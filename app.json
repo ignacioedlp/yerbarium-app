@@ -9,7 +9,7 @@
     "ios": {
       "supportsTablet": true,
       "bundleIdentifier": "app.yerbarium.mobile",
-      "icon": "./assets/branding/icon.png"
+      "icon": "./assets/branding/icon-light.png"
     },
     "android": {
       "package": "app.yerbarium.mobile",
@@ -42,7 +42,7 @@
       "ios",
       "android"
     ],
-    "icon": "./assets/branding/icon.png",
+    "icon": "./assets/branding/icon-light.png",
     "extra": {
       "router": {},
       "eas": {

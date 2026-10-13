@@ -5,8 +5,8 @@ Adaptación vectorial de `yerba-plataform/apps/web/public/logos/yerbatica-small.
 - `icon.png` / `.svg`: lima `#c4e38c` sobre verde; ícono principal de 1024 × 1024, sin transparencia ni esquinas redondeadas.
 - `icon-light.png` / `.svg`: verde sobre crema, variante clara.
 - `logo-green`, `logo-cream`, `logo-white`: símbolos con fondo transparente, en PNG y SVG.
-- `android-foreground.png`: símbolo lima `#c4e38c` sobre transparencia, dentro de la zona segura adaptativa.
-- `android-background.png`: fondo verde independiente.
+- `android-foreground.png`: símbolo verde `#0c5947` sobre transparencia, dentro de la zona segura adaptativa.
+- `android-background.png`: fondo crema independiente.
 - `android-monochrome.png`: máscara blanca transparente para íconos temáticos de Android.
 - `splash-logo.png`: símbolo verde transparente para la pantalla de inicio.
 - `preview.png`: lámina de referencia.

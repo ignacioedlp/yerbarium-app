@@ -57,7 +57,7 @@ const assets = {
   "logo-white": svg(symbol(palette.white, 740)),
   icon: svg(symbol(palette.lime), palette.green),
   "icon-light": svg(symbol(palette.green), palette.cream),
-  "android-foreground": svg(symbol(palette.lime, 540)),
+  "android-foreground": svg(symbol(palette.green, 540)),
   "android-monochrome": svg(symbol(palette.white, 540)),
   "splash-logo": svg(symbol(palette.green, 740)),
 };
@@ -68,7 +68,7 @@ for (const [name, source] of Object.entries(assets)) {
   await raster.png().toFile(path.join(directory, `${name}.png`));
 }
 await sharp({
-  create: { width: 1024, height: 1024, channels: 3, background: palette.green },
+  create: { width: 1024, height: 1024, channels: 3, background: palette.cream },
 })
   .png()
   .toFile(path.join(directory, "android-background.png"));
