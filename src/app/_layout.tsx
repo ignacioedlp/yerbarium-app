@@ -130,6 +130,10 @@ function Navigation() {
           options={{ title: "Editar perfil", headerShown: true }}
         />
         <Stack.Screen
+          name="eliminar-cuenta"
+          options={{ title: "Eliminar cuenta", headerShown: true }}
+        />
+        <Stack.Screen
           name="opinion/[slug]"
           options={{ title: "Tu opinión", headerShown: true }}
         />

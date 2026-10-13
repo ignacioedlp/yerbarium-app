@@ -1,10 +1,10 @@
 import { learningLinks } from "@/content/learning";
 import { AuthField, AuthSheet, AuthSwitch } from "@/components/auth-sheet";
 import React from "react";
-import { Alert, Pressable, Text, TextInput, View } from "react-native";
+import { Pressable, Text, TextInput, View } from "react-native";
 import { HandNote } from "@/components/editorial";
 import { Icon } from "@/components/icon";
-import { router } from "expo-router";
+import { router, type Href } from "expo-router";
 import { Controller, useForm } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -282,6 +282,12 @@ export function Profile() {
           ))}
         </View>
       </View>
+                <Button
+            label="Eliminar cuenta"
+            secondary
+            destructive
+            onPress={() => router.push("/eliminar-cuenta" as Href)}
+          />
     </Page>
   );
 }
