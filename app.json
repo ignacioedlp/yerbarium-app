@@ -42,6 +42,13 @@
       "ios",
       "android"
     ],
-    "icon": "./assets/branding/icon.png"
+    "icon": "./assets/branding/icon.png",
+    "extra": {
+      "router": {},
+      "eas": {
+        "projectId": "6e0bd664-76f8-4a92-9a9e-ec8fedd48ccd"
+      }
+    },
+    "owner": "jai-soft"
   }
 }
