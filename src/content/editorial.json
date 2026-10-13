@@ -1,0 +1,426 @@
+{
+  "cultura": {
+    "title": "Cultura matera",
+    "introduction": "Una misma planta dio lugar a costumbres diversas. El mate, el tereré y el chimarrão cuentan una historia regional hecha de saberes indígenas, intercambios y rituales cotidianos.",
+    "sections": [
+      {
+        "id": "raices-guaranies",
+        "title": "Raíces guaraníes",
+        "paragraphs": [
+          "Mucho antes de convertirse en un producto comercial, el  ka'a formaba parte de la vida de pueblos guaraníes. Sus hojas se usaban en bebidas y prácticas sociales, rituales y medicinales dentro del territorio donde la planta crece de forma nativa.",
+          "Hablar de un único “origen nacional” proyecta fronteras modernas sobre una historia anterior a ellas. La cultura de la yerba pertenece a una región compartida y conserva, en palabras, técnicas y relatos, la profundidad del legado guaraní.",
+          "En guaraní, la palabra se relaciona con la yerba y también con el monte. Esa relación recuerda que planta, territorio y cultura no son capítulos separados."
+        ]
+      },
+      {
+        "id": "expansion-historica",
+        "title": "Expansión histórica",
+        "paragraphs": [
+          "Durante el período colonial, el consumo se extendió por las rutas de la Cuenca del Plata. Las misiones jesuíticas aprendieron a cultivar la planta, organizaron yerbales y ampliaron su circulación comercial.",
+          "Con el tiempo, la yerba atravesó ámbitos rurales y urbanos y fue adoptada por grupos sociales muy distintos. La industrialización regularizó molienda, empaque y distribución, pero no eliminó las variantes locales: cada lugar conservó objetos, gestos y preferencias.",
+          "Saberes y usos guaraníes en el territorio nativo de la planta.",
+          "Expansión del consumo y desarrollo del cultivo en las misiones.",
+          "Consolidación de mercados, plantaciones e industrias nacionales.",
+          "Una práctica regional que viaja con sus comunidades y sigue transformándose."
+        ]
+      },
+      {
+        "id": "argentina",
+        "title": "Argentina",
+        "paragraphs": [
+          "En Argentina el mate atraviesa hogares, trabajos, viajes y encuentros. Puede tomarse a solas, pero la ronda compartida funciona como una forma inmediata de bienvenida y conversación.",
+          "La producción se concentra en Misiones y nordeste de Corrientes. En buena parte del país predomina la yerba con palo y el mate caliente, aunque conviven moliendas, recipientes y modos de preparación muy diversos. El hábito no es una ceremonia fija: cambia entre regiones, familias y generaciones."
+        ]
+      },
+      {
+        "id": "uruguay",
+        "title": "Uruguay",
+        "paragraphs": [
+          "En Uruguay, mate y termo forman una pareja portátil. La práctica ocupa el espacio público de un modo especialmente visible: acompaña caminatas, plazas, estudio, trabajo y conversación.",
+          "Es habitual una yerba de molienda fina y predominio de hoja, asociada a un perfil intenso. Aunque el país no posee una gran industria yerbatera propia, construyó una cultura material y códigos de consumo reconocibles dentro de la región."
+        ]
+      },
+      {
+        "id": "paraguay-terere",
+        "title": "Paraguay y tereré",
+        "paragraphs": [
+          "El tereré se prepara con agua fría y yerba mate, y puede incorporar  pohã ñana: plantas frescas machacadas y agregadas al agua según saberes transmitidos en familias y comunidades.",
+          "La ronda se organiza con una jarra o termo, una guampa y una bombilla. Es una práctica cotidiana de hospitalidad, diálogo y pertenencia. En 2020, sus prácticas y saberes tradicionales en la cultura del pohã ñana fueron inscritos por la UNESCO en la Lista Representativa del Patrimonio Cultural Inmaterial de la Humanidad.",
+          "El reconocimiento de la UNESCO corresponde a la práctica cultural paraguaya completa —sus conocimientos, transmisión y códigos—, no solo a una bebida fría."
+        ]
+      },
+      {
+        "id": "brasil-chimarrao",
+        "title": "Brasil y chimarrão",
+        "paragraphs": [
+          "En el sur de Brasil, el chimarrão es una de las expresiones más extendidas de la erva-mate y un símbolo de identidad y encuentro en Rio Grande do Sul.",
+          "En 2023, el Instituto do Patrimônio Histórico e Artístico do Estado registró el “Sistema Cultural e Socioambiental da Erva-Mate Tradicional” como el primer patrimonio cultural inmaterial del estado. El reconocimiento abarca prácticas tradicionales de cultivo y comercialización vinculadas a distintos grupos sociales."
+        ]
+      },
+      {
+        "id": "mate-bombilla-recipiente",
+        "title": "Mate, bombilla y recipiente",
+        "paragraphs": [
+          "El equipo básico parece simple, pero cada pieza resume siglos de adaptación. Material, forma y tamaño cambian la experiencia y también expresan gustos e identidades locales."
+        ]
+      },
+      {
+        "id": "cebado",
+        "title": "El cebado",
+        "paragraphs": [
+          "Cebar es preparar y servir cada mate. La persona que ceba administra el agua, cuida la estructura de la yerba y recibe el mate de vuelta antes de entregarlo a quien sigue.",
+          "1  Cargar. Llenar el recipiente con yerba sin compactarla por completo.",
+          "2  Acomodar. Inclinar la yerba para formar una zona alta y otra más baja.",
+          "3  Humedecer. Verter un poco de agua en la zona baja para asentar la mezcla.",
+          "4  Colocar la bombilla. Introducirla en la zona húmeda y evitar moverla después.",
+          "5  Cebar. Servir siempre cerca de la bombilla para extraer la yerba de manera gradual.",
+          "No existe una técnica universal. La molienda, el recipiente y la costumbre local cambian el método; estas pautas son un punto de partida."
+        ]
+      },
+      {
+        "id": "compartir",
+        "title": "Compartir como práctica social",
+        "paragraphs": [
+          "Compartir mate no consiste solo en repartir una bebida. La ronda organiza turnos, pausas y una atención mutua: alguien ceba, alguien recibe, toma y devuelve.",
+          "Los códigos no son idénticos en toda la región. En muchas rondas, decir “gracias” indica que esa persona ya no quiere seguir tomando; el mate vuelve al cebador y no pasa directamente de mano en mano. Son acuerdos aprendidos por observación, no reglas rígidas ni pruebas de autenticidad.",
+          "La cultura matera vive porque se transmite y también porque cambia. Respetarla implica reconocer sus raíces y la diversidad de quienes la practican."
+        ]
+      },
+      {
+        "id": "fuentes",
+        "title": "Fuentes",
+        "paragraphs": [
+          "Esta introducción reúne fuentes públicas de los cuatro países y evita presentar una tradición nacional como medida de todas las demás. Última revisión editorial: septiembre de 2026."
+        ]
+      }
+    ],
+    "sources": [
+      {
+        "name": "El mate",
+        "publisher": "Argentina.gob.ar",
+        "href": "https://www.argentina.gob.ar/pais/mate",
+        "note": "Síntesis institucional sobre el origen guaraní, la historia y los usos del mate en Argentina."
+      },
+      {
+        "name": "Saberes compartidos: proceso de inventario del patrimonio cultural inmaterial del Uruguay",
+        "publisher": "Ministerio de Educación y Cultura de Uruguay",
+        "href": "https://www.gub.uy/ministerio-educacion-cultura/sites/ministerio-educacion-cultura/files/2023-01/libro_saberes_compartidos.pdf",
+        "note": "Investigación sobre la práctica del mate, sus objetos y sus códigos sociales en Uruguay."
+      },
+      {
+        "name": "Prácticas y saberes tradicionales del tereré en la cultura del pohã ñana",
+        "publisher": "UNESCO — Patrimonio Cultural Inmaterial",
+        "href": "https://ich.unesco.org/es/RL/practicas-y-saberes-tradicionales-del-terere-en-la-cultura-del-poha-nana-bebida-ancestral-guarani-en-paraguay-01603",
+        "note": "Expediente del elemento paraguayo inscrito en la Lista Representativa en 2020."
+      },
+      {
+        "name": "La yerba mate en la cultura guaraní y el origen del tereré",
+        "publisher": "Secretaría Nacional de Cultura de Paraguay",
+        "href": "https://cultura.gov.py/2015/02/la-yerba-mate-en-la-cultura-guarani-y-el-origen-del-terere/",
+        "note": "Recorrido histórico y cultural desde una institución pública paraguaya."
+      },
+      {
+        "name": "Evolução da produção de erva-mate",
+        "publisher": "Embrapa Florestas",
+        "href": "https://www.embrapa.br/en/busca-de-publicacoes/-/publicacao/1122672/evolucao-da-producao-de-erva-mate-ilex-paraguariensis-aquifoliaceae",
+        "note": "Contexto de la erva-mate y sus preparaciones calientes y frías en Brasil y la región."
+      },
+      {
+        "name": "Erva-mate é o primeiro patrimônio cultural imaterial do Rio Grande do Sul",
+        "publisher": "Portal do Estado do Rio Grande do Sul — IPHAE",
+        "href": "https://estado.rs.gov.br/erva-mate-e-o-primeiro-patrimonio-cultural-imaterial-do-rio-grande-do-sul",
+        "note": "Registro del Sistema Cultural e Socioambiental da Erva-Mate Tradicional en 2023."
+      }
+    ]
+  },
+  "sobre-la-yerba": {
+    "title": "Sobre la yerba",
+    "introduction": "De un árbol de la Selva Paranaense a una mezcla de hojas, palo y polvo: entender el recorrido ayuda a reconocer qué hay detrás de cada paquete.",
+    "sections": [
+      {
+        "id": "ilex-paraguariensis",
+        "title": "Qué es Ilex paraguariensis",
+        "paragraphs": [
+          "Ilex paraguariensis es una especie de la familia de los acebos. Es un árbol perenne nativo de una región subtropical de Sudamérica; sus hojas y ramas jóvenes, una vez elaboradas, forman la yerba mate.",
+          "En el monte puede alcanzar varios metros de altura. En cultivo se la mantiene más baja mediante podas para cuidar la planta y facilitar la cosecha. La yerba mate contiene cafeína y teobromina.",
+          "“Yerba mate” puede nombrar la planta, el producto seco del paquete o la infusión. “Mate” también designa tanto la bebida como el recipiente en el que se prepara."
+        ]
+      },
+      {
+        "id": "donde-crece",
+        "title": "Dónde crece y se produce",
+        "paragraphs": [
+          "Su territorio de origen atraviesa fronteras actuales. La especie es nativa del nordeste argentino, Paraguay, parte de Brasil y Uruguay, dentro y alrededor de la Selva Paranaense y el Bosque Atlántico.",
+          "El cultivo comercial se concentra en Misiones y nordeste de Corrientes.",
+          "La producción se vincula especialmente con los estados del sur.",
+          "La planta y sus usos forman parte de un paisaje cultural guaraní vivo.",
+          "Que una marca pertenezca a un país no significa necesariamente que toda su hoja provenga de allí. Por eso en el catálogo distinguimos origen de la hoja, país de elaboración y país de tradición cuando las fuentes permiten hacerlo."
+        ]
+      },
+      {
+        "id": "del-yerbal-al-paquete",
+        "title": "Del yerbal al paquete",
+        "paragraphs": [
+          "El proceso combina cosecha, calor, reducción de tamaño y tiempo. No hay una única receta: el estacionamiento y las proporciones de hoja, palo y polvo varían entre productos."
+        ]
+      },
+      {
+        "id": "hoja-palo-polvo",
+        "title": "Hoja, palo y polvo",
+        "paragraphs": [
+          "La molienda no es uniforme. Sus fracciones trabajan juntas y explican parte del sabor, la intensidad y la espuma de la infusión."
+        ]
+      },
+      {
+        "id": "con-palo-vs-despalada",
+        "title": "Con palo vs despalada",
+        "paragraphs": [
+          "Con palo",
+          "Una mezcla con presencia visible de ramas finas",
+          "En la normativa argentina debe contener al menos 65% de hojas desecadas, rotas o pulverizadas y no más de 35% de palo.",
+          "Despalada o despalillada",
+          "Una proporción mucho mayor de hoja",
+          "En la normativa argentina debe contener al menos 90% de hojas desecadas, rotas o pulverizadas y no más de 10% de palo. “Despalada” no significa necesariamente cero palo.",
+          "Las denominaciones y límites legales pueden variar entre países. Para comparar productos, conviene mirar la declaración del envase y la fuente asociada a cada dato."
+        ]
+      },
+      {
+        "id": "leer-una-ficha",
+        "title": "Cómo leer una ficha de Yerbarium",
+        "paragraphs": [
+          "Una ficha separa hechos del producto, descripción editorial y opinión de la comunidad. No rellenamos silencios: “no informado” es distinto de un valor confirmado."
+        ]
+      },
+      {
+        "id": "fuentes",
+        "title": "Fuentes",
+        "paragraphs": [
+          "Esta guía sintetiza fuentes botánicas, institucionales y normativas. Última revisión editorial: septiembre de 2026."
+        ]
+      }
+    ],
+    "sources": [
+      {
+        "name": "Ilex paraguariensis A.St.-Hil.",
+        "publisher": "Plants of the World Online — Royal Botanic Gardens, Kew",
+        "href": "https://powo.science.kew.org/taxon/315555-2",
+        "note": "Taxonomía aceptada y distribución nativa de la especie."
+      },
+      {
+        "name": "El mate",
+        "publisher": "Argentina.gob.ar",
+        "href": "https://www.argentina.gob.ar/pais/mate",
+        "note": "Descripción de la planta, antecedentes históricos y zona productora argentina."
+      },
+      {
+        "name": "De las chacras a los mates argentinos: así se produce la yerba mate",
+        "publisher": "Instituto Nacional de la Yerba Mate",
+        "href": "https://inym.org.ar/noticias/produccion-sustentable/80256-de-las-chacras-a-los-mates-argentinos-asi-se-produce-la-yerba-mate.html",
+        "note": "Etapas del proceso productivo, desde el vivero hasta el envasado."
+      },
+      {
+        "name": "Resolución Conjunta 2-E/2018",
+        "publisher": "Código Alimentario Argentino — Argentina.gob.ar",
+        "href": "https://www.argentina.gob.ar/normativa/nacional/resoluci%C3%B3n-2-2018-306660/texto",
+        "note": "Límites vigentes de hoja y palo y método de medición para yerba con palo y despalada."
+      },
+      {
+        "name": "Consejos para elegir la mejor yerba mate",
+        "publisher": "Instituto Nacional de la Yerba Mate",
+        "href": "https://inym.org.ar/noticias/yerba-mate-argentina/78364-consejos-para-elegir-la-mejor-yerba-mate.html",
+        "note": "Estacionamiento y función de hoja, palo y polvo en la mezcla."
+      },
+      {
+        "name": "Estudian la germinación en semillas de yerba mate",
+        "publisher": "INTA — Argentina.gob.ar",
+        "href": "https://www.argentina.gob.ar/noticias/estudian-la-germinacion-en-semillas-de-yerba-mate",
+        "note": "Descripción institucional de la especie y presencia de cafeína y teobromina."
+      }
+    ]
+  },
+  "como-preparar-un-mate": {
+    "title": "Cómo preparar un mate",
+    "introduction": "Un poco de yerba, agua y tiempo para encontrar tu manera. Te acompañamos en las primeras cebadas con un método habitual, abierto a otras costumbres.",
+    "sections": [
+      {
+        "id": "antes-de-empezar",
+        "title": "Una forma de empezar, muchas formas de cebar",
+        "paragraphs": [
+          "No existe un único método correcto. Esta guía parte de una preparación frecuente en Argentina; las costumbres regionales y personales también tienen su lugar.",
+          "Tené a mano yerba, mate, bombilla y agua. Si estrenás un recipiente, revisá primero si tu mate necesita curado. Para conocer lo que hay en el paquete, conocé más sobre la yerba."
+        ]
+      },
+      {
+        "id": "paso-a-paso",
+        "title": "Cómo preparar un mate, paso a paso",
+        "paragraphs": [],
+        "steps": [
+          {
+            "title": "Elegir y llenar el mate",
+            "copy": "Elegí un recipiente limpio y una yerba que quieras probar. Llenalo entre 2/3 y 3/4: es una referencia común, no una regla absoluta. Dejá espacio para el agua y la bombilla."
+          },
+          {
+            "title": "Inclinar la yerba",
+            "copy": "Tapá la boca con la palma, agitá suavemente y volvé a inclinar el recipiente. Buscá que la yerba quede más alta de un lado: esa pendiente es la conocida montañita."
+          },
+          {
+            "title": "Humedecer la parte baja",
+            "copy": "Verté un poco de agua tibia en el hueco y esperá a que se absorba. Esta humectación inicial evita el cambio brusco de temperatura que recibiría la yerba seca al contacto inmediato con agua muy caliente."
+          },
+          {
+            "title": "Colocar la bombilla",
+            "copy": "Introducí la bombilla en el sector húmedo y más bajo. Una vez acomodada, evitá moverla innecesariamente: no hace falta revolver la yerba entre cebadas."
+          },
+          {
+            "title": "Cebar",
+            "copy": "Usá agua caliente, sin hervir: unos 70–80 °C son una referencia práctica para el cebado. Verté de a poco en el mismo sector bajo, cerca de la bombilla. Ajustá la temperatura a tu comodidad y dejá enfriar si está demasiado caliente para tomar."
+          },
+          {
+            "title": "Mantener el mate",
+            "copy": "Conservá parte de la yerba seca arriba y avanzá gradualmente hacia ella cuando el sabor se debilite. La forma de cebar cambia según la región, la molienda y cada persona: encontrá la que te resulte cómoda."
+          }
+        ]
+      },
+      {
+        "id": "consejos",
+        "title": "Pequeños cuidados para la próxima ronda",
+        "paragraphs": [
+          "De a poco alcanza",
+          "No inundes toda la superficie de entrada ni revuelvas con la bombilla. Probá pequeños ajustes antes de cambiar toda tu preparación.",
+          "Al terminar, retirá la yerba, enjuagá el recipiente y dejalo secar por completo. El cuidado depende del material. Y el ritual también cambia: descubrí esas diferencias en Cultura matera."
+        ]
+      },
+      {
+        "id": "revision",
+        "title": "Sobre esta guía",
+        "paragraphs": [
+          "Texto original basado en las referencias indicadas. Revisión editorial: octubre de 2026."
+        ]
+      }
+    ],
+    "sources": [
+      {
+        "name": "Tips for making a delicious mate",
+        "publisher": "Yerba Mate Argentina · INYM",
+        "href": "https://yerbamateargentina.org.ar/en/news/mate-tips/80336-tips-for-making-a-delicious-mate.html",
+        "note": "Referencia para la cantidad de yerba, el agua y la colocación de la bombilla."
+      },
+      {
+        "name": "Cómo hacer un buen mate",
+        "publisher": "Ruta de la Yerba Mate",
+        "href": "https://www.rutadelayerbamate.org.ar/yerba-mate/hacer-un-buen-mate/",
+        "note": "Humectación inicial y secuencia habitual de cebado."
+      }
+    ]
+  },
+  "como-curar-un-mate": {
+    "title": "Cómo curar un mate",
+    "introduction": "No todos los mates necesitan curado. Antes de empezar, mirá el material del interior y las indicaciones de quien lo fabricó.",
+    "sections": [
+      {
+        "id": "materiales",
+        "title": "No todos los mates necesitan curado",
+        "paragraphs": [
+          "El curado tradicional prepara el interior de algunos recipientes orgánicos. No reemplaza la limpieza ni garantiza que nunca aparezcan hongos."
+        ],
+        "materials": [
+          {
+            "title": "Calabaza",
+            "copy": "Suele requerir curado antes del primer uso, salvo que ya venga curada. Revisá las instrucciones."
+          },
+          {
+            "title": "Madera",
+            "copy": "Algunas se curan tradicionalmente. Depende de la especie, el acabado y el fabricante."
+          },
+          {
+            "title": "Acero inoxidable",
+            "copy": "No requiere curado tradicional. Lavalo antes del primer uso según sus indicaciones."
+          },
+          {
+            "title": "Vidrio / Cerámica",
+            "copy": "Normalmente no requieren curado. Respetá las instrucciones de limpieza y evitá cambios bruscos de temperatura."
+          },
+          {
+            "title": "Plástico / Sintéticos",
+            "copy": "No requieren curado tradicional. Usá recipientes aptos para bebidas calientes y seguí sus límites de temperatura."
+          }
+        ]
+      },
+      {
+        "id": "calabaza",
+        "title": "Calabaza: un curado con atención",
+        "paragraphs": [
+          "Si el fabricante indica otro procedimiento, seguí el de tu pieza. Para una calabaza sin curar, esta es una orientación tradicional acotada:"
+        ],
+        "steps": [
+          {
+            "title": "Enjuagar suavemente",
+            "copy": "Hacé un enjuague breve con agua tibia para retirar restos sueltos. Evitá sumergir el exterior, sobre todo si tiene cuero o apliques."
+          },
+          {
+            "title": "Agregar yerba húmeda",
+            "copy": "Llená con yerba usada, húmeda y recién retirada de una preparación, sin señales de deterioro. Si hace falta, agregá un poco de agua tibia para mantenerla húmeda, sin desbordar."
+          },
+          {
+            "title": "Dejar reposar y revisar",
+            "copy": "Revisá durante el reposo y retirala como máximo a las 24 horas; no la dejes varios días ni prolongues el proceso si hay calor o aparecen olores extraños. Ese límite no garantiza que no se formen hongos."
+          },
+          {
+            "title": "Retirar y limpiar",
+            "copy": "Vaciá la yerba. Si hay membrana interna floja, retirala con una cucharita, con suavidad y sin adelgazar ni perforar la pared. No busques eliminar todas las manchas."
+          },
+          {
+            "title": "Enjuagar y secar por completo",
+            "copy": "Enjuagá y quitá el exceso de agua. Dejá el mate boca arriba, en un lugar ventilado, hasta que el interior esté completamente seco. Repetí solo si hace falta retirar restos sueltos y las indicaciones de la pieza lo permiten."
+          }
+        ]
+      },
+      {
+        "id": "madera",
+        "title": "Madera: cada pieza tiene sus cuidados",
+        "paragraphs": [
+          "No todas las maderas se comportan igual. Consultá al fabricante antes de curar: el tratamiento depende de la especie y del acabado. Evitá remojos prolongados, que pueden hinchar o agrietar la pieza.",
+          "No improvises un recubrimiento",
+          "No uses lavandina, químicos agresivos ni selladores que no sean aptos para contacto con alimentos. Tampoco hiervas un mate delicado sin indicaciones del fabricante."
+        ]
+      },
+      {
+        "id": "secado",
+        "title": "Secar bien es parte del ritual",
+        "paragraphs": [
+          "Después de cada uso, sacá la yerba, enjuagá y dejá secar por completo en un lugar ventilado antes de guardarlo. No encierres el mate húmedo ni lo apoyes boca abajo sobre una superficie que impida circular el aire.",
+          "Manchas y señales de alerta",
+          "El oscurecimiento o las manchas de yerba, por sí solos, no prueban que haya moho. El olor a humedad, una capa con pelusa o crecimiento negro o verde persistente son señales de alerta: dejá de usarlo y consultá al fabricante. Si persisten, reemplazá el recipiente; no intentes tapar el olor ni seguir curándolo.",
+          "Cuando esté listo y seco, seguí con cómo preparar un mate. Cada cuidado acompaña una costumbre: conocé también la cultura matera."
+        ]
+      },
+      {
+        "id": "revision",
+        "title": "Sobre esta guía",
+        "paragraphs": [
+          "Texto original basado en las referencias indicadas. Revisión editorial: octubre de 2026."
+        ]
+      }
+    ],
+    "sources": [
+      {
+        "name": "Cómo curar y limpiar el mate",
+        "publisher": "Taragüi · Las Marías",
+        "href": "https://www.taragui.com/de/post/c%C3%B3mo-curar-y-limpiar-el-mate",
+        "note": "Referencia para materiales, curado tradicional y secado boca arriba. Esta guía adopta un criterio conservador y no reproduce tratamientos con fuego ni recubrimientos."
+      },
+      {
+        "name": "Qué hacer si el mate tiene hongos",
+        "publisher": "Yerba Mate Argentina · INYM",
+        "href": "https://yerbamateargentina.org.ar/es/noticias/tomar/79337-que-hacer-si-el-mate-tiene-hongos.html",
+        "note": "Prevención: retirar la yerba al terminar, limpiar y guardar en un lugar seco. No generalizamos el uso de agua hirviendo a recipientes delicados."
+      },
+      {
+        "name": "Mate de madera: guía del curado",
+        "publisher": "YVY Maté",
+        "href": "https://yvy-mate.fr/es/blogs/blog-mate-yvy/curar-mate-de-madera",
+        "note": "Cuidados específicos de la madera y precaución con remojos y cambios térmicos."
+      }
+    ]
+  }
+}

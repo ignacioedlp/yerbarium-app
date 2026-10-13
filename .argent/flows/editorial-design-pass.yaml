@@ -1,0 +1,13 @@
+# Recorder captured the tab by a raw point because its icon id was ambiguous.
+# Retargeted to the exact visible tab label observed through describe.
+steps:
+  - launch: app.yerbarium.mobile
+  - await:
+      visible: { text: "TODA LA" }
+      timeout: 15000
+  - await: { idle: true }
+  - tap: { text: "Explorar" }
+  - await:
+      visible: { text: "PRÓXIMA YERBA" }
+      timeout: 5000
+  - await: { idle: true }

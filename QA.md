@@ -1,0 +1,292 @@
+# Validación de Yerbarium App
+
+## 2026-10-13 — Hojas y selección de pestañas en Android
+
+- `LeafRating` usa el ícono nativo Material Community Icons en Android, con relleno parcial por recorte; iOS conserva las hojas SVG. Esto evita depender del renderizado Android de SVG embebido como URI de imagen.
+- Las pestañas nativas fijan el indicador activo y el ripple al verde seleccionado del tema (`#d0e3b8`), evitando el azul dinámico de Material You.
+- Pasan `bun run typecheck`, `bun run lint` (con avisos preexistentes) y `bun run export:android`. Argent no encuentra emulador Android ni AVD; la apariencia en dispositivo queda pendiente de verificación visual.
+
+## 2026-10-13 — Acciones visibles en sheets de autenticación
+
+- Ingresar y registro conservan sus campos y errores en un área desplazable. Los botones y el cambio entre formularios ahora ocupan un footer fijo con su propio inset inferior; quedan visibles al abrir el sheet en cualquiera de sus detents parciales.
+- Tras el reporte de que persistía el problema, ajusté también el detent inicial Android a 0.92 (con expansión hasta 1.0); iOS conserva 0.68/0.8. El primer detent anterior era demasiado bajo para alojar las acciones del footer dentro de la ventana nativa.
+- Revisiones pendientes en Android físico/emulador; el entorno no tiene AVD disponible.
+
+## 2026-10-13 — Compatibilidad con Expo Go Android
+
+- Se detectó Reanimated 4.7.1 / Worklets 0.13.0, versiones conservadas para el development client iOS instalado y excluidas de la validación del SDK. Expo SDK 57 incluye Reanimated 4.5.1 / Worklets 0.10.1: Expo Go necesita esas versiones nativas y JavaScript coincidentes.
+- Instaladas las versiones del SDK con `bunx expo install react-native-reanimated react-native-worklets --bun`; actualizado bun.lock y retirado expo.install.exclude. Las rutas revisadas sí tienen export default; el desajuste de módulos compartidos es la causa probable de los avisos en cadena, pendiente de confirmar en el teléfono Android del usuario.
+- Pasaron TypeScript, 15 pruebas y exportaciones Hermes de Android (con caché limpia) e iOS. Lint terminó sin errores, con un aviso existente por Alert sin usar en src/screens/account.tsx.
+- Expo Doctor: 20/21 checks. El único fallo corresponde a parches pendientes dentro del SDK 57: @expo/ui 57.0.22 → ~57.0.23, expo 57.0.27 → ~57.0.28, expo-dev-client 57.0.19 → ~57.0.20, expo-router 57.0.25 → ~57.0.26 y expo-splash-screen 57.0.9 → ~57.0.10. Sin actualización adicional del SDK o sus otros módulos en esta corrección.
+- Argent no encuentra dispositivo ni AVD Android. No se verificó arranque en Expo Go ni recorrido visual. Reiniciar el Metro existente con `bun run start:go --clear` y abrir el proyecto en Expo Go compatible con SDK 57.
+- ios/Podfile.lock y el cliente iOS instalado todavía usan 4.7.1 / 0.13.0: ejecutar `bun run ios` para recompilar antes de volver a probar en ese development client. No se reconstruyó ni modificó el cliente instalado durante esta corrección.
+
+## Header de ficha — 2026-10-10
+
+- Header compartido con safe area real, fila flexible y botón de volver de 44 puntos. Se elimina el posicionamiento absoluto que ubicaba el título detrás de la isla dinámica.
+- La ficha muestra «Ficha de yerba» en navegación y conserva nombre/marca completos en el hero.
+- Comprobación visual en iPhone 17 Pro iOS 26.4: título visible bajo la isla dinámica y alineado con Volver. Captura: `docs/design-pass/detail-header-safe-area.png`.
+- Pasan TypeScript, ESLint, 15 tests y exportaciones iOS/Android. Detector sin hallazgos.
+- Android (sin AVD), landscape, tablet y texto grande quedan pendientes de comprobación visual. Esta pasada no ejecutó el botón Volver.
+
+Fecha: 8 de octubre de 2026.
+
+## Comprobaciones ejecutadas
+
+| Comprobación                                                            | Resultado                                 |
+| ----------------------------------------------------------------------- | ----------------------------------------- |
+| TypeScript estricto                                                     | Pasa                                      |
+| ESLint                                                                  | Pasa, sin errores ni advertencias         |
+| Pruebas automatizadas                                                   | 15 pruebas pasan en 4 archivos            |
+| Exportación Hermes para iOS                                             | Pasa                                      |
+| Exportación Hermes para Android                                         | Pasa                                      |
+| Configuración nativa / config plugins (`expo config --type introspect`) | Pasa                                      |
+| Expo Doctor                                                             | Pasa: 21/21 comprobaciones, sin problemas |
+
+Las pruebas cubren rotación concurrente, 401 tardío de un token anterior, límite de un reintento HTTP, credenciales conservadas tras fallos de red, carreras entre almacenamiento y logout, exclusión de estados de biblioteca, paginación por origen configurado, caducidad de caché pública y valores técnicos desconocidos/cero.
+
+La exportación genera bundles JavaScript/Hermes y assets. No equivale a construir un IPA/APK ni a verificar los recorridos en dispositivos.
+
+## Limitaciones del entorno
+
+- Argent encontró un iPhone 17 Pro iniciado. Expo Go se abrió mediante Argent y rechazó el proyecto por incompatibilidad con SDK 57. No se reinstaló Expo Go ni se borraron sus datos.
+- No hay emulador Android ni AVD configurado en este entorno.
+- El acceso al socket de Docker fue denegado por el sandbox. La API local no estaba disponible para los recorridos completos.
+- La primera ejecución de Expo Doctor encontró dos versiones de `react-native-screens`. Se resolvió con una única versión compatible, un override explícito y una reinstalación de dependencias. La última ejecución pasó las 21 comprobaciones, incluidas las remotas.
+- Las verificaciones remotas de Expo Doctor pueden fallar con `ENOTFOUND exp.host` o errores de React Native Directory por restricciones de red.
+
+## Recorridos pendientes en iOS y Android
+
+Usar Expo Go con soporte para SDK 57 y una API de desarrollo accesible. Para recorridos de escritura, usar una cuenta de pruebas y datos de desarrollo.
+
+1. Abrir Inicio; explorar estilos, marcas y yerbas; paginar y actualizar. Buscar un nombre con tildes, probar una consulta sin resultados y limpiar los filtros.
+2. Abrir una ficha; comprobar textos largos, imágenes ausentes y URL de imagen fallida, estadísticas sin opiniones, fuentes, disponibilidad y navegación de vuelta.
+3. Seleccionar 2, 3 y 4 yerbas; verificar diferencias, desplazamiento horizontal y el rechazo de una quinta selección.
+4. Registrarse, cerrar sesión e ingresar con usuario/email. Reabrir la app con sesión guardada y comprobar un refresh expirado y un fallo de red durante la restauración.
+5. Guardar una favorita, marcar probada y cambiar a quiero probar; confirmar exclusión y actualización de resumen/listados. Cerrar sesión y verificar que los datos privados desaparezcan.
+6. Editar perfil y privacidad; verificar un perfil privado desde otra cuenta y uno público desde una opinión.
+7. Publicar una puntuación rápida, editar comentario/sensorial/notas y borrar. Forzar una respuesta de error en desarrollo: el borrador debe conservarse y un reintento debe guardar una sola vez.
+8. Consultar catálogo/fichas con conexión, reiniciar sin conexión y verificar datos guardados y artículos. Confirmar que las escrituras estén deshabilitadas y se recuperen al reconectar.
+9. Probar tamaño de texto grande, VoiceOver/TalkBack, teclado en formularios, orientación y volver/cancelar. Ningún botón principal debe quedar inaccesible.
+
+No se presenta ningún recorrido pendiente como aprobado.
+
+## Segunda pasada visual
+
+La app recupera la identidad editorial de la web: verde profundo, papel crema, títulos Lilita en mayúsculas, acentos lima, anotaciones Caveat y collages originales. Capturas en `docs/design-pass/`.
+
+En esta sesión el usuario ya había instalado el development build. Se verificaron en el iPhone 17 Pro Inicio, catálogo, perfil sin sesión, ingreso y una ficha de catálogo. El buscador vacío enfoca el campo y abre el teclado; tocar fuera lo cierra. No se modificaron datos comunitarios ni credenciales.
+
+La revisión independiente de las tres correcciones visuales dio `ship` para las cuatro superficies capturadas. El recorrido `.argent/flows/editorial-design-pass.yaml` pasó seis pasos de inicio/catálogo. Sus dos checks de idle informaron movimiento residual pequeño; se comprobaron visualmente las pantallas y las identidades de destino. No se usa esa advertencia como prueba de carga de datos completada.
+
+TypeScript, ESLint, las 15 pruebas y los bundles Hermes iOS/Android pasan después de los cambios. El detector de diseño no informó hallazgos. Android queda pendiente de comprobación visual porque no hay AVD disponible. No se verificaron en esta pasada los flujos de escritura autenticados ni todos los estados de accesibilidad/texto grande.
+
+## Home alineada con la web — 2026-10-09
+
+- Portada compacta con titular en tres líneas según ancho disponible, collage completo antes de la descripción y búsqueda. Logo compartido con lettering Lilita. Accesos con feedback de presión y una columna para texto grande o pantallas estrechas.
+- Verificación visual en development build del iPhone 17 Pro iOS 26.4: home sin recorte del mate ni superposición de texto; búsqueda abre Explorar en modo Búsqueda y la pestaña Inicio permite regresar. Captura: `docs/design-pass/home-web-native.png`.
+- Pasan typecheck, lint, 15 tests y exportaciones Hermes iOS/Android. Android, tablet y Dynamic Type quedan pendientes de revisión visual.
+- Web hermana: se reemplazó la imagen mobile al 25% de opacidad por un collage completo en una fila propia. Pasan typecheck, lint, 181 tests, build de producción y detector de diseño sin hallazgos. La revisión visual en navegador está pendiente: el sandbox denegó abrir el puerto 3000 (`listen EPERM`). No se publicó el cambio.
+
+## Simplificación nativa y tarjetas del catálogo — 2026-10-09
+
+- Se retiró la cabecera de Yerbarium en las cuatro pestañas. Safe areas explícitas para Inicio, Explorar, Biblioteca y Perfil; stacks secundarios conservan sus cabeceras y navegación de vuelta.
+- Inicio: título corto y mate pequeño, búsqueda, estilos, cuatro yerbas y un acceso editorial. Se retiraron el hero de landing, accesos duplicados de pestañas, secciones promocionales y footer. Explorar tiene título simple, búsqueda directa y selector nativo de Yerbas/Marcas (SwiftUI en iOS, Compose en Android). Biblioteca, Perfil, Ingresar y Registro ya no incluyen heroes promocionales.
+- Tarjetas compartidas: fondo/borde, composición botánica a opacidad completa, chip de estilo y banderas SVG originales de la web. Sin panel salvia ni franja inferior. Corazón de favoritas conectado a PATCH de biblioteca con estado pendiente, control de conexión, error y protección al cambiar de sesión. Comparación en diálogo nativo mediante pulsación larga.
+- iPhone 17 Pro iOS 26.4: se comprobaron home, catálogo, teclado/dismiss, selector nativo, perfil sin sesión, apertura de ingreso desde favoritas y pulsación larga/agregado a comparación. Capturas: `docs/design-pass/home-native.png`, `catalog-native.png`, `profile-native.png`.
+- Pasan TypeScript, lint sin warnings, 15 tests y exportaciones Hermes iOS/Android. Detector sin hallazgos.
+- Los productos DEV locales carecen de fotos; se verificó el placeholder explícito y no se sustituyeron con packs inventados. No se verificó el guardado autenticado de favoritas, el producto con foto real, Dynamic Type, tablet ni el comportamiento visual en Android (sin AVD).
+
+## Ficha de yerba compacta — 2026-10-10
+
+- Se revisó visualmente la ficha web local de `dev-amanda-sample` y su organización por pestañas. La app conserva el fondo crema elegido por el usuario.
+- Resumen con nombre, acceso a marca, valoración, origen/tradición/estilo y acciones de biblioteca/comparación. Galería horizontal de imágenes reales; créditos y licencias en Fuentes. Se retiraron las tarjetas y el texto decorativo del detalle.
+- Cuatro pestañas: Ficha (descripción, presentaciones, disponibilidad y compra), Perfil (datos técnicos y perfil comunitario), Opiniones y Fuentes. Solo se muestran dos opiniones inicialmente; Más opiniones conserva la paginación. Evaluación sensorial individual bajo demanda; se evita duplicar la propia opinión pública.
+- Se verificó la presentación sin sesión y sin imágenes en iPhone 17 Pro iOS 26.4. Los handlers de Opiniones, Perfil y Fuentes se ejecutaron mediante el depurador y se comprobaron sus contenidos renderizados. La capa flotante de Expo Dev Menu se ocultó en el simulador después de que el hit-test la identificara como receptora de los toques.
+- La automatización de toques de Argent no activó los controles, incluso tras ocultar esa capa. No se presenta como aprobado el recorrido por toques, la vuelta ni el guardado autenticado. Quedan pendientes la galería con fotos reales, errores/reintentos de API, texto grande, VoiceOver, tablet y revisión visual Android.
+- Pasan TypeScript, ESLint, las 15 pruebas existentes y las exportaciones Hermes iOS/Android. Captura: `docs/design-pass/detail-compact.png`.
+
+### Composición de imagen recuperada
+
+Se restauró el collage botánico original detrás de la foto del envase, a opacidad completa y dentro de una galería horizontal de 240 puntos de alto. El collage también aparece cuando falta la foto del producto, con una indicación explícita. Se mantienen las pestañas y las filas compactas. Verificado visualmente en iPhone 17 Pro tras recargar Metro; TypeScript y ESLint pasan. La foto real del envase sigue pendiente por falta de imágenes en los productos DEV.
+
+## Explorar: grilla de marcas y selector estable — 2026-10-10
+
+- Marcas usa una grilla de dos columnas sin tarjetas: logo real y nombre; toda la celda abre la ficha. Las marcas sin imagen o con error de carga muestran su inicial. Se mantienen paginación, errores y actualización por pull-to-refresh.
+- Cabecera, búsqueda y selector nativo fuera de las listas; título Explorar estable. Ambas listas permanecen montadas y solo se muestra la seleccionada, evitando recrear el selector y conservando el estado/scroll. El contenido oculto se excluye de accesibilidad. Sin animación de desplazamiento entre pestañas pares.
+- Se comprobó en iPhone 17 Pro la grilla con cinco marcas (cantidad impar), un logo real y respaldos sin logo. El cambio Yerbas/Marcas mediante el handler mantiene iguales las posiciones de la cabecera y el selector. El handler de Development Lab abre su ficha y se confirmó el contenido de destino.
+- Los toques automatizados de Argent siguen sin activar controles; estas verificaciones de cambio y navegación se realizaron ejecutando los handlers desde el depurador. No se verificó por toques ni se midió fluidez en un build release/dispositivo lento. Android y texto grande pendientes.
+- TypeScript, ESLint, 15 pruebas y exportaciones Hermes iOS/Android pasan. Captura: docs/design-pass/brands-grid.png.
+
+## Escalas con hojas SVG — 2026-10-11
+
+- Componente compartido LeafRating con la silueta SVG y el relleno parcial de la web. Se usa en catálogo, ficha, perfil comunitario, opiniones individuales, comparación y formulario de opinión/sensorial. Se eliminaron estrellas y barras sensoriales. La nota de la opinión mantiene incrementos de medio punto; No evaluar conserva el valor null de los atributos.
+- Corrección del renderizador SVG nativo: una máscara de ancho cero podía dejar una hoja vacía rellena. Ahora no se incluye el path relleno cuando la fracción vale cero. Hojas de izquierda a derecha; cifras con ancho fijo y un decimal para mantener la alineación.
+- Verificado visualmente en iPhone 17 Pro: nota 3,5 (tres hojas, media y una vacía) y perfil comunitario con 2,0, 1,25 y 3,0. Escalas y cifras alineadas; captura docs/design-pass/leaf-ratings.png. El perfil y el scroll se activaron mediante el depurador por la limitación de toques automatizados ya documentada.
+- TypeScript, ESLint, 15 tests existentes y bundles Hermes iOS/Android pasan. No se verificó el guardado autenticado de la opinión ni el formulario por toques, ni accesibilidad/texto grande y Android visual.
+
+## Favorita junto al título — 2026-10-11
+
+- Corazón junto al nombre de la yerba con estado seleccionado, carga y deshabilitado durante escritura o lectura de biblioteca. Sin sesión abre Ingresar. Con sesión usa el PATCH existente de biblioteca; refleja la respuesta en la caché y actualiza biblioteca/resumen. Se descarta la respuesta si cambió la cuenta activa.
+- Retirados Ingresar y guardar y los controles de comparación de la ficha. Se conserva comparación desde catálogo. Se retiró el botón Favorita duplicado de la fila de biblioteca; Probada y Quiero probar siguen disponibles.
+- Verificado visualmente en iPhone 17 Pro y mediante handler: el corazón sin sesión abre el formulario de ingreso. La ficha no muestra los botones retirados. Captura actualizada: docs/design-pass/detail-compact.png.
+- Pasan TypeScript, ESLint, 15 pruebas existentes y exportaciones Hermes iOS/Android. Guardado autenticado, fallo/reintento de escritura, cambio de cuenta durante petición y prueba por toques siguen pendientes.
+
+## Enlaces editoriales en filas — 2026-10-11
+
+- Sobre la yerba y Cultura matera comparten EditorialSourceLink: nombre, editor y nota dentro de una fila completa, con flecha discreta y divisor inferior. Se retiró el botón independiente de cada fuente. La fila tiene rol de enlace y usa openExternal, conservando el error y el reintento.
+- Ambas listas revisadas visualmente y con el árbol de accesibilidad en iPhone 17 Pro. No hay botones de fuentes; cada bloque se expone como un único enlace. Capturas: docs/design-pass/culture-source-rows.png y about-source-rows.png. El desplazamiento se hizo desde el depurador; la apertura externa por toques no se verificó.
+- Pasan TypeScript, ESLint, 15 pruebas y exportaciones Hermes iOS/Android. Android visual y texto grande pendientes.
+
+## Edición de ingreso y registro — 2026-10-11
+
+- Los cinco campos de ingreso/registro dejan el buffer de edición en el TextInput nativo (defaultValue constante); React Hook Form recibe el texto mediante onChangeText y conserva validación, errores y envío. Field ahora acepta inputRef para que Controller pueda enfocar el campo inválido.
+- Antes del cambio se observó un único carácter en el valor controlado, con foco y la misma instancia nativa. Tras el cambio se verificaron valores largos en el buffer nativo y en el modelo RHF: 14 caracteres en usuario/contraseña de ingreso, 14 en usuario/contraseña de registro y 18 en email. Solo datos ficticios; no se enviaron los formularios.
+- La inyección de teclado de Argent no produjo entradas de forma fiable. La comprobación de valores completos se hizo aplicando texto nativo y sus eventos onChange con el depurador; no constituye una prueba de escritura física. Teclado real, autofill, borrado/pegado, validación con foco y Android visual pendientes. Capturas: docs/design-pass/login-inputs.png y registration-inputs.png.
+- TypeScript, ESLint, 15 pruebas y exportaciones Hermes iOS/Android pasan.
+
+## Header solo en ficha de yerba — 2026-10-11
+
+- El stack oculta el header por defecto y lo activa explícitamente solo en yerbas/[slug]. La visibilidad ya no depende del título; títulos dinámicos de las otras rutas no activan cabecera.
+- Se añadieron safe areas superiores a las pantallas secundarias sin header, incluidos ingreso/registro, marca, comparación, editoriales, opinión, edición/perfil público y fallback.
+- Verificado visualmente Ingresar sin header, con contenido bajo la barra de estado. La cabecera Ficha de yerba se detectó en accesibilidad al abrir su ruta, aunque el modal de ingreso permaneció al frente; no se presenta como una captura visual de la ficha en esta pasada.
+- TypeScript, ESLint, 15 pruebas y exportaciones Hermes iOS/Android pasan. Android visual pendiente.
+
+## Transición entre tabs de ficha — 2026-10-11
+
+- Ficha/Perfil/Opiniones/Fuentes comparten un indicador inferior que se desplaza en 200 ms y un panel con fundido de entrada de 140 ms. Solo transform y opacidad se animan en el hilo UI; la altura sigue al contenido. Las tabs mantienen sus roles, etiquetas y estado seleccionado. Reduce Motion elimina el desplazamiento y el fundido; la línea usa el ancho medido, sin fijar dimensiones de pantalla.
+- Reanimated 4.7.1 y Worklets 0.13.0 coinciden con las versiones ya compiladas en ios/Podfile.lock y el cliente instalado. Expo sugiere 4.5.1/0.10.1 por defecto; se conservaron las versiones nativas existentes para evitar desajustes. Se reinició Metro con caché limpia. El intento de reconstrucción se canceló durante la instalación de Pods; no se presenta como una compilación nativa nueva.
+- Verificado en iPhone 17 Pro mediante el handler de Perfil en el depurador: contenido técnico visible, captura durante el desplazamiento y captura estable con indicador alineado. Sin errores ni warnings en el registro nuevo. El toque de Argent no activó la tab, una limitación ya documentada; prueba física, cambios rápidos, Reduce Motion real, texto grande, Android visual y fluidez release pendientes.
+- Pasan TypeScript, ESLint, las 15 pruebas existentes y exportaciones Hermes iOS/Android.
+
+## Tabs animadas en perfil público y biblioteca — 2026-10-11
+
+- Reemplacé los botones de colecciones en ambas pantallas por `AnimatedTabs`, reutilizado también en la ficha. La barra comparte accesibilidad, indicador de 200 ms, colores de estado y respeto por Reduce Motion; el contenido entra con el fundido de 140 ms. Cada tab sigue consultando su colección correspondiente.
+- En iPhone 17 Pro comprobé Mi biblioteca: Favoritas muestra dos yerbas; al seleccionar Probadas el indicador se desplaza y queda bajo la segunda tab y la lista pasa a una yerba. El toque automatizado de Argent informó éxito sin cambiar la selección; la activación se verificó desde el handler React en el depurador. Perfil público no comprobado visualmente en esta sesión.
+- Pasan TypeScript, ESLint, 15 pruebas existentes y exportaciones Hermes iOS/Android. No se hizo una nueva compilación nativa.
+
+## Conteos en tabs de colecciones — 2026-10-11
+
+- Los conteos se muestran al lado de Favoritas, Probadas y Quiero probar, y se retiró la línea superior que repetía los tres totales. Se mantienen en ambos contextos: perfil público y Mi biblioteca. Los controles accesibles anuncian la etiqueta y el conteo; mientras carga el resumen, la etiqueta aparece sin un cero temporal.
+- Comprobado en la biblioteca del iPhone 17 Pro: “Favoritas 2”, “Probadas 1” y “Quiero probar 0”, en una sola línea y sin el resumen redundante. El perfil público no tiene datos públicos en la cuenta de desarrollo usada para la verificación; allí se aplicó la misma barra compartida.
+- Pasan TypeScript, ESLint, las 15 pruebas existentes y exportaciones Hermes iOS/Android.
+
+## Espaciado entre yerbas en biblioteca y perfil público — 2026-10-11
+
+- Las listas de ambas pantallas agrupan las `YerbaCard` con un `gap` vertical de `theme.spacing.md` (16 pt), para separarlas sin alterar las tarjetas ni el orden.
+- Verificado visualmente en Mi biblioteca en iPhone 17 Pro: separación uniforme entre las dos yerbas. Perfil público comparte el mismo contenedor y espaciado; sin datos públicos disponibles para comprobar esa pantalla con la cuenta de desarrollo.
+- Pasan TypeScript, ESLint, las 15 pruebas existentes y exportaciones Hermes iOS/Android.
+
+## Selector Yerbas / Marcas como tabs — 2026-10-11
+
+- Reemplacé el Picker nativo de `CatalogMode` por `AnimatedTabs`, manteniendo las etiquetas, el estado seleccionado y la lógica existente de las listas montadas.
+- Pasan TypeScript, ESLint, las 15 pruebas y las exportaciones Hermes iOS/Android. El simulador siguió mostrando el bundle anterior tras recargar; falta reiniciar Metro para comprobar la apariencia actualizada.
+
+## Rutas Expo y compatibilidad Android — 2026-10-11
+
+- Las rutas de biblioteca, perfil público y ficha de yerba exportan ahora componentes de ruta explícitos. La exportación Android dejó de informar que faltaba el `default export` en esas rutas.
+- Restauré Reanimated 4.7.1 y Worklets 0.13.0, que coinciden con las versiones compiladas en el cliente nativo instalado. El cliente avisaba del desajuste C++ 0.13.0/JavaScript 0.10.1 después de la actualización previa. Se excluyen estas dos dependencias de la validación automática del SDK porque el cliente instalado requiere esas versiones.
+- Tras recargar, el registro JS del simulador iOS quedó sin errores ni avisos de Worklets. Las exportaciones Hermes Android/iOS no muestran avisos de exportación de rutas; pasan typecheck, ESLint, 15 pruebas y Expo Doctor (21/21).
+- No se pudo probar el runtime Android en este entorno: no tiene Android SDK, `adb` ni emulador. La exportación JS Android pasa; la verificación de ejecución en un cliente Android sigue pendiente.
+
+## 2026-10-11 — Hero de Inicio y buscadores
+
+- Hero: mismo asset de mate y paisaje, con imagen en el flujo del layout y titular de tres líneas; “yerba” en lima.
+- SearchBox compartido: cápsula crema con borde oliva y acción verde de 44 pt; foco verde en Explorar, controles accesibles y selección de texto verde.
+- Verificado visualmente en iPhone 17 Pro / iOS 26.4: Inicio y Explorar con teclado abierto mediante deep link.
+- Pasaron typecheck, lint, 15 tests y exportaciones iOS/Android. Detector de diseño sin hallazgos.
+- Limitación: Argent informó tap y escritura exitosos, pero la pantalla no reflejó navegación por tap ni texto ingresado; no se pudo confirmar el recorrido completo de búsqueda mediante esas acciones. Android, tablet y texto ampliado no se verificaron en dispositivo.
+
+### Ajuste posterior — hero compacto
+
+- Tarjeta verde reducida de 192 a 128 pt de altura mínima; imagen de 160 pt anclada al pie, sobresaliendo 32 pt por arriba. Contenedor externo con margen superior de 16 pt y texto con espacio reservado para el collage.
+- Confirmación visual en iPhone 17 Pro / iOS 26.4: collage sobresale por arriba, sin recorte superior ni superposición con el título; buscador conserva el diseño anterior.
+- Sin prueba visual nueva en Android, tablet o fuente ampliada.
+
+## 2026-10-11 — Filtros, fuentes y selección
+
+- Filtros de Explorar en BottomSheet nativo de @expo/ui: papel, cabecera con cierre, selectores nativos, contenido desplazable y acciones al pie.
+- Borrador aislado: cerrar descarta cambios; Aplicar transfiere la selección al catálogo; Limpiar restablece todas las opciones del borrador, incluido estilo.
+- Fuentes de ficha reutilizan EditorialSourceLink de Cultura, con título, editorial, consulta y enlace.
+- Token global selected: #d0e3b8 para No evaluar, notas percibidas y demás botones seleccionados.
+- iOS 26.4 / iPhone 17 Pro: sheet verificado visualmente. Se comprobó mediante callbacks del runtime que cerrar descarta país AR y aplicar lo transfiere al estado del catálogo. La automatización táctil de Argent seguía informando éxito sin efecto visible, por lo que no se considera un recorrido táctil completo.
+- Evaluación sensorial verificada visualmente en iOS; se seleccionó una nota solo en el borrador, sin publicar ni guardar una opinión.
+- Typecheck, lint sin avisos, 15 tests y exportación iOS/Android pasaron. Sin verificación en dispositivo Android, tablet o fuente ampliada.
+
+## 2026-10-11 — Tarjetas de biblioteca y perfil público
+
+- Ambas colecciones reutilizan YerbaCard mediante LibraryYerbaCard, sin duplicar su composición o sus acciones.
+- La API de biblioteca devuelve un resumen sin stats, styles ni país. La app completa esos campos desde la ficha pública con TanStack Query y reutiliza datos del catálogo/ficha ya almacenados en caché. La tarjeta básica permanece visible mientras carga y ante falta de conexión; error sin datos completos ofrece reintento.
+- El tipo de biblioteca acepta los datos completos si la API los incorpora, y en ese caso no solicita enriquecimiento.
+- Verificado visualmente en Biblioteca de iPhone 17 Pro/iOS 26.4: Amanda con valoración y estilo; Andresito con estilo y bandera. Se conservan corazones y navegación a la ficha.
+- Perfil público usa el mismo componente. La cuenta disponible es privada y el usuario de prueba no existe; no se verificó una colección pública con datos en dispositivo. No se alteró la privacidad ni se publicaron datos para realizar QA.
+- Pasaron typecheck, lint, 15 tests y exportaciones iOS/Android. Sin prueba visual Android, tablet o red offline en esta pasada.
+
+## 2026-10-11 — Espacio debajo del header
+
+- Perfil público, Marca, Cultura, Sobre la yerba y Editar perfil ya no solicitan safeTop a Page: AppHeader contempla la zona segura superior y el stack coloca el contenido debajo.
+- Se mantienen los márgenes editoriales normales (16 pt en hero compacto, 24 pt en artículos/formulario), sin sumar nuevamente el inset superior del dispositivo.
+- Verificado visualmente en las cinco pantallas en iPhone 17 Pro / iOS 26.4. Sin edición ni guardado de datos de perfil.
+- Pasaron typecheck, lint, 15 tests y exportaciones iOS/Android. Sin prueba visual Android o tablet.
+
+## 2026-10-11 — Ingreso y registro
+
+- Rutas de autenticación presentadas como formSheet nativo, con tirador, fondo papel y cierre circular. Ingreso abre al 68% y registro al 80%; pueden expandirse.
+- AuthSheet comparte cabecera, espaciado, contenido desplazable, gestión de teclado y footer de acciones; cambio de formulario como enlace secundario.
+- AuthField conserva el buffer nativo y React Hook Form; campos de 56 pt, borde verde al enfocar, errores en rojo y mostrar/ocultar contraseña. Teclado Siguiente pasa al próximo campo; Ir valida y envía desde contraseña.
+- Estados pendientes deshabilitan edición, cierre, cambio de formulario y gesto de dismissal.
+- Verificados visualmente Ingreso y Registro en iOS 26.4 / iPhone 17 Pro, además de teclado y errores de registro vacío. Mediante callbacks del runtime se verificaron validación de ambos formularios, mostrar/ocultar contraseña y cambio de Registro a Ingreso. No se enviaron credenciales, crearon cuentas ni cambió la sesión existente.
+- Pasaron typecheck, lint, 15 tests y exportaciones finales iOS/Android. La automatización táctil no se considera validación del recorrido completo; no se probó autenticación exitosa contra servidor ni dispositivo Android/tablet/fuente ampliada.
+
+### Ajuste — iconos y aceptación de términos
+
+- El control de contraseña usa ojo / ojo tachado: SF Symbols en iOS y Material Community Icons en Android, conservando las etiquetas accesibles Mostrar/Ocultar contraseña.
+- Registro muestra antes de Crear cuenta: “Al crear una cuenta, aceptás los términos y condiciones de Yerbarium.” Es un aviso textual, sin enlace a una página inexistente.
+- Se mantiene la validación y la autenticación existente, sin checkbox nuevo ni cambio del contrato de registro.
+
+## 2026-10-11 — Skeletons de tarjetas de yerbas
+
+- Inicio, Explorar (catálogo/búsqueda/filtros), Marca, Biblioteca y colecciones públicas muestran tres skeletons en carga inicial y refresco. Paginación agrega tres al pie y conserva resultados anteriores. Se mantienen errores, reintentos, estados vacíos y datos offline.
+- YerbaCard comparte un fundido de skeleton a contenido de 220 ms, con demoras de 0/55/110 ms por fila y máximo 110 ms. Reduce Motion omite animación y demoras; imagen real usa transición de 180 ms. LibraryYerbaCard también cubre consultas de enriquecimiento.
+- iPhone 17 Pro / iOS 26.4: refresco del catálogo Barbacuá verificado con una consulta pública retenida temporalmente desde el debugger. Se confirmó un grupo con tres skeletons, se capturó su composición y se liberó la consulta; regresaron las dos tarjetas reales. La instrumentación temporal fue retirada y las opciones de consulta restauradas.
+- Pasaron typecheck, lint, 15 tests y exportaciones iOS/Android. Sin recorrido visual completo de todas las listas, paginación, modo offline, Reduce Motion o Android/tablet. El comportamiento temporal no se midió en un build release ni en un dispositivo físico de menor rendimiento.
+
+## 2026-10-12 — Tamaño uniforme de tarjetas de marcas
+
+- La grilla reparte el ancho entre contenedores iguales y cada BrandTile ocupa el 100% de su celda con proporción 1,15. El relleno del texto ya no modifica el reparto de ancho frente a los logos; la celda vacía mantiene el ancho de la última fila impar.
+- Verificado visualmente en Explorar / Marcas, iPhone 17 Pro / iOS 26.4: Amanda, Andresito, Baldo, Cachamai, Canarias y Cruz de Malta tienen el mismo tamaño. El árbol de accesibilidad confirma ancho 0,420 y altura 0,168 en las seis tarjetas.
+- Pasaron typecheck, lint, 15 pruebas y exportaciones Hermes iOS/Android. Detector de layout sin hallazgos. Sin verificación visual en Android, tablet o texto ampliado.
+
+## 2026-10-12 — Guías de preparación y curado
+
+- Aprende en Perfil incluye Cómo preparar un mate y Cómo curar un mate; ambas usan la ruta editorial existente y contenido local disponible sin una consulta nueva a la API.
+- Contenido trasladado de las guías web: seis pasos de preparación, cinco pasos de curado de calabaza, cuidados de cinco materiales, secado, señales de alerta y sus cinco fuentes. Los artículos ofrecen enlaces para seguir aprendiendo.
+- Heroes con la misma imagen mate-hero-inicio.webp que Cultura en la web. Verificados visualmente ambos artículos y la sección Aprende de Perfil en iPhone 17 Pro / iOS 26.4 mediante Argent. Apertura de artículos comprobada por deep links; no se verificó el recorrido táctil completo ni enlaces externos.
+- Pasaron typecheck, lint, 15 pruebas y exportaciones Hermes iOS/Android. Sin revisión visual en Android, tablet o texto ampliado.
+- Web: TypeScript, lint y las nueve pruebas existentes de guías/navegación pasaron. Ambos heroes verificados en Brave a 1440 px y 390 px; fotografía visible y sin solapamiento con el texto. Playwright local no pudo iniciar Chromium por las restricciones del sandbox; la comprobación visual se completó con el navegador conectado.
+
+## 2026-10-12 — Comprar en detalle de yerba
+
+- Comprar aparece junto a Quiero probar en la fila de acciones y despliega/cierra Dónde comprar, como en la web. Disponible sin sesión y solo cuando la API devuelve enlaces; se retiró la lista duplicada de la pestaña Ficha.
+- Tiendas ordenadas por prioridad e ID; precio formateado con moneda, etiqueta Tienda oficial, aviso de salida a tienda externa y aviso de afiliados cuando corresponde. Los enlaces prefieren affiliate_url y manejan errores con reintento.
+- iPhone 17 Pro / iOS 26.4: Baldo con enlace real muestra el botón junto a los estados de biblioteca y el panel con tienda oficial, ARS 11.490,00 y aviso de afiliados. Amanda sin enlaces oculta Comprar. Apertura y cierre ejercitados mediante el callback del botón en el debugger de Argent; no recorrido táctil completo. Inspección temporal del query client retirada sin cambiar datos ni sesión.
+- Pasaron typecheck, lint, 15 pruebas y exportaciones Hermes iOS/Android. No se abrió una tienda externa ni se realizó una compra. Sin verificación visual Android/tablet/texto ampliado, sesión anónima ni simulación de errores externos.
+
+## 2026-10-12 — Notas percibidas agrupadas
+
+- Selector de notas de opinión organizado por las mismas diez familias y etiquetas en español de la web, en el mismo orden. Chips con +/✓, selección múltiple, fondo verde suave al seleccionar y filas que se ajustan al ancho disponible. Los códigos de familia ya no aparecen en cada chip.
+- Ayuda sobre selección independiente de atributos, Limpiar notas y estado vacío explícito. Se conserva la paginación existente; las notas cargadas se agrupan y deduplican por slug. Familias nuevas desconocidas se muestran en Otras notas.
+- Verificado en iPhone 17 Pro / iOS 26.4 con las 38 notas reales: grupos y acomodo visual, selección simultánea de Cacao y Café conservando una nota previamente seleccionada, y deselección de ambas para restaurar el borrador. Interacciones por callbacks del debugger de Argent, sin publicar/guardar una opinión ni modificar datos del servidor. Variables temporales eliminadas.
+- Pasaron typecheck, lint, 15 pruebas y exportaciones Hermes iOS/Android. Sin recorrido táctil completo, prueba de guardado, acción Limpiar notas ni verificación visual Android/tablet/texto ampliado.
+
+## 2026-10-12 — Títulos de artículos en el header
+
+- El header editorial toma siempre el título del artículo. Cultura matera y Sobre la yerba ya no reciben un título vacío.
+- Verificados ambos títulos en iPhone 17 Pro / iOS 26.4 mediante Argent.
+- Pasaron typecheck, lint, 15 pruebas y exportaciones iOS/Android. Sin revisión visual Android/tablet.
+
+## 2026-10-12 — Ancho de botones outline
+
+- Button ocupa todo el ancho disponible por defecto tanto para acciones principales como outline. Las acciones marcadas compact mantienen su tamaño para filas de controles; fullWidth sigue siendo una opción explícita.
+- Perfil sin sesión verificado visualmente en iPhone 17 Pro / iOS 26.4: Crear cuenta ocupa el mismo ancho que Ingresar dentro de Tu ronda empieza acá.
+- Pasaron typecheck, lint, 15 pruebas y exportaciones iOS/Android. Sin revisión visual Android/tablet.
