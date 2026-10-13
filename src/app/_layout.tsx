@@ -79,6 +79,10 @@ function Navigation() {
                 if (back && navigation.canGoBack()) navigation.goBack();
                 else router.replace("/(tabs)/explorar");
               }}
+              rightAction={options.headerRight?.({
+                tintColor: theme.colors.green,
+                canGoBack: Boolean(back),
+              })}
             />
           ),
           contentStyle: { backgroundColor: theme.colors.background },

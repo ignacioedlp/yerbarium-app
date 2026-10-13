@@ -78,7 +78,6 @@ export const styles = StyleSheet.create({
   },
   row: {
     flexDirection: "row",
-    flexWrap: "wrap",
     alignItems: "center",
     gap: t.spacing.sm,
   },

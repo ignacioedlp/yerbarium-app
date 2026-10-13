@@ -282,12 +282,21 @@ export function Profile() {
           ))}
         </View>
       </View>
-                <Button
+      {session.user ? (
+        <View style={{ gap: theme.spacing.sm }}>
+          <Button
+            label="Cerrar sesión"
+            secondary
+            onPress={() => void session.logout()}
+          />
+          <Button
             label="Eliminar cuenta"
             secondary
             destructive
             onPress={() => router.push("/eliminar-cuenta" as Href)}
           />
+        </View>
+      ) : null}
     </Page>
   );
 }

@@ -16,6 +16,7 @@ export interface PublicProfile {
   country_code?: string;
   language_code?: string;
   is_private: boolean;
+  is_blocked?: boolean;
 }
 
 export type FieldErrors = Record<string, string[]>;
