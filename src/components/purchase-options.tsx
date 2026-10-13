@@ -4,8 +4,15 @@ import type { YerbaPurchaseLink } from "@/api/types";
 import { Body, ErrorMessage, openExternal } from "@/components/ui";
 import { Icon } from "@/components/icon";
 import { theme as t } from "@/theme";
+import { trackAnalyticsEvent } from "@/analytics";
 
-export function PurchaseOptions({ links }: { links: YerbaPurchaseLink[] }) {
+export function PurchaseOptions({
+  slug,
+  links,
+}: {
+  slug: string;
+  links: YerbaPurchaseLink[];
+}) {
   const [failedLink, setFailedLink] = useState<number | null>(null);
   return (
     <View
@@ -35,6 +42,12 @@ export function PurchaseOptions({ links }: { links: YerbaPurchaseLink[] }) {
               accessibilityHint="Abre la tienda en el navegador"
               onPress={() => {
                 setFailedLink(null);
+                trackAnalyticsEvent("purchase_provider_clicked", {
+                  yerba_slug: slug,
+                  provider: link.provider,
+                  purchase_link_id: link.id,
+                  is_affiliate: Boolean(link.affiliate_url),
+                });
                 void openExternal(link.affiliate_url || link.url).catch(() =>
                   setFailedLink(link.id),
                 );

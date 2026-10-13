@@ -91,7 +91,7 @@ export function Compare() {
     ]),
   ] as [string, (yerba: YerbaMateDetail) => string][];
   return (
-    <Page safeTop>
+    <Page>
       <View
         style={{
           marginHorizontal: -theme.spacing.lg,

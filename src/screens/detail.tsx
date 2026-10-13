@@ -394,7 +394,11 @@ export function Detail() {
                   </>
                 )}
                 {purchaseSlug === slug && !!yerba.purchase_links?.length && (
-                  <PurchaseOptions key={slug} links={yerba.purchase_links} />
+                  <PurchaseOptions
+                    key={slug}
+                    slug={slug}
+                    links={yerba.purchase_links}
+                  />
                 )}
               </View>
             </View>

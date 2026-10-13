@@ -32,12 +32,16 @@
           "resizeMode": "contain",
           "backgroundColor": "#f4f0e4"
         }
-      ]
+      ],
+      "expo-localization"
     ],
     "experiments": {
       "typedRoutes": true
     },
-    "platforms": ["ios", "android"],
+    "platforms": [
+      "ios",
+      "android"
+    ],
     "icon": "./assets/branding/icon.png"
   }
 }

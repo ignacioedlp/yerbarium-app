@@ -1,10 +1,9 @@
-import React from "react";
-import { Platform } from "react-native";
-import { Stack, router } from "expo-router";
+import React, { useEffect, useRef } from "react";
+import { ActivityIndicator, Platform, View } from "react-native";
+import { Stack, router, useSegments } from "expo-router";
 import { useFonts } from "expo-font";
 import { NunitoSans_400Regular } from "@expo-google-fonts/nunito-sans/400Regular";
 import { NunitoSans_800ExtraBold } from "@expo-google-fonts/nunito-sans/800ExtraBold";
-import { ActivityIndicator, View } from "react-native";
 import { SafeAreaProvider } from "react-native-safe-area-context";
 import { StatusBar } from "expo-status-bar";
 import { DataProvider } from "@/providers/data";
@@ -12,6 +11,37 @@ import { SessionProvider, useSession } from "@/providers/session";
 import { ComparisonProvider } from "@/providers/comparison";
 import { theme } from "@/theme";
 import { AppHeader } from "@/components/app-header";
+import { PostHogProvider, usePostHog } from "posthog-react-native";
+import { posthogClient } from "@/analytics";
+
+function AnalyticsTracking() {
+  const posthog = usePostHog();
+  const segments = useSegments();
+  const screenName = segments.join("/");
+  const { user, ready } = useSession();
+  const identifiedUser = useRef<string | null>(null);
+
+  useEffect(() => {
+    if (!ready) return;
+    const userId = user?.id == null ? null : String(user.id);
+    if (userId && identifiedUser.current !== userId) {
+      if (identifiedUser.current) posthog.reset();
+      posthog.identify(userId);
+      identifiedUser.current = userId;
+    } else if (!userId && identifiedUser.current) {
+      posthog.reset();
+      identifiedUser.current = null;
+    }
+  }, [posthog, ready, user?.id]);
+
+  useEffect(() => {
+    if (!screenName) return;
+    posthog.capture("$screen", { $screen_name: screenName });
+  }, [screenName, posthog]);
+
+  return null;
+}
+
 function Navigation() {
   const { ready } = useSession();
   const [fonts, error] = useFonts({
@@ -29,6 +59,7 @@ function Navigation() {
     );
   return (
     <>
+      {posthogClient && <AnalyticsTracking />}
       <StatusBar style="dark" />
       <Stack
         screenOptions={{
@@ -105,7 +136,7 @@ function Navigation() {
   );
 }
 export default function RootLayout() {
-  return (
+  const app = (
     <SafeAreaProvider>
       <DataProvider>
         <SessionProvider>
@@ -115,5 +146,14 @@ export default function RootLayout() {
         </SessionProvider>
       </DataProvider>
     </SafeAreaProvider>
+  );
+  if (!posthogClient) return app;
+  return (
+    <PostHogProvider
+      client={posthogClient}
+      autocapture={{ captureScreens: false, captureTouches: false }}
+    >
+      {app}
+    </PostHogProvider>
   );
 }
