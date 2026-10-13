@@ -1,4 +1,8 @@
 import { LeafRating } from "@/components/leaf-rating";
+import {
+  ContentLoadingTransition,
+  type SkeletonVariant,
+} from "./content-skeleton";
 import { YerbaCardReveal, YerbaCardSkeletons } from "./yerba-card-loading";
 import React from "react";
 import {
@@ -283,6 +287,7 @@ export function QueryState({
   empty,
   children,
   yerbaCards = false,
+  skeleton = "content",
 }: React.PropsWithChildren<{
   query: {
     data?: unknown;
@@ -293,6 +298,7 @@ export function QueryState({
   };
   empty?: boolean;
   yerbaCards?: boolean;
+  skeleton?: SkeletonVariant;
 }>) {
   if (
     yerbaCards &&
@@ -300,6 +306,17 @@ export function QueryState({
     !query.isFetchingNextPage
   )
     return <YerbaCardSkeletons />;
+  const loading =
+    query.data === undefined && !query.error && query.fetchStatus !== "paused";
+  if (loading && yerbaCards) return <YerbaCardSkeletons />;
+  if (!yerbaCards && (loading || query.data !== undefined))
+    return (
+      <ContentLoadingTransition loading={loading} variant={skeleton}>
+        <QueryContent query={query} empty={empty}>
+          {children}
+        </QueryContent>
+      </ContentLoadingTransition>
+    );
   if (query.data === undefined)
     return (
       <Card>
@@ -313,16 +330,26 @@ export function QueryState({
               }}
             />
           </>
-        ) : query.fetchStatus === "paused" ? (
-          <Body>Conectate para cargar esta información por primera vez.</Body>
         ) : (
-          <ActivityIndicator
-            color={t.colors.green}
-            accessibilityLabel="Cargando"
-          />
+          <Body>Conectate para cargar esta información por primera vez.</Body>
         )}
       </Card>
     );
+  return (
+    <QueryContent query={query} empty={empty}>
+      {children}
+    </QueryContent>
+  );
+}
+
+function QueryContent({
+  query,
+  empty,
+  children,
+}: React.PropsWithChildren<{
+  query: { error: unknown; refetch: () => unknown };
+  empty?: boolean;
+}>) {
   return (
     <>
       {query.error && (

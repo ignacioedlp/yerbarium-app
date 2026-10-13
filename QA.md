@@ -290,3 +290,14 @@ Se restauró el collage botánico original detrás de la foto del envase, a opac
 - Button ocupa todo el ancho disponible por defecto tanto para acciones principales como outline. Las acciones marcadas compact mantienen su tamaño para filas de controles; fullWidth sigue siendo una opción explícita.
 - Perfil sin sesión verificado visualmente en iPhone 17 Pro / iOS 26.4: Crear cuenta ocupa el mismo ancho que Ingresar dentro de Tu ronda empieza acá.
 - Pasaron typecheck, lint, 15 pruebas y exportaciones iOS/Android. Sin revisión visual Android/tablet.
+# 2026-10-13 — Skeletons de carga de contenido
+
+- QueryState reemplaza la tarjeta con spinner por placeholders de texto; detalle agrega imagen y acciones, marca/perfil un encabezado, y estilos chips. Las listas de yerbas conservan sus skeletons existentes. Errores, reintentos y mensajes offline conservan su comportamiento.
+- Verificado visualmente en iPhone 17 Pro / iOS 26.4 con el estado de una consulta pública de detalle cambiado temporalmente a pendiente desde Argent. Skeleton visible sin tarjeta/spinner; datos originales restaurados y contenido real confirmado. Instrumentación temporal eliminada.
+- Pasaron TypeScript, 15 pruebas y exportaciones Hermes iOS/Android. Lint sin errores, con tres warnings previos en _layout.tsx/account.tsx. Detector de diseño sin hallazgos. Sin revisión visual Android/tablet, variantes de encabezado/chips ni simulación de error/offline.
+
+## Transición de skeleton a contenido
+
+- QueryState mantiene un contenedor estable para las variantes de contenido y cruza las opacidades del skeleton y los datos durante 280 ms con Reanimated en el hilo UI. Los datos disponibles desde el inicio se muestran directamente; Reduce Motion omite el fundido. Las tarjetas de yerbas conservan su transición existente.
+- En iPhone 17 Pro / iOS 26.4 se comprobó el skeleton de chips de estilos y el retorno a los datos reales mediante estado temporal de la consulta, restaurado al terminar. Expo Go mostró inicialmente un error de ExpoAsset; reiniciar y reabrir el proyecto permitió continuar. Variables temporales eliminadas.
+- TypeScript, lint sin errores (tres warnings previos), 15 pruebas y exportaciones Hermes iOS/Android pasaron; detector de diseño sin hallazgos. Sin evaluación de fluidez en build release/dispositivo físico de menor rendimiento, Android o Reduce Motion activado.

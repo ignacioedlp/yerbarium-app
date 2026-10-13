@@ -1,5 +1,11 @@
 # Project Environment
 
+Environment inspector refreshed 2026-10-13 for the loading skeleton change:
+
+```json
+{"is_react_native":true,"is_expo":true,"is_native_ios":false,"is_native_android":false,"expo_version":"~57.0.21","react_native_version":"0.86.3","package_manager":"bun","has_ios_dir":true,"has_android_dir":false,"platforms":["ios","android"],"start_command":"bun run start","ios_command":"bun run ios","android_command":"bun run android","metro_port_default":8081,"bundle_identifier":"app.yerbarium.mobile","recommended_device":{"platform":"ios","udid":"9D6BF627-7CFD-4103-913A-EDFA79173694","name":"iPhone 17 Pro","state":"Booted","runtime":"iOS 26.4"}}
+```
+
 - Workspace: `/Users/toxedev/Develop/yerbarium`.
 - Mobile app: `yerbarium-app`, Expo SDK 57 / React Native 0.86, TypeScript strict.
 - API and web source: sibling `yerba-plataform`, Django/PostgreSQL and Next.js.

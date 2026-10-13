@@ -23,8 +23,8 @@ export function Brand() {
   const yerbas = usePages<YerbaMateListItem>("yerbas/", { brand: slug });
   return (
     <Page>
-      <Stack.Screen  />
-      <QueryState query={brand}>
+      <Stack.Screen />
+      <QueryState query={brand} skeleton="header">
         {brand.data && (
           <>
             <View style={{ gap: theme.spacing.md }}>

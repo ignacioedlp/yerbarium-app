@@ -130,7 +130,7 @@ export function Detail() {
     <Page>
       <StatusBar style="dark" />
       <Stack.Screen />
-      <QueryState query={query}>
+      <QueryState query={query} skeleton="detail">
         {yerba && (
           <>
             <View style={{ gap: theme.spacing.md }}>

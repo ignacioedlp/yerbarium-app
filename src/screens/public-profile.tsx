@@ -49,7 +49,7 @@ export function PublicProfile() {
   };
   return (
     <Page>
-      <QueryState query={profile}>
+      <QueryState query={profile} skeleton="header">
         <View
           style={{
             marginHorizontal: -theme.spacing.lg,
@@ -68,9 +68,11 @@ export function PublicProfile() {
           </Card>
         ) : (
           <>
-            {profile.data?.bio && <HandNote rotate={false}>
-                        {profile.data?.bio || "Contá un poco sobre vos y tu ronda."}
-                      </HandNote>}
+            {profile.data?.bio && (
+              <HandNote rotate={false}>
+                {profile.data?.bio || "Contá un poco sobre vos y tu ronda."}
+              </HandNote>
+            )}
             <AnimatedTabs
               options={COLLECTION_TABS.map((option) => ({
                 ...option,
