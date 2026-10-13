@@ -9,7 +9,10 @@
     "ios": {
       "supportsTablet": true,
       "bundleIdentifier": "app.yerbarium.mobile",
-      "icon": "./assets/branding/icon-light.png"
+      "icon": "./assets/branding/icon-light.png",
+      "infoPlist": {
+        "ITSAppUsesNonExemptEncryption": false
+      }
     },
     "android": {
       "package": "app.yerbarium.mobile",

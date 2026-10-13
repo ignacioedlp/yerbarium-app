@@ -1,6 +1,7 @@
 import React, { useEffect, useRef } from "react";
 import { ActivityIndicator, Platform, View } from "react-native";
 import { Stack, router, useSegments } from "expo-router";
+import { ObserveRoot, useObserve } from "expo-observe";
 import { useFonts } from "expo-font";
 import { NunitoSans_400Regular } from "@expo-google-fonts/nunito-sans/400Regular";
 import { NunitoSans_800ExtraBold } from "@expo-google-fonts/nunito-sans/800ExtraBold";
@@ -44,12 +45,17 @@ function AnalyticsTracking() {
 
 function Navigation() {
   const { ready } = useSession();
+  const { markInteractive } = useObserve();
   const [fonts, error] = useFonts({
     NunitoSans_400Regular,
     NunitoSans_800ExtraBold,
     Lilita: require("../../assets/fonts/lilita-one-latin.ttf"),
     Caveat: require("../../assets/fonts/caveat-variable.ttf"),
   });
+
+  useEffect(() => {
+    if (ready && (fonts || error)) markInteractive();
+  }, [error, fonts, markInteractive, ready]);
 
   if (!ready || (!fonts && !error))
     return (
@@ -135,7 +141,7 @@ function Navigation() {
     </>
   );
 }
-export default function RootLayout() {
+function RootLayout() {
   const app = (
     <SafeAreaProvider>
       <DataProvider>
@@ -157,3 +163,5 @@ export default function RootLayout() {
     </PostHogProvider>
   );
 }
+
+export default ObserveRoot.wrap(RootLayout);
