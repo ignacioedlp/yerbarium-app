@@ -130,6 +130,18 @@ function Navigation() {
           }}
         />
         <Stack.Screen
+          name="recuperar-contrasena"
+          options={{ title: "Recuperar cuenta", headerShown: true }}
+        />
+        <Stack.Screen
+          name="restablecer-contrasena"
+          options={{ title: "Nueva contraseña", headerShown: true }}
+        />
+        <Stack.Screen
+          name="verificar-email"
+          options={{ title: "Verificar email", headerShown: true }}
+        />
+        <Stack.Screen
           name="editar-perfil"
           options={{ title: "Editar perfil", headerShown: true }}
         />
