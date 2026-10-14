@@ -9,7 +9,6 @@ import {
   Button,
   Card,
   QueryState,
-  styles,
 } from "@/components/ui";
 import { useComparison } from "@/providers/comparison";
 import { get } from "@/api/client";
@@ -117,39 +116,28 @@ export function Compare() {
           />
         </Card>
       )}
-      {queries.map((query, index) => (
-        <Card key={slugs[index]}>
-          <QueryState query={query}>
-            {query.data && (
-              <>
-                <Title>{query.data.name}</Title>
-                <Button
-                  label="Ver ficha"
-                  secondary
-                  onPress={() =>
-                    router.push({
-                      pathname: "/yerbas/[slug]",
-                      params: { slug: slugs[index] },
-                    })
-                  }
-                />
-              </>
-            )}
-          </QueryState>
-          <Button
-            label="Quitar"
-            secondary
-            onPress={() => toggle(slugs[index])}
-          />
-        </Card>
-      ))}
+
       {ready && (
         <>
           <Title>Comparación</Title>
           <Body muted>Deslizá hacia los lados para ver todas las yerbas.</Body>
           <ScrollView horizontal showsHorizontalScrollIndicator>
-            <View>
-              <View style={{ flexDirection: "row" }}>
+            <View
+              style={{
+                overflow: "hidden",
+                borderWidth: 1,
+                borderColor: theme.colors.border,
+                borderRadius: theme.radius.card,
+                backgroundColor: theme.colors.surface,
+              }}
+            >
+              <View
+                style={{
+                  flexDirection: "row",
+                  borderBottomWidth: 2,
+                  borderColor: theme.colors.border,
+                }}
+              >
                 {[
                   "Característica",
                   ...queries.map((query) => query.data!.name),
@@ -157,12 +145,32 @@ export function Compare() {
                   <View
                     key={index}
                     style={{
-                      width: 190,
-                      padding: theme.spacing.md,
-                      backgroundColor: theme.colors.sage,
+                      width: index === 0 ? 132 : 176,
+                      minHeight: 72,
+                      justifyContent: "center",
+                      paddingHorizontal: theme.spacing.md,
+                      paddingVertical: theme.spacing.sm,
+                      backgroundColor:
+                        index === 0 ? theme.colors.green : theme.colors.sage,
+                      borderRightWidth: 1,
+                      borderColor: theme.colors.border,
                     }}
                   >
-                    <Text style={styles.title}>{name}</Text>
+                    <Text
+                      style={{
+                        fontFamily: theme.fonts.display,
+                        fontSize: index === 0 ? 13 : 18,
+                        lineHeight: index === 0 ? 17 : 22,
+                        letterSpacing: 0.2,
+                        textTransform: "uppercase",
+                        color:
+                          index === 0 ? theme.colors.cream : theme.colors.ink,
+                        flexShrink: 1,
+                      }}
+                      numberOfLines={2}
+                    >
+                      {name}
+                    </Text>
                   </View>
                 ))}
               </View>
@@ -170,18 +178,32 @@ export function Compare() {
                 const values = queries.map((query) => value(query.data!));
                 const differs = new Set(values).size > 1;
                 return (
-                  <View key={label} style={{ flexDirection: "row" }}>
+                  <View
+                    key={label}
+                    style={{
+                      flexDirection: "row",
+                      borderBottomWidth: 1,
+                      borderColor: theme.colors.border,
+                    }}
+                  >
                     {[label, ...values].map((cell, index) => (
                       <View
                         key={index}
                         style={{
-                          width: 190,
-                          padding: theme.spacing.md,
-                          borderBottomWidth: 1,
+                          width: index === 0 ? 132 : 176,
+                          minHeight: 60,
+                          justifyContent: "center",
+                          paddingHorizontal: theme.spacing.md,
+                          paddingVertical: theme.spacing.sm,
                           borderColor: theme.colors.border,
+                          borderRightWidth: 1,
                           backgroundColor: differs
-                            ? theme.colors.sage
-                            : theme.colors.surface,
+                            ? index === 0
+                              ? theme.colors.selected
+                              : theme.colors.sage
+                            : index === 0
+                              ? theme.colors.cream
+                              : theme.colors.surface,
                         }}
                       >
                         {index > 0 &&
@@ -224,7 +246,20 @@ export function Compare() {
                             size={16}
                           />
                         ) : (
-                          <Body>{cell}</Body>
+                          <Text
+                            style={{
+                              fontFamily:
+                                index === 0
+                                  ? theme.fonts.bold
+                                  : theme.fonts.body,
+                              fontSize: index === 0 ? 13 : 15,
+                              lineHeight: 20,
+                              color: theme.colors.ink,
+                              flexShrink: 1,
+                            }}
+                          >
+                            {cell}
+                          </Text>
                         )}
                       </View>
                     ))}
@@ -239,6 +274,32 @@ export function Compare() {
           </Body>
         </>
       )}
+      {queries.map((query, index) => (
+        <Card key={slugs[index]}>
+          <QueryState query={query}>
+            {query.data && (
+              <>
+                <Title>{query.data.name}</Title>
+                <Button
+                  label="Ver ficha"
+                  secondary
+                  onPress={() =>
+                    router.push({
+                      pathname: "/yerbas/[slug]",
+                      params: { slug: slugs[index] },
+                    })
+                  }
+                />
+              </>
+            )}
+          </QueryState>
+          <Button
+            label="Quitar"
+            secondary
+            onPress={() => toggle(slugs[index])}
+          />
+        </Card>
+      ))}
       {slugs.length > 0 && (
         <Button label="Limpiar comparación" secondary onPress={clear} />
       )}
