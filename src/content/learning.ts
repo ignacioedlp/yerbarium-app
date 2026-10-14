@@ -7,6 +7,8 @@ export type EditorialArticle = {
     id: string;
     title: string;
     paragraphs: string[];
+    styleGuides?: { slug: string; name: string; description: string }[];
+    notes?: string[];
     steps?: { title: string; copy: string }[];
     materials?: { title: string; copy: string }[];
   }[];

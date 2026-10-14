@@ -1,5 +1,11 @@
 # Validación de Yerbarium App
 
+## 2026-10-13 — Estilos de yerba en la guía editorial
+
+- La guía “Sobre la yerba” describe Tradicional, Suave, Barbacuá, Orgánica, Compuesta, Saborizada, Tereré y Chimarrão. Cada estilo abre Explorar filtrado por su categoría, y se agregaron referencias institucionales y normativas.
+- Pasaron `bun run typecheck` y la validación de `src/content/editorial.json`. `bun run lint` terminó sin errores y con un aviso preexistente en `src/screens/home.tsx:37` (`moveCarousel` sin uso).
+- La vista no se comprobó en simulador porque Argent no está disponible en este entorno. Presentación y navegación en iOS/Android pendientes de revisión visual.
+
 ## 2026-10-13 — Configuración de privacidad y manifiesto Android
 
 - `app.json` declara los datos enviados para funciones de cuenta/perfil y actividad/analítica en `ios.privacyManifests`; el manifiesto se genera al hacer prebuild. También conserva los motivos de APIs requeridas que ya tenía el Privacy Manifest nativo.
