@@ -18,6 +18,7 @@ import {
   ErrorMessage,
   RequireSession,
   useCanWrite,
+  openExternal,
 } from "@/components/ui";
 import { useSession } from "@/providers/session";
 import { normalizeError, write } from "@/api/client";
@@ -33,6 +34,7 @@ const registrationSchema = z.object({
   email: z.email("Ingresá un email válido."),
   password: z.string().min(8, "Usá al menos ocho caracteres."),
 });
+const termsUrl = "https://yerbarium.vercel.app/terminos-y-condiciones/";
 // Auth inputs own their native editing buffer; onChangeText keeps RHF in sync.
 function LoginForm() {
   const passwordInput = React.useRef<TextInput>(null);
@@ -102,6 +104,7 @@ function LoginForm() {
   );
 }
 function RegistrationForm() {
+  const [termsLinkError, setTermsLinkError] = React.useState(false);
   const emailInput = React.useRef<TextInput>(null);
   const passwordInput = React.useRef<TextInput>(null);
   const session = useSession(),
@@ -138,9 +141,28 @@ function RegistrationForm() {
               color: theme.colors.muted,
             }}
           >
-            Al crear una cuenta, aceptás los términos y condiciones de
-            Yerbarium.
+            Al crear una cuenta, aceptás los{" "}
+            <Text
+              accessibilityRole="link"
+              onPress={() => {
+                setTermsLinkError(false);
+                void openExternal(termsUrl).catch(() =>
+                  setTermsLinkError(true),
+                );
+              }}
+              style={{
+                color: theme.colors.green,
+                fontFamily: theme.fonts.bold,
+                textDecorationLine: "underline",
+              }}
+            >
+              términos y condiciones
+            </Text>{" "}
+            de Yerbarium.
           </Text>
+          {termsLinkError && (
+            <ErrorMessage message="No pudimos abrir los términos y condiciones." />
+          )}
           <Button
             label={mutation.isPending ? "Creando cuenta…" : "Crear cuenta"}
             disabled={!online || mutation.isPending}
