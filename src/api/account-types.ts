@@ -2,7 +2,6 @@ export interface Account {
   id?: number;
   username: string;
   email: string;
-  email_verified?: boolean;
   display_name: string;
   bio: string;
   country_code: string;
