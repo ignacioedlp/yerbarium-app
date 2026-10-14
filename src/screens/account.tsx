@@ -35,6 +35,7 @@ const registrationSchema = z.object({
   password: z.string().min(8, "Usá al menos ocho caracteres."),
 });
 const termsUrl = "https://yerbarium.vercel.app/terminos-y-condiciones/";
+const privacyUrl = "https://yerbarium.vercel.app/privacidad/";
 // Auth inputs own their native editing buffer; onChangeText keeps RHF in sync.
 function LoginForm() {
   const passwordInput = React.useRef<TextInput>(null);
@@ -104,7 +105,7 @@ function LoginForm() {
   );
 }
 function RegistrationForm() {
-  const [termsLinkError, setTermsLinkError] = React.useState(false);
+  const [legalLinkError, setLegalLinkError] = React.useState(false);
   const emailInput = React.useRef<TextInput>(null);
   const passwordInput = React.useRef<TextInput>(null);
   const session = useSession(),
@@ -145,9 +146,9 @@ function RegistrationForm() {
             <Text
               accessibilityRole="link"
               onPress={() => {
-                setTermsLinkError(false);
+                setLegalLinkError(false);
                 void openExternal(termsUrl).catch(() =>
-                  setTermsLinkError(true),
+                  setLegalLinkError(true),
                 );
               }}
               style={{
@@ -156,12 +157,29 @@ function RegistrationForm() {
                 textDecorationLine: "underline",
               }}
             >
-              términos y condiciones
-            </Text>{" "}
-            de Yerbarium.
+              Términos y Condiciones
+            </Text>
+            . Consultá la{" "}
+            <Text
+              accessibilityRole="link"
+              onPress={() => {
+                setLegalLinkError(false);
+                void openExternal(privacyUrl).catch(() =>
+                  setLegalLinkError(true),
+                );
+              }}
+              style={{
+                color: theme.colors.green,
+                fontFamily: theme.fonts.bold,
+                textDecorationLine: "underline",
+              }}
+            >
+              Política de privacidad
+            </Text>
+            .
           </Text>
-          {termsLinkError && (
-            <ErrorMessage message="No pudimos abrir los términos y condiciones." />
+          {legalLinkError && (
+            <ErrorMessage message="No pudimos abrir el enlace legal." />
           )}
           <Button
             label={mutation.isPending ? "Creando cuenta…" : "Crear cuenta"}
