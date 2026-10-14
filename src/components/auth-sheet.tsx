@@ -22,13 +22,11 @@ export function AuthSheet({
   children,
   actions,
   pending,
-  showClose = true,
 }: React.PropsWithChildren<{
   title: string;
   description: string;
   actions: React.ReactNode;
   pending: boolean;
-  showClose?: boolean;
 }>) {
   const insets = useSafeAreaInsets();
   return (
@@ -62,28 +60,26 @@ export function AuthSheet({
             <Title>{title}</Title>
             <Body>{description}</Body>
           </View>
-          {showClose && (
-            <Pressable
-              accessibilityRole="button"
-              accessibilityLabel="Cerrar"
-              disabled={pending}
-              onPress={() => {
-                if (router.canGoBack()) router.back();
-                else router.replace("/(tabs)/perfil");
-              }}
-              style={({ pressed }) => ({
-                width: 44,
-                height: 44,
-                borderRadius: t.radius.pill,
-                backgroundColor: t.colors.sage,
-                alignItems: "center",
-                justifyContent: "center",
-                opacity: pending ? 0.45 : pressed ? 0.65 : 1,
-              })}
-            >
-              <Icon name="close" />
-            </Pressable>
-          )}
+          <Pressable
+            accessibilityRole="button"
+            accessibilityLabel="Cerrar"
+            disabled={pending}
+            onPress={() => {
+              if (router.canGoBack()) router.back();
+              else router.replace("/(tabs)/perfil");
+            }}
+            style={({ pressed }) => ({
+              width: 44,
+              height: 44,
+              borderRadius: t.radius.pill,
+              backgroundColor: t.colors.sage,
+              alignItems: "center",
+              justifyContent: "center",
+              opacity: pending ? 0.45 : pressed ? 0.65 : 1,
+            })}
+          >
+            <Icon name="close" />
+          </Pressable>
         </View>
         <OfflineBanner />
         <View style={{ gap: 20 }}>{children}</View>
