@@ -51,14 +51,17 @@ function symbol(color, height = 700, x = 512, y = 512) {
 function svg(inner, background = null) {
   return `<svg xmlns="http://www.w3.org/2000/svg" width="1024" height="1024" viewBox="0 0 1024 1024">${background ? `<rect width="1024" height="1024" fill="${background}"/>` : ""}${inner}</svg>\n`;
 }
+// Android launchers crop the 108dp adaptive layer to a smaller visible mask.
+// Keep both variants at the same scale, with room around the mate after cropping.
+const androidSymbolHeight = 432;
 const assets = {
   "logo-green": svg(symbol(palette.green, 740)),
   "logo-cream": svg(symbol(palette.cream, 740)),
   "logo-white": svg(symbol(palette.white, 740)),
   icon: svg(symbol(palette.lime), palette.green),
   "icon-light": svg(symbol(palette.green), palette.cream),
-  "android-foreground": svg(symbol(palette.green, 540)),
-  "android-monochrome": svg(symbol(palette.white, 540)),
+  "android-foreground": svg(symbol(palette.green, androidSymbolHeight)),
+  "android-monochrome": svg(symbol(palette.white, androidSymbolHeight)),
   "splash-logo": svg(symbol(palette.green, 740)),
 };
 for (const [name, source] of Object.entries(assets)) {
