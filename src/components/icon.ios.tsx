@@ -19,6 +19,7 @@ const names = {
   eye: "eye",
   eyeOff: "eye.slash",
   external: "arrow.up.right.square",
+  more: "ellipsis",
 } as const;
 export function Icon({
   name,

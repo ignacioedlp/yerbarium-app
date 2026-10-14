@@ -17,7 +17,8 @@ export type IconName =
   | "person"
   | "eye"
   | "eyeOff"
-  | "external";
+  | "external"
+  | "more";
 export type IconProps = { name: IconName; size?: number; color?: string };
 const names = {
   search: "magnify",
@@ -37,6 +38,7 @@ const names = {
   eye: "eye-outline",
   eyeOff: "eye-off-outline",
   external: "open-in-new",
+  more: "dots-vertical",
 } as const;
 export function Icon({
   name,

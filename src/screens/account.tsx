@@ -1,10 +1,10 @@
 import { learningLinks } from "@/content/learning";
 import { AuthField, AuthSheet, AuthSwitch } from "@/components/auth-sheet";
 import React from "react";
-import { Alert, Pressable, Text, TextInput, View } from "react-native";
+import { Pressable, Text, TextInput, View } from "react-native";
 import { HandNote } from "@/components/editorial";
 import { Icon } from "@/components/icon";
-import { router } from "expo-router";
+import { router, type Href } from "expo-router";
 import { Controller, useForm } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -18,6 +18,7 @@ import {
   ErrorMessage,
   RequireSession,
   useCanWrite,
+  openExternal,
 } from "@/components/ui";
 import { useSession } from "@/providers/session";
 import { normalizeError, write } from "@/api/client";
@@ -33,6 +34,8 @@ const registrationSchema = z.object({
   email: z.email("Ingresá un email válido."),
   password: z.string().min(8, "Usá al menos ocho caracteres."),
 });
+const termsUrl = "https://yerbarium.vercel.app/terminos-y-condiciones/";
+const privacyUrl = "https://yerbarium.vercel.app/privacidad/";
 // Auth inputs own their native editing buffer; onChangeText keeps RHF in sync.
 function LoginForm() {
   const passwordInput = React.useRef<TextInput>(null);
@@ -102,6 +105,7 @@ function LoginForm() {
   );
 }
 function RegistrationForm() {
+  const [legalLinkError, setLegalLinkError] = React.useState(false);
   const emailInput = React.useRef<TextInput>(null);
   const passwordInput = React.useRef<TextInput>(null);
   const session = useSession(),
@@ -138,9 +142,45 @@ function RegistrationForm() {
               color: theme.colors.muted,
             }}
           >
-            Al crear una cuenta, aceptás los términos y condiciones de
-            Yerbarium.
+            Al crear una cuenta, aceptás los{" "}
+            <Text
+              accessibilityRole="link"
+              onPress={() => {
+                setLegalLinkError(false);
+                void openExternal(termsUrl).catch(() =>
+                  setLegalLinkError(true),
+                );
+              }}
+              style={{
+                color: theme.colors.green,
+                fontFamily: theme.fonts.bold,
+                textDecorationLine: "underline",
+              }}
+            >
+              Términos y Condiciones
+            </Text>
+            . Consultá la{" "}
+            <Text
+              accessibilityRole="link"
+              onPress={() => {
+                setLegalLinkError(false);
+                void openExternal(privacyUrl).catch(() =>
+                  setLegalLinkError(true),
+                );
+              }}
+              style={{
+                color: theme.colors.green,
+                fontFamily: theme.fonts.bold,
+                textDecorationLine: "underline",
+              }}
+            >
+              Política de privacidad
+            </Text>
+            .
           </Text>
+          {legalLinkError && (
+            <ErrorMessage message="No pudimos abrir el enlace legal." />
+          )}
           <Button
             label={mutation.isPending ? "Creando cuenta…" : "Crear cuenta"}
             disabled={!online || mutation.isPending}
@@ -282,6 +322,21 @@ export function Profile() {
           ))}
         </View>
       </View>
+      {session.user ? (
+        <View style={{ gap: theme.spacing.sm }}>
+          <Button
+            label="Cerrar sesión"
+            secondary
+            onPress={() => void session.logout()}
+          />
+          <Button
+            label="Eliminar cuenta"
+            secondary
+            destructive
+            onPress={() => router.push("/eliminar-cuenta" as Href)}
+          />
+        </View>
+      ) : null}
     </Page>
   );
 }

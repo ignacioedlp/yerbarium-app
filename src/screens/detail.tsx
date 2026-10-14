@@ -43,6 +43,7 @@ import { technicalRows } from "@/api/format";
 import { useSession } from "@/providers/session";
 import { Icon } from "@/components/icon";
 import { AnimatedTabContent, AnimatedTabs } from "@/components/animated-tabs";
+import { CommunitySafetyActions } from "@/components/community-safety-actions";
 
 const DETAIL_TABS = {
   info: "Ficha",
@@ -59,9 +60,9 @@ export function Detail() {
   const galleryWidth = Math.min(420, width - theme.spacing.lg * 2);
   const { slug } = useLocalSearchParams<{ slug: string }>();
   const path = `yerbas/${encodeURIComponent(slug)}/`;
-  const query = useResource<YerbaMateDetail>(path),
-    reviews = usePages<Review>(`${path}reviews/`);
   const { user, error: sessionError, restore } = useSession();
+  const query = useResource<YerbaMateDetail>(path),
+    reviews = usePages<Review>(`${path}reviews/`, {}, !!user);
   const [tab, setTab] = React.useState<
     "info" | "profile" | "reviews" | "sources"
   >("info");
@@ -343,9 +344,16 @@ export function Detail() {
                 <Body muted>Producto discontinuado</Body>
               )}
               <View style={{ gap: theme.spacing.sm }}>
-                <View style={styles.row}>
-                  {user && (
-                    <QueryState query={library}>
+                {user && (
+                  <QueryState query={library}>
+                    <View
+                      style={{
+                        flexDirection: "row",
+                        flexWrap: "wrap",
+                        alignItems: "center",
+                        gap: theme.spacing.sm,
+                      }}
+                    >
                       {(["is_tried", "wants_to_try"] as const).map((key) => (
                         <Button
                           key={key}
@@ -363,9 +371,11 @@ export function Detail() {
                           }
                         />
                       ))}
-                    </QueryState>
-                  )}
-                  {!!yerba.purchase_links?.length && (
+                    </View>
+                  </QueryState>
+                )}
+                {!!yerba.purchase_links?.length && (
+                  <View style={styles.row}>
                     <Button
                       compact
                       label="Comprar"
@@ -374,8 +384,8 @@ export function Detail() {
                         setPurchaseSlug(purchaseSlug === slug ? null : slug)
                       }
                     />
-                  )}
-                </View>
+                  </View>
+                )}
                 {user && mutation.error && (
                   <ErrorMessage
                     message={normalizeError(mutation.error).message}
@@ -825,6 +835,10 @@ function DetailReview({ review }: { review: Review }) {
           </Text>
         </Pressable>
         <LeafRating value={review.rating} size={16} />
+        <CommunitySafetyActions
+          username={review.username}
+          reviewId={review.id}
+        />
       </View>
       {review.comment && <Body>{review.comment}</Body>}
       {review.flavor_notes.length > 0 && (

@@ -66,6 +66,9 @@ export type Review = {
   flavor_notes: FlavorNote[];
   created_at: string;
 };
+export type ReportReason =
+  "SPAM" | "ABUSE" | "HATE" | "INAPPROPRIATE" | "OTHER";
+export type BlockStatus = { is_blocked: boolean };
 export function libraryChanges(
   key: keyof LibraryState,
   value: boolean,

@@ -185,6 +185,58 @@
         ]
       },
       {
+        "id": "estilos-del-catalogo",
+        "title": "Estilos que vas a encontrar",
+        "paragraphs": [
+          "En la web y la app usamos estos estilos para ayudarte a explorar el catálogo. Cada etiqueta señala un aspecto distinto del producto: proceso, ingredientes, intensidad o forma de preparación."
+        ],
+        "styleGuides": [
+          {
+            "slug": "tradicional",
+            "name": "Tradicional",
+            "description": "La yerba de perfil clásico para preparar mate caliente. La mezcla de hoja, palo y polvo, el estacionamiento y la molienda cambian según cada marca."
+          },
+          {
+            "slug": "suave",
+            "name": "Suave",
+            "description": "Una mezcla buscada para ofrecer menor intensidad o amargor percibido. “Suave” describe el perfil que propone el producto; no es una medida única compartida por todas las marcas."
+          },
+          {
+            "slug": "barbacua",
+            "name": "Barbacuá",
+            "description": "Yerba secada con el método barbacuá, un sistema tradicional de secado con calor de leña. El nombre refiere al proceso declarado, no a una nota de sabor aislada."
+          },
+          {
+            "slug": "organica",
+            "name": "Orgánica",
+            "description": "Yerba producida bajo normas de agricultura orgánica y con certificación correspondiente. Conviene consultar el sello y la certificadora que aparecen en el envase."
+          },
+          {
+            "slug": "compuesta",
+            "name": "Compuesta",
+            "description": "Combina yerba mate con una o más hierbas, como menta, cedrón o peperina. La composición concreta y su denominación dependen de los ingredientes y de la normativa aplicable."
+          },
+          {
+            "slug": "saborizada",
+            "name": "Saborizada",
+            "description": "Suma ingredientes o aromas que le dan un sabor añadido, por ejemplo cítrico o mentolado. Revisá la lista de ingredientes para saber qué aporta ese perfil."
+          },
+          {
+            "slug": "terere",
+            "name": "Tereré",
+            "description": "Yerba o molienda presentada para preparar tereré con agua fría. También hay quienes preparan tereré con yerbas no etiquetadas específicamente para ese uso."
+          },
+          {
+            "slug": "chimarrao",
+            "name": "Chimarrão",
+            "description": "Yerba de molienda fina asociada al chimarrão brasileño, que suele conservar un color verde intenso y se toma con cuia y bomba. Su preparación y textura difieren de las mezclas más gruesas habituales en Argentina."
+          }
+        ],
+        "notes": [
+          "Un mismo producto puede reunir varias etiquetas, por ejemplo orgánica y barbacuá. Las descripciones orientan la exploración; para confirmar ingredientes, certificaciones o método, consultá el envase y las fuentes de cada ficha."
+        ]
+      },
+      {
         "id": "leer-una-ficha",
         "title": "Cómo leer una ficha de Yerbarium",
         "paragraphs": [
@@ -223,6 +275,24 @@
         "publisher": "Código Alimentario Argentino — Argentina.gob.ar",
         "href": "https://www.argentina.gob.ar/normativa/nacional/resoluci%C3%B3n-2-2018-306660/texto",
         "note": "Límites vigentes de hoja y palo y método de medición para yerba con palo y despalada."
+      },
+      {
+        "name": "Calidad del producto obtenido y eficiencia de secado en tres sistemas de transformación primaria de yerba mate",
+        "publisher": "Instituto Nacional de la Yerba Mate e INTA",
+        "href": "https://inym.org.ar/descargar.html?archivo=aVhJMWh3b2VGSXFVazlqOXhkTU42Zz09",
+        "note": "Estudio que caracteriza los sistemas de secado barbacuá, a cintas y rotativo."
+      },
+      {
+        "name": "Resolución Conjunta 28/2023 — Artículo 1198 del Código Alimentario Argentino",
+        "publisher": "Argentina.gob.ar",
+        "href": "https://www.argentina.gob.ar/normativa/nacional/norma-392189/texto",
+        "note": "Denominaciones y composición de yerba mate compuesta y aromatizada en Argentina."
+      },
+      {
+        "name": "Caderno de especificações técnicas — Erva-mate do Planalto Norte Catarinense",
+        "publisher": "Instituto Nacional da Propriedade Industrial — Brasil",
+        "href": "https://www.gov.br/inpi/pt-br/servicos/indicacoes-geograficas/arquivos/cadernos-de-especificacoes-tecnicas/PlanaltoNorteCatarinense.pdf",
+        "note": "Características y elaboración de yerba para chimarrão y tereré en esa indicación geográfica brasileña."
       },
       {
         "name": "Consejos para elegir la mejor yerba mate",

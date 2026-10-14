@@ -1,5 +1,18 @@
 # Validación de Yerbarium App
 
+## 2026-10-13 — Estilos de yerba en la guía editorial
+
+- La guía “Sobre la yerba” describe Tradicional, Suave, Barbacuá, Orgánica, Compuesta, Saborizada, Tereré y Chimarrão. Cada estilo abre Explorar filtrado por su categoría, y se agregaron referencias institucionales y normativas.
+- Pasaron `bun run typecheck` y la validación de `src/content/editorial.json`. `bun run lint` terminó sin errores y con un aviso preexistente en `src/screens/home.tsx:37` (`moveCarousel` sin uso).
+- La vista no se comprobó en simulador porque Argent no está disponible en este entorno. Presentación y navegación en iOS/Android pendientes de revisión visual.
+
+## 2026-10-13 — Configuración de privacidad y manifiesto Android
+
+- `app.json` declara los datos enviados para funciones de cuenta/perfil y actividad/analítica en `ios.privacyManifests`; el manifiesto se genera al hacer prebuild. También conserva los motivos de APIs requeridas que ya tenía el Privacy Manifest nativo.
+- `expo-build-properties` fija `android.targetSdkVersion` en 36. La configuración bloquea almacenamiento externo heredado, `SYSTEM_ALERT_WINDOW` y `VIBRATE`; deja `INTERNET`, necesario para API y analítica.
+- Pasaron prebuild limpios de iOS y Android. `plutil -lint ios/Yerbarium/PrivacyInfo.xcprivacy` pasó. El manifiesto Android generado contiene solo `INTERNET` como permiso activo y directivas `tools:node="remove"` para los cuatro permisos bloqueados; `android/gradle.properties` fija `android.targetSdkVersion=36`.
+- No se pudo ejecutar el merge de manifiestos Gradle ni comprobar el manifiesto del AAB: falta un Java Runtime en este entorno. Repetir `./gradlew :app:processReleaseMainManifest` y revisar el reporte/manifiesto del AAB antes de subir.
+
 ## 2026-10-13 — Hojas y selección de pestañas en Android
 
 - `LeafRating` usa el ícono nativo Material Community Icons en Android, con relleno parcial por recorte; iOS conserva las hojas SVG. Esto evita depender del renderizado Android de SVG embebido como URI de imagen.

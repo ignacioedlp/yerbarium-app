@@ -9,7 +9,7 @@ import {
 } from "@/components/animated-tabs";
 import { theme } from "@/theme";
 import React, { useState } from "react";
-import { useLocalSearchParams } from "expo-router";
+import { Stack, useLocalSearchParams } from "expo-router";
 import { Page, Body, Button, Card, QueryState } from "@/components/ui";
 import { useResource, usePages } from "@/hooks/queries";
 import { PublicProfile as ProfileType } from "@/api/account-types";
@@ -18,6 +18,8 @@ import {
   LibraryEntry,
   LibrarySummary,
 } from "@/api/community-types";
+import { CommunitySafetyActions } from "@/components/community-safety-actions";
+import { useSession } from "@/providers/session";
 
 const COLLECTION_TABS: AnimatedTabOption<LibraryCollection>[] = [
   { key: "favorite", label: "Favoritas" },
@@ -27,10 +29,13 @@ const COLLECTION_TABS: AnimatedTabOption<LibraryCollection>[] = [
 
 export function PublicProfile() {
   const { username } = useLocalSearchParams<{ username: string }>();
+  const { user } = useSession();
   const path = `profiles/${encodeURIComponent(username)}/`;
-  const profile = useResource<ProfileType>(path);
+  const profile = useResource<ProfileType>(path, !!user);
+  const [blockedOverride, setBlockedOverride] = useState<boolean | null>(null);
   const [state, setState] = useState<LibraryCollection>("favorite");
-  const visible = !!profile.data && !profile.data.is_private;
+  const isBlocked = blockedOverride ?? profile.data?.is_blocked ?? false;
+  const visible = !!profile.data && !profile.data.is_private && !isBlocked;
   const library = usePages<LibraryEntry>(
     `${path}library/`,
     { state },
@@ -49,6 +54,20 @@ export function PublicProfile() {
   };
   return (
     <Page>
+      <Stack.Screen
+        options={{
+          headerRight:
+            user && user.username !== username && profile.data
+              ? () => (
+                  <CommunitySafetyActions
+                    username={username}
+                    isBlocked={isBlocked}
+                    onBlockChange={setBlockedOverride}
+                  />
+                )
+              : undefined,
+        }}
+      />
       <QueryState query={profile} skeleton="header">
         <View
           style={{
@@ -62,54 +81,62 @@ export function PublicProfile() {
             compact
           />
         </View>
-        {profile.data?.is_private ? (
-          <Card>
-            <Body>Este perfil es privado.</Body>
-          </Card>
+        {isBlocked ? (
+          <View style={{ gap: theme.spacing.sm }}>
+            <Body>Bloqueaste a @{username}.</Body>
+          </View>
         ) : (
           <>
-            {profile.data?.bio && (
-              <HandNote rotate={false}>
-                {profile.data?.bio || "Contá un poco sobre vos y tu ronda."}
-              </HandNote>
-            )}
-            <AnimatedTabs
-              options={COLLECTION_TABS.map((option) => ({
-                ...option,
-                count: summary.data ? collectionCounts[option.key] : undefined,
-              }))}
-              selected={state}
-              onSelect={setState}
-            />
-            <AnimatedTabContent activeKey={state}>
-              <QueryState query={library} yerbaCards>
-                {library.data?.pages[0]?.count === 0 ? (
-                  <Body>Esta colección todavía no tiene yerbas.</Body>
-                ) : (
-                  <View style={{ gap: theme.spacing.md }}>
-                    {library.data?.pages
-                      .flatMap((p) => p.results)
-                      .map((item, index) => (
-                        <LibraryYerbaCard
-                          key={item.yerba.slug}
-                          yerba={item.yerba}
-                          index={index % 20}
-                        />
-                      ))}
-                  </View>
+            {profile.data?.is_private ? (
+              <Card>
+                <Body>Este perfil es privado.</Body>
+              </Card>
+            ) : (
+              <>
+                {profile.data?.bio && (
+                  <HandNote rotate={false}>{profile.data.bio}</HandNote>
                 )}
-              </QueryState>
-              {library.isFetchingNextPage && <YerbaCardSkeletons />}
-              {library.hasNextPage && (
-                <Button
-                  label="Cargar más"
-                  disabled={library.isFetchingNextPage}
-                  onPress={() => {
-                    void library.fetchNextPage();
-                  }}
+                <AnimatedTabs
+                  options={COLLECTION_TABS.map((option) => ({
+                    ...option,
+                    count: summary.data
+                      ? collectionCounts[option.key]
+                      : undefined,
+                  }))}
+                  selected={state}
+                  onSelect={setState}
                 />
-              )}
-            </AnimatedTabContent>
+                <AnimatedTabContent activeKey={state}>
+                  <QueryState query={library} yerbaCards>
+                    {library.data?.pages[0]?.count === 0 ? (
+                      <Body>Esta colección todavía no tiene yerbas.</Body>
+                    ) : (
+                      <View style={{ gap: theme.spacing.md }}>
+                        {library.data?.pages
+                          .flatMap((p) => p.results)
+                          .map((item, index) => (
+                            <LibraryYerbaCard
+                              key={item.yerba.slug}
+                              yerba={item.yerba}
+                              index={index % 20}
+                            />
+                          ))}
+                      </View>
+                    )}
+                  </QueryState>
+                  {library.isFetchingNextPage && <YerbaCardSkeletons />}
+                  {library.hasNextPage && (
+                    <Button
+                      label="Cargar más"
+                      disabled={library.isFetchingNextPage}
+                      onPress={() => {
+                        void library.fetchNextPage();
+                      }}
+                    />
+                  )}
+                </AnimatedTabContent>
+              </>
+            )}
           </>
         )}
       </QueryState>

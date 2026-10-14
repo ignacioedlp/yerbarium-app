@@ -1,4 +1,5 @@
 import { Pressable, Text, View } from "react-native";
+import type { ReactNode } from "react";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { Icon } from "@/components/icon";
 import { Paper } from "@/components/editorial";
@@ -8,10 +9,12 @@ export function AppHeader({
   title,
   onBack,
   paper = false,
+  rightAction,
 }: {
   title: string;
   onBack: () => void;
   paper?: boolean;
+  rightAction?: ReactNode;
 }) {
   const insets = useSafeAreaInsets();
   return (
@@ -69,7 +72,16 @@ export function AppHeader({
         >
           {title}
         </Text>
-        <View style={{ width: 44 }} />
+        <View
+          style={{
+            width: 44,
+            height: 44,
+            alignItems: "center",
+            justifyContent: "center",
+          }}
+        >
+          {rightAction}
+        </View>
       </View>
     </View>
   );

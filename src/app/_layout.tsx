@@ -79,6 +79,10 @@ function Navigation() {
                 if (back && navigation.canGoBack()) navigation.goBack();
                 else router.replace("/(tabs)/explorar");
               }}
+              rightAction={options.headerRight?.({
+                tintColor: theme.colors.green,
+                canGoBack: Boolean(back),
+              })}
             />
           ),
           contentStyle: { backgroundColor: theme.colors.background },
@@ -128,6 +132,10 @@ function Navigation() {
         <Stack.Screen
           name="editar-perfil"
           options={{ title: "Editar perfil", headerShown: true }}
+        />
+        <Stack.Screen
+          name="eliminar-cuenta"
+          options={{ title: "Eliminar cuenta", headerShown: true }}
         />
         <Stack.Screen
           name="opinion/[slug]"
