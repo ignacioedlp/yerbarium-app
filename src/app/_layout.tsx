@@ -1,3 +1,4 @@
+import { tr, useLocale } from "@/i18n";
 import React, { useEffect, useRef } from "react";
 import { ActivityIndicator, Platform, View } from "react-native";
 import { Stack, router, useSegments } from "expo-router";
@@ -9,6 +10,7 @@ import { SafeAreaProvider } from "react-native-safe-area-context";
 import { StatusBar } from "expo-status-bar";
 import { DataProvider } from "@/providers/data";
 import { SessionProvider, useSession } from "@/providers/session";
+import { LocaleProvider, useLocaleReady } from "@/providers/locale";
 import { ComparisonProvider } from "@/providers/comparison";
 import { theme } from "@/theme";
 import { AppHeader } from "@/components/app-header";
@@ -16,6 +18,7 @@ import { PostHogProvider, usePostHog } from "posthog-react-native";
 import { posthogClient } from "@/analytics";
 
 function AnalyticsTracking() {
+  useLocale();
   const posthog = usePostHog();
   const segments = useSegments();
   const screenName = segments.join("/");
@@ -44,7 +47,9 @@ function AnalyticsTracking() {
 }
 
 function Navigation() {
+  useLocale();
   const { ready } = useSession();
+  const localeReady = useLocaleReady();
   const { markInteractive } = useObserve();
   const [fonts, error] = useFonts({
     NunitoSans_400Regular,
@@ -54,13 +59,13 @@ function Navigation() {
   });
 
   useEffect(() => {
-    if (ready && (fonts || error)) markInteractive();
-  }, [error, fonts, markInteractive, ready]);
+    if (ready && localeReady && (fonts || error)) markInteractive();
+  }, [error, fonts, markInteractive, ready, localeReady]);
 
-  if (!ready || (!fonts && !error))
+  if (!ready || !localeReady || (!fonts && !error))
     return (
       <View style={{ flex: 1, justifyContent: "center" }}>
-        <ActivityIndicator accessibilityLabel="Preparando Yerbarium" />
+        <ActivityIndicator accessibilityLabel={tr("Preparando Yerbarium")} />
       </View>
     );
   return (
@@ -91,24 +96,24 @@ function Navigation() {
         <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
         <Stack.Screen
           name="yerbas/[slug]"
-          options={{ title: "Yerba", headerShown: true }}
+          options={{ title: tr("Yerba"), headerShown: true }}
         />
         <Stack.Screen
           name="marcas/[slug]"
-          options={{ title: "Marca", headerShown: true }}
+          options={{ title: tr("Marca"), headerShown: true }}
         />
         <Stack.Screen
           name="usuarios/[username]"
-          options={{ title: "Perfil", headerShown: true }}
+          options={{ title: tr("Perfil"), headerShown: true }}
         />
         <Stack.Screen
           name="comparar"
-          options={{ title: "Comparar", headerShown: true }}
+          options={{ title: tr("Comparar"), headerShown: true }}
         />
         <Stack.Screen
           name="ingresar"
           options={{
-            title: "Ingresar",
+            title: tr("Ingresar"),
             presentation: "formSheet",
             headerShown: false,
             sheetAllowedDetents:
@@ -120,7 +125,7 @@ function Navigation() {
         <Stack.Screen
           name="registro"
           options={{
-            title: "Crear cuenta",
+            title: tr("Crear cuenta"),
             presentation: "formSheet",
             headerShown: false,
             sheetAllowedDetents:
@@ -131,27 +136,27 @@ function Navigation() {
         />
         <Stack.Screen
           name="recuperar-contrasena"
-          options={{ title: "Recuperar cuenta", headerShown: true }}
+          options={{ title: tr("Recuperar cuenta"), headerShown: true }}
         />
         <Stack.Screen
           name="restablecer-contrasena"
-          options={{ title: "Nueva contraseña", headerShown: true }}
+          options={{ title: tr("Nueva contraseña"), headerShown: true }}
         />
         <Stack.Screen
           name="verificar-email"
-          options={{ title: "Verificar email", headerShown: true }}
+          options={{ title: tr("Verificar email"), headerShown: true }}
         />
         <Stack.Screen
           name="editar-perfil"
-          options={{ title: "Editar perfil", headerShown: true }}
+          options={{ title: tr("Editar perfil"), headerShown: true }}
         />
         <Stack.Screen
           name="eliminar-cuenta"
-          options={{ title: "Eliminar cuenta", headerShown: true }}
+          options={{ title: tr("Eliminar cuenta"), headerShown: true }}
         />
         <Stack.Screen
           name="opinion/[slug]"
-          options={{ title: "Tu opinión", headerShown: true }}
+          options={{ title: tr("Tu opinión"), headerShown: true }}
         />
         <Stack.Screen
           name="editorial/[article]"
@@ -162,13 +167,16 @@ function Navigation() {
   );
 }
 function RootLayout() {
+  useLocale();
   const app = (
     <SafeAreaProvider>
       <DataProvider>
         <SessionProvider>
-          <ComparisonProvider>
-            <Navigation />
-          </ComparisonProvider>
+          <LocaleProvider>
+            <ComparisonProvider>
+              <Navigation />
+            </ComparisonProvider>
+          </LocaleProvider>
         </SessionProvider>
       </DataProvider>
     </SafeAreaProvider>

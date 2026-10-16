@@ -1,3 +1,4 @@
+import { tr, useLocale } from "@/i18n";
 import React, { useState } from "react";
 import { LibraryYerbaCard } from "@/components/library-yerba-card";
 import { YerbaCardSkeletons } from "@/components/yerba-card-loading";
@@ -32,6 +33,7 @@ const COLLECTION_TABS: AnimatedTabOption<LibraryCollection>[] = [
 ];
 
 export function Library() {
+  useLocale();
   const { user } = useSession();
   const [state, setState] = useState<LibraryCollection>("favorite");
   const query = usePages<LibraryEntry>(
@@ -52,7 +54,7 @@ export function Library() {
   };
   return (
     <Page safeTop>
-      <Title>Mi biblioteca</Title>
+      <Title>{tr("Mi biblioteca")}</Title>
       <RequireSession>
         <AnimatedTabs
           options={COLLECTION_TABS.map((option) => ({
@@ -66,9 +68,9 @@ export function Library() {
           <QueryState query={query} yerbaCards>
             {query.data?.pages[0]?.count === 0 ? (
               <Card>
-                <Title>Tu biblioteca está esperando</Title>
+                <Title>{tr("Tu biblioteca está esperando")}</Title>
                 <Body>
-                  Guardá yerbas desde sus fichas para encontrarlas acá.
+                  {tr("Guardá yerbas desde sus fichas para encontrarlas acá.")}
                 </Body>
               </Card>
             ) : (
@@ -88,7 +90,7 @@ export function Library() {
           {query.isFetchingNextPage && <YerbaCardSkeletons />}
           {query.hasNextPage && (
             <Button
-              label="Cargar más"
+              label={tr("Cargar más")}
               disabled={query.isFetchingNextPage}
               onPress={() => {
                 void query.fetchNextPage();

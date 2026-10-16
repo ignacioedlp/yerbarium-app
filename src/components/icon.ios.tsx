@@ -22,6 +22,9 @@ const names = {
   eyeOff: "eye.slash",
   external: "arrow.up.right.square",
   more: "ellipsis",
+  globe: "globe",
+  language: "character.bubble",
+  chevronDown: "chevron.down",
 } as const;
 export function Icon({
   name,

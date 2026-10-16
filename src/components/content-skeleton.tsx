@@ -1,3 +1,4 @@
+import { tr, useLocale } from "@/i18n";
 import React from "react";
 import { StyleSheet, View } from "react-native";
 import Animated, {
@@ -20,6 +21,7 @@ export function ContentLoadingTransition({
   loading: boolean;
   variant: SkeletonVariant;
 }>) {
+  useLocale();
   // Start cached content fully visible; fade only after an actual loading state.
   const progress = useSharedValue(loading ? 0 : 1);
   React.useEffect(() => {
@@ -69,11 +71,12 @@ export function ContentSkeleton({
 }: {
   variant?: SkeletonVariant;
 }) {
+  useLocale();
   return (
     <View
       testID={`loading-skeleton-${variant}`}
       accessible
-      accessibilityLabel="Cargando contenido"
+      accessibilityLabel={tr("Cargando contenido")}
       accessibilityState={{ busy: true }}
       pointerEvents="none"
       style={s.container}

@@ -1,3 +1,4 @@
+import { tr, useLocale } from "@/i18n";
 import { Text, View } from "react-native";
 import { Icon } from "@/components/icon";
 import { CountryFlag } from "@/components/country-flag";
@@ -18,6 +19,7 @@ import {
 import { useResource, usePages } from "@/hooks/queries";
 import { BrandDetail, YerbaMateListItem } from "@/api/types";
 export function Brand() {
+  useLocale();
   const { slug } = useLocalSearchParams<{ slug: string }>();
   const brand = useResource<BrandDetail>(`brands/${encodeURIComponent(slug)}/`);
   const yerbas = usePages<YerbaMateListItem>("yerbas/", { brand: slug });
@@ -62,7 +64,7 @@ export function Brand() {
                     accessible
                     accessibilityLabel={
                       brand.data.is_verified
-                        ? `${brand.data.name}, marca verificada`
+                        ? tr("{0}, marca verificada", { 0: brand.data.name })
                         : brand.data.name
                     }
                     style={{
@@ -93,7 +95,7 @@ export function Brand() {
                   </View>
                   {brand.data.website && (
                     <ExternalLink
-                      label="Sitio oficial"
+                      label={tr("Sitio oficial")}
                       url={brand.data.website}
                     />
                   )}
@@ -108,7 +110,7 @@ export function Brand() {
           </>
         )}
       </QueryState>
-      <Title>Sus yerbas</Title>
+      <Title>{tr("Sus yerbas")}</Title>
       <QueryState
         query={yerbas}
         yerbaCards
@@ -123,7 +125,7 @@ export function Brand() {
       {yerbas.isFetchingNextPage && <YerbaCardSkeletons />}
       {yerbas.hasNextPage && (
         <Button
-          label="Más yerbas"
+          label={tr("Más yerbas")}
           disabled={yerbas.isFetchingNextPage}
           onPress={() => {
             void yerbas.fetchNextPage();

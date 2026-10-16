@@ -1,3 +1,4 @@
+import { tr, useLocale } from "@/i18n";
 import React, {
   createContext,
   useCallback,
@@ -30,6 +31,7 @@ const Context = createContext<null | {
   reload: () => Promise<void>;
 }>(null);
 export function SessionProvider({ children }: React.PropsWithChildren) {
+  useLocale();
   const client = useQueryClient();
   const [user, setUser] = useState<Account | null>(null),
     [ready, setReady] = useState(false),
@@ -77,7 +79,7 @@ export function SessionProvider({ children }: React.PropsWithChildren) {
     } catch (e) {
       if (normalizeError(e).status !== 401)
         setError(
-          "No pudimos restaurar tu sesión. Volvé a intentar con conexión.",
+          tr("No pudimos restaurar tu sesión. Volvé a intentar con conexión."),
         );
     } finally {
       setReady(true);

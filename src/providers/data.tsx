@@ -1,3 +1,4 @@
+import { useLocale } from "@/i18n";
 import React, { useEffect, useState } from "react";
 import { AppState } from "react-native";
 import NetInfo from "@react-native-community/netinfo";
@@ -17,6 +18,7 @@ import {
   canPersistPublicQuery,
 } from "@/api/cache-policy";
 export function DataProvider({ children }: React.PropsWithChildren) {
+  useLocale();
   const [client] = useState(
     () =>
       new QueryClient({

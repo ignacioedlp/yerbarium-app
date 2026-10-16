@@ -1,9 +1,11 @@
+import { tr, useLocale } from "@/i18n";
 import React from "react";
 import { View, Text, Pressable, StyleSheet, TextInput } from "react-native";
 import { Image } from "expo-image";
 import { theme as t } from "@/theme";
 import { Icon } from "./icon";
 export function Paper({ dark = false }: { dark?: boolean }) {
+  useLocale();
   return (
     <View
       collapsable={false}
@@ -24,6 +26,7 @@ export function Paper({ dark = false }: { dark?: boolean }) {
 }
 
 export function BrandLockup() {
+  useLocale();
   return (
     <View
       style={{ flexDirection: "row", alignItems: "center", gap: t.spacing.sm }}
@@ -57,6 +60,7 @@ export function Display({
   size?: number;
   color?: string;
 }>) {
+  useLocale();
   return (
     <Text
       accessibilityRole="header"
@@ -78,6 +82,7 @@ export function HandNote({
   light = false,
   rotate = true,
 }: React.PropsWithChildren<{ light?: boolean; rotate?: boolean }>) {
+  useLocale();
   return (
     <Text
       style={{
@@ -101,6 +106,7 @@ export function SectionHeading({
   action?: string;
   onPress?: () => void;
 }) {
+  useLocale();
   return (
     <View
       style={{
@@ -166,6 +172,7 @@ export function EditorialHero({
   compact?: boolean;
   paper?: boolean;
 }>) {
+  useLocale();
   return (
     <View
       style={{
@@ -244,13 +251,14 @@ export function SearchBox({
   placeholder?: string;
   autoFocus?: boolean;
 }) {
+  useLocale();
   const input = React.useRef<TextInput>(null);
   const [focused, setFocused] = React.useState(false);
   if (!onChangeText)
     return (
       <Pressable
         accessibilityRole="button"
-        accessibilityLabel="Buscar yerbas y marcas"
+        accessibilityLabel={tr("Buscar yerbas y marcas")}
         onPress={onSubmit}
         style={({ pressed }) => [e.search, { opacity: pressed ? 0.75 : 1 }]}
       >
@@ -263,7 +271,7 @@ export function SearchBox({
             flex: 1,
           }}
         >
-          {placeholder}
+          {tr(placeholder)}
         </Text>
         <View style={e.searchAction}>
           <Icon name="arrow" size={20} color={t.colors.cream} />
@@ -276,10 +284,10 @@ export function SearchBox({
       <TextInput
         ref={input}
         autoFocus={autoFocus}
-        accessibilityLabel="Buscar yerba o marca"
+        accessibilityLabel={tr("Buscar yerba o marca")}
         value={value}
         onChangeText={onChangeText}
-        placeholder={placeholder}
+        placeholder={tr(placeholder)}
         placeholderTextColor={t.colors.muted}
         style={{
           flex: 1,
@@ -297,15 +305,22 @@ export function SearchBox({
       />
       <Pressable
         accessibilityRole="button"
-        accessibilityLabel={value ? "Limpiar búsqueda" : "Buscar"}
+        accessibilityLabel={value ? tr("Limpiar búsqueda") : tr("Buscar")}
         onPress={() => {
           if (value) onChangeText("");
           else if (onSubmit) onSubmit();
           else input.current?.focus();
         }}
-        style={({ pressed }) => [e.searchAction, { opacity: pressed ? 0.75 : 1 }]}
+        style={({ pressed }) => [
+          e.searchAction,
+          { opacity: pressed ? 0.75 : 1 },
+        ]}
       >
-        <Icon name={value ? "close" : "arrow"} size={20} color={t.colors.cream} />
+        <Icon
+          name={value ? "close" : "arrow"}
+          size={20}
+          color={t.colors.cream}
+        />
       </Pressable>
     </View>
   );

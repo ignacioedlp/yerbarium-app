@@ -1,3 +1,4 @@
+import { tr, useLocale } from "@/i18n";
 import { Pressable, Text, View } from "react-native";
 import type { ReactNode } from "react";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
@@ -16,6 +17,7 @@ export function AppHeader({
   paper?: boolean;
   rightAction?: ReactNode;
 }) {
+  useLocale();
   const insets = useSafeAreaInsets();
   return (
     <View
@@ -39,7 +41,7 @@ export function AppHeader({
       >
         <Pressable
           accessibilityRole="button"
-          accessibilityLabel="Volver"
+          accessibilityLabel={tr("Volver")}
           onPress={onBack}
           hitSlop={6}
           style={({ pressed }) => ({

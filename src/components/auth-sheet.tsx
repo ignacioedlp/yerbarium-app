@@ -1,3 +1,4 @@
+import { tr, useLocale } from "@/i18n";
 import React, { useState } from "react";
 import {
   KeyboardAvoidingView,
@@ -30,6 +31,7 @@ export function AuthSheet({
   pending: boolean;
   showClose?: boolean;
 }>) {
+  useLocale();
   const insets = useSafeAreaInsets();
   return (
     <KeyboardAvoidingView
@@ -65,7 +67,7 @@ export function AuthSheet({
           {showClose && (
             <Pressable
               accessibilityRole="button"
-              accessibilityLabel="Cerrar"
+              accessibilityLabel={tr("Cerrar")}
               disabled={pending}
               onPress={() => {
                 if (router.canGoBack()) router.back();
@@ -119,6 +121,7 @@ export function AuthField({
   hint?: string;
   inputRef?: React.Ref<TextInput>;
 }) {
+  useLocale();
   const [focused, setFocused] = useState(false);
   const [visible, setVisible] = useState(false);
   return (
@@ -170,7 +173,7 @@ export function AuthField({
           <Pressable
             accessibilityRole="button"
             accessibilityLabel={
-              visible ? "Ocultar contraseña" : "Mostrar contraseña"
+              visible ? tr("Ocultar contraseña") : tr("Mostrar contraseña")
             }
             accessibilityState={{ selected: visible }}
             onPress={() => setVisible(!visible)}
@@ -202,6 +205,7 @@ export function AuthSwitch({
   register: boolean;
   pending: boolean;
 }) {
+  useLocale();
   return (
     <View
       style={{
@@ -213,7 +217,7 @@ export function AuthSwitch({
       }}
     >
       <Body muted>
-        {register ? "¿Ya tenés cuenta?" : "¿Todavía no tenés cuenta?"}
+        {register ? tr("¿Ya tenés cuenta?") : tr("¿Todavía no tenés cuenta?")}
       </Body>
       <Pressable
         accessibilityRole="button"
@@ -234,7 +238,7 @@ export function AuthSwitch({
             color: t.colors.green,
           }}
         >
-          {register ? "Ingresar" : "Crear cuenta"}
+          {register ? tr("Ingresar") : tr("Crear cuenta")}
         </Text>
       </Pressable>
     </View>

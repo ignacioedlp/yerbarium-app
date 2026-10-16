@@ -1,3 +1,4 @@
+import { tr, useLocale } from "@/i18n";
 import React from "react";
 import { Alert, Pressable } from "react-native";
 import { useQueryClient } from "@tanstack/react-query";
@@ -32,6 +33,7 @@ export function CommunitySafetyActions({
   isBlocked?: boolean;
   onBlockChange?: (blocked: boolean) => void;
 }) {
+  useLocale();
   const { user } = useSession();
   const queryClient = useQueryClient();
   const [blocked, setBlocked] = React.useState(isBlocked);
@@ -45,11 +47,11 @@ export function CommunitySafetyActions({
       if (target === "review" && reviewId) await reportReview(reviewId, reason);
       else await reportUser(username, reason);
       Alert.alert(
-        "Reporte enviado",
-        "Gracias. Lo revisará el equipo de moderación.",
+        tr("Reporte enviado"),
+        tr("Gracias. Lo revisará el equipo de moderación."),
       );
     } catch {
-      Alert.alert("No se pudo enviar", "Intentá nuevamente más tarde.");
+      Alert.alert(tr("No se pudo enviar"), tr("Intentá nuevamente más tarde."));
     } finally {
       setPending(false);
     }
@@ -57,14 +59,14 @@ export function CommunitySafetyActions({
 
   function chooseReason(target: "review" | "user") {
     Alert.alert(
-      target === "review" ? "Reportar opinión" : "Reportar usuario",
-      "Elegí el motivo del reporte.",
+      target === "review" ? tr("Reportar opinión") : tr("Reportar usuario"),
+      tr("Elegí el motivo del reporte."),
       [
         ...reasons.map(({ key, label }) => ({
-          text: label,
+          text: tr(label),
           onPress: () => void submitReport(key, target),
         })),
-        { text: "Cancelar", style: "cancel" as const },
+        { text: tr("Cancelar"), style: "cancel" as const },
       ],
     );
   }
@@ -77,22 +79,27 @@ export function CommunitySafetyActions({
         setBlocked(false);
         onBlockChange?.(false);
         Alert.alert(
-          "Usuario desbloqueado",
-          `Volvés a ver el perfil de @${username}.`,
+          tr("Usuario desbloqueado"),
+          tr("Volvés a ver el perfil de @{0}.", { 0: username }),
         );
       } else {
         await blockUser(username);
         setBlocked(true);
         onBlockChange?.(true);
         Alert.alert(
-          "Usuario bloqueado",
-          `Ya no vas a ver el perfil ni las opiniones de @${username}.`,
+          tr("Usuario bloqueado"),
+          tr("Ya no vas a ver el perfil ni las opiniones de @{0}.", {
+            0: username,
+          }),
         );
       }
       await queryClient.invalidateQueries({ queryKey: ["public"] });
       await queryClient.invalidateQueries({ queryKey: ["private"] });
     } catch {
-      Alert.alert("No se pudo actualizar", "Intentá nuevamente más tarde.");
+      Alert.alert(
+        tr("No se pudo actualizar"),
+        tr("Intentá nuevamente más tarde."),
+      );
     } finally {
       setPending(false);
     }
@@ -100,24 +107,31 @@ export function CommunitySafetyActions({
 
   function openMenu() {
     if (pending) return;
-    Alert.alert("Opciones de comunidad", undefined, [
+    Alert.alert(tr("Opciones de comunidad"), undefined, [
       ...(reviewId
-        ? [{ text: "Reportar opinión", onPress: () => chooseReason("review") }]
+        ? [
+            {
+              text: tr("Reportar opinión"),
+              onPress: () => chooseReason("review"),
+            },
+          ]
         : []),
-      { text: "Reportar usuario", onPress: () => chooseReason("user") },
+      { text: tr("Reportar usuario"), onPress: () => chooseReason("user") },
       {
-        text: blocked ? "Desbloquear usuario" : "Bloquear usuario",
+        text: blocked ? tr("Desbloquear usuario") : tr("Bloquear usuario"),
         style: blocked ? "default" : "destructive",
         onPress: () => {
           if (blocked) void toggleBlock();
           else {
             Alert.alert(
-              `¿Bloquear a @${username}?`,
-              "No vas a ver sus opiniones ni su perfil. Podés deshacerlo después.",
+              tr("¿Bloquear a @{0}?", { 0: username }),
+              tr(
+                "No vas a ver sus opiniones ni su perfil. Podés deshacerlo después.",
+              ),
               [
-                { text: "Cancelar", style: "cancel" },
+                { text: tr("Cancelar"), style: "cancel" },
                 {
-                  text: "Bloquear",
+                  text: tr("Bloquear"),
                   style: "destructive",
                   onPress: () => void toggleBlock(),
                 },
@@ -126,15 +140,15 @@ export function CommunitySafetyActions({
           }
         },
       },
-      { text: "Cancelar", style: "cancel" },
+      { text: tr("Cancelar"), style: "cancel" },
     ]);
   }
 
   return (
     <Pressable
       accessibilityRole="button"
-      accessibilityLabel="Más opciones de comunidad"
-      accessibilityHint="Reportar opinión o usuario, o bloquear usuario"
+      accessibilityLabel={tr("Más opciones de comunidad")}
+      accessibilityHint={tr("Reportar opinión o usuario, o bloquear usuario")}
       accessibilityState={{ disabled: pending }}
       disabled={pending}
       onPress={openMenu}

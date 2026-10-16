@@ -1,3 +1,4 @@
+import { tr, useLocale } from "@/i18n";
 import { Pressable, Text, View } from "react-native";
 import { flavorFamilies, type FlavorNote } from "@/api/community-types";
 import { Body } from "@/components/ui";
@@ -14,6 +15,7 @@ export function FlavorNotePicker({
   onToggle: (slug: string) => void;
   disabled?: boolean;
 }) {
+  useLocale();
   const uniqueNotes = [
     ...new Map(notes.map((note) => [note.slug, note])).values(),
   ];
@@ -29,7 +31,9 @@ export function FlavorNotePicker({
   });
   if (!uniqueNotes.length)
     return (
-      <Body muted>Todavía no hay notas disponibles para seleccionar.</Body>
+      <Body muted>
+        {tr("Todavía no hay notas disponibles para seleccionar.")}
+      </Body>
     );
   return (
     <View style={{ gap: t.spacing.lg }}>
@@ -45,7 +49,7 @@ export function FlavorNotePicker({
                 color: t.colors.ink,
               }}
             >
-              {group.label}
+              {tr(group.label)}
             </Text>
             <View
               style={{
@@ -60,7 +64,7 @@ export function FlavorNotePicker({
                   <Pressable
                     key={note.slug}
                     accessibilityRole="checkbox"
-                    accessibilityLabel={`${note.name}, ${group.label}`}
+                    accessibilityLabel={`${tr(note.name)}, ${tr(group.label)}`}
                     accessibilityState={{ checked, disabled }}
                     disabled={disabled}
                     onPress={() => onToggle(note.slug)}
@@ -87,7 +91,7 @@ export function FlavorNotePicker({
                       }}
                     >
                       {checked ? "✓ " : "+ "}
-                      {note.name}
+                      {tr(note.name)}
                     </Text>
                   </Pressable>
                 );

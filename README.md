@@ -105,3 +105,13 @@ La publicación en tiendas, EAS Update, notificaciones y sincronización de escr
 ## Diseño de la web en la app
 
 La segunda pasada recupera la identidad editorial de la web: verde profundo, papel crema, Lilita, Nunito Sans y Caveat, collages originales y tarjetas horizontales. El sistema normativo está en `DESIGN.md` y `.impeccable/design.json`. Capturas antes/después y evidencia iOS en `docs/design-pass/`; resultados y límites de validación en `QA.md`. Los cambios de esta pasada son de JavaScript y assets y se reflejan con Fast Refresh en el development build existente.
+
+## Traducciones de la app
+
+La interfaz nativa admite `es`, `es-AR`, `pt`, `pt-BR` y `en`. El idioma guardado en **Editar perfil → Idioma de la app** se aplica después de guardar correctamente el perfil. Si se deja sin especificar, se usa el primer idioma compatible del dispositivo; el respaldo es español de Argentina. Sin sesión se conserva la última preferencia local compatible. AsyncStorage guarda solo el código de idioma, sin datos de cuenta.
+
+Los mensajes y las cuatro guías editoriales están en `src/i18n`. `tr` recibe el texto fuente en español rioplatense y parámetros con nombre; `useLocale` suscribe los componentes a los cambios. Los formatos regionales usan `getLocale` y las cantidades usan `countLabel`. No concatenar fragmentos de una oración traducida ni usar una etiqueta traducida como identificador de dominio. Los códigos de idioma, las rutas y los valores enviados a la API permanecen estables.
+
+Al agregar mensajes, actualizar los catálogos de inglés, español y ambas variantes de portugués. `es-AR` usa las claves originales, con un pequeño catálogo de excepciones para errores que la API entrega en inglés. Los nombres comerciales, las descripciones remotas, las opiniones, las biografías y los títulos originales de las fuentes conservan su idioma original. Las traducciones no modifican la web ni la API.
+
+`bun run test` comprueba la cobertura de los mensajes literales, las guías, las escalas sensoriales, los parámetros de interpolación, las preferencias, las variantes regionales y el respaldo para Hermes sin `Intl.PluralRules`.

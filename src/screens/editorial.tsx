@@ -1,3 +1,4 @@
+import { tr, useLocale } from "@/i18n";
 import { Stack, router, useLocalSearchParams } from "expo-router";
 import { View, Text, Pressable } from "react-native";
 import { Image } from "expo-image";
@@ -12,6 +13,7 @@ import { theme as t } from "@/theme";
 import { Icon } from "@/components/icon";
 import { articles, learningLinks } from "@/content/learning";
 export function Editorial() {
+  useLocale();
   const { article } = useLocalSearchParams<{ article: string }>();
   const data = articles[article];
   const isGuide =
@@ -20,30 +22,30 @@ export function Editorial() {
   if (!data)
     return (
       <Page>
-        <Title>Artículo no encontrado</Title>
+        <Title>{tr("Artículo no encontrado")}</Title>
       </Page>
     );
   return (
     <Page fullBleed>
-      <Stack.Screen options={{ title: data.title }} />
+      <Stack.Screen options={{ title: tr(data.title) }} />
       <EditorialHero
         title={
           isGuide
             ? preparing
-              ? "Cómo preparar"
-              : "Cómo curar"
+              ? tr("Cómo preparar")
+              : tr("Cómo curar")
             : article === "cultura"
-              ? "Más que una bebida,"
-              : "De la planta"
+              ? tr("Más que una bebida,")
+              : tr("De la planta")
         }
         accent={
           isGuide
-            ? "un mate"
+            ? tr("un mate")
             : article === "cultura"
-              ? "una cultura"
-              : "a tu mate"
+              ? tr("una cultura")
+              : tr("a tu mate")
         }
-        description={data.introduction}
+        description={tr(data.introduction)}
       >
         {isGuide && (
           <Image
@@ -51,7 +53,9 @@ export function Editorial() {
             contentFit="cover"
             contentPosition="right center"
             style={{ height: 190, borderRadius: t.radius.card }}
-            accessibilityLabel="Mate con bombilla entre hojas de yerba mate"
+            accessibilityLabel={tr(
+              "Mate con bombilla entre hojas de yerba mate",
+            )}
           />
         )}
       </EditorialHero>
@@ -67,19 +71,19 @@ export function Editorial() {
             style={{ height: 240, borderRadius: t.radius.card }}
             accessibilityLabel={
               article === "cultura"
-                ? "Paisaje de cultivo de yerba mate"
-                : "Yerbales y su territorio"
+                ? tr("Paisaje de cultivo de yerba mate")
+                : tr("Yerbales y su territorio")
             }
           />
         )}
         <HandNote>
           {isGuide
             ? preparing
-              ? "Tu mate, tu manera"
-              : "El cuidado empieza adentro"
+              ? tr("Tu mate, tu manera")
+              : tr("El cuidado empieza adentro")
             : article === "cultura"
-              ? "Territorio, personas, tradición."
-              : "Conocer la yerba, disfrutar la ronda."}
+              ? tr("Territorio, personas, tradición.")
+              : tr("Conocer la yerba, disfrutar la ronda.")}
         </HandNote>
         {data.sections.map((section) => (
           <View
@@ -91,7 +95,7 @@ export function Editorial() {
               borderColor: t.colors.subtleBorder,
             }}
           >
-            <SectionHeading title={section.title} />
+            <SectionHeading title={tr(section.title)} />
             {section.paragraphs.map((paragraph, index) => (
               <Text
                 key={index}
@@ -103,17 +107,26 @@ export function Editorial() {
                   color: t.colors.ink,
                 }}
               >
-                {paragraph}
+                {tr(paragraph)}
               </Text>
             ))}
             {section.styleGuides && (
-              <View style={{ borderTopWidth: 1, borderColor: t.colors.subtleBorder }}>
+              <View
+                style={{
+                  borderTopWidth: 1,
+                  borderColor: t.colors.subtleBorder,
+                }}
+              >
                 {section.styleGuides.map((style) => (
                   <Pressable
                     key={style.slug}
                     accessibilityRole="button"
-                    accessibilityLabel={`Explorar estilo ${style.name}`}
-                    accessibilityHint="Abre el catálogo filtrado por este estilo"
+                    accessibilityLabel={tr("Explorar estilo {0}", {
+                      0: tr(style.name),
+                    })}
+                    accessibilityHint={tr(
+                      "Abre el catálogo filtrado por este estilo",
+                    )}
                     onPress={() =>
                       router.push({
                         pathname: "/explorar",
@@ -147,7 +160,7 @@ export function Editorial() {
                           color: t.colors.green,
                         }}
                       >
-                        {style.name}
+                        {tr(style.name)}
                       </Text>
                       <Icon name="arrow" size={18} />
                     </View>
@@ -160,19 +173,19 @@ export function Editorial() {
                         color: t.colors.ink,
                       }}
                     >
-                      {style.description}
+                      {tr(style.description)}
                     </Text>
                   </Pressable>
                 ))}
               </View>
             )}
             {section.notes?.map((note) => (
-              <Body key={note} muted>
-                {note}
+              <Body key={tr(note)} muted>
+                {tr(note)}
               </Body>
             ))}
             {section.materials?.map((material) => (
-              <View key={material.title} style={{ gap: t.spacing.xs }}>
+              <View key={tr(material.title)} style={{ gap: t.spacing.xs }}>
                 <Text
                   accessibilityRole="header"
                   style={{
@@ -181,14 +194,14 @@ export function Editorial() {
                     color: t.colors.green,
                   }}
                 >
-                  {material.title}
+                  {tr(material.title)}
                 </Text>
-                <Body>{material.copy}</Body>
+                <Body>{tr(material.copy)}</Body>
               </View>
             ))}
             {section.steps?.map((step, index) => (
               <View
-                key={step.title}
+                key={tr(step.title)}
                 style={{
                   padding: t.spacing.md,
                   gap: t.spacing.sm,
@@ -205,26 +218,26 @@ export function Editorial() {
                     color: t.colors.green,
                   }}
                 >
-                  {String(index + 1).padStart(2, "0")} · {step.title}
+                  {String(index + 1).padStart(2, "0")} · {tr(step.title)}
                 </Text>
-                <Body>{step.copy}</Body>
+                <Body>{tr(step.copy)}</Body>
               </View>
             ))}
           </View>
         ))}
-        <SectionHeading title="Fuentes" />
+        <SectionHeading title={tr("Fuentes")} />
         <View>
           {data.sources.map((source, index) => (
             <EditorialSourceLink key={index} {...source} />
           ))}
         </View>
-        <SectionHeading title="Seguir aprendiendo" />
+        <SectionHeading title={tr("Seguir aprendiendo")} />
         {learningLinks
           .filter((link) => link.article !== article)
           .map((link) => (
             <Button
               key={link.article}
-              label={link.label}
+              label={tr(link.label)}
               secondary
               fullWidth
               onPress={() =>

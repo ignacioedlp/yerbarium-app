@@ -1,3 +1,4 @@
+import { tr, useLocale } from "@/i18n";
 import React from "react";
 import { StyleSheet, View } from "react-native";
 import Animated, {
@@ -14,6 +15,7 @@ import { theme as t } from "@/theme";
 
 // Match the catalog card's footprint so the handoff keeps each row in place.
 export function YerbaCardSkeleton() {
+  useLocale();
   return (
     <View style={s.card} pointerEvents="none" accessible={false}>
       <View style={s.copy}>
@@ -36,11 +38,12 @@ export function YerbaCardSkeleton() {
 }
 
 export function YerbaCardSkeletons() {
+  useLocale();
   return (
     <View
       testID="yerba-card-skeletons"
       accessible
-      accessibilityLabel="Cargando yerbas"
+      accessibilityLabel={tr("Cargando yerbas")}
       accessibilityState={{ busy: true }}
       style={{ gap: t.spacing.md }}
     >
@@ -56,6 +59,7 @@ export function YerbaCardReveal({
   index = 0,
   loading = false,
 }: React.PropsWithChildren<{ index?: number; loading?: boolean }>) {
+  useLocale();
   const reducedMotion = useReducedMotion();
   const progress = useSharedValue(reducedMotion && !loading ? 1 : 0);
   // Bound the stagger to 110 ms; scrolling a long catalog must never add latency.

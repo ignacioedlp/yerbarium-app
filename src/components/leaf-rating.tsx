@@ -1,3 +1,4 @@
+import { tr, useLocale, getLocale } from "@/i18n";
 import { Image } from "expo-image";
 import { Platform, Pressable, Text, View } from "react-native";
 import { theme } from "@/theme";
@@ -30,12 +31,13 @@ export function LeafRating({
   onChange?: (value: number) => void;
   disabled?: boolean;
 }) {
+  useLocale();
   const parsed = value === null ? null : Number(value);
   const rating =
     parsed !== null && Number.isFinite(parsed)
       ? Math.max(0, Math.min(5, parsed))
       : null;
-  const formatted = rating?.toLocaleString("es-AR", {
+  const formatted = rating?.toLocaleString(getLocale(), {
     minimumFractionDigits: 1,
     maximumFractionDigits: 1,
   });
@@ -43,7 +45,7 @@ export function LeafRating({
     <View
       accessible={!onChange}
       accessibilityRole={onChange ? undefined : "image"}
-      accessibilityLabel={`${label}: ${rating === null ? "sin evaluación" : `${formatted} de 5`}`}
+      accessibilityLabel={`${tr(label)}: ${rating === null ? tr("sin evaluación") : tr("{0} de 5", { 0: formatted })}`}
       style={{
         flexDirection: "row",
         alignItems: "center",
@@ -54,40 +56,52 @@ export function LeafRating({
       <View style={{ flexDirection: "row", gap: 2 }}>
         {Array.from({ length: 5 }, (_, index) => {
           const fill = Math.max(0, Math.min(1, (rating ?? 0) - index));
-          const leaf = Platform.OS === "android" ? (
-            <View style={{ width: size, height: size }}>
-              <Icon name="leaf" size={size} color={theme.colors.styleBackground} />
-              {fill > 0 && (
-                <View
-                  pointerEvents="none"
-                  style={{
-                    position: "absolute",
-                    left: 0,
-                    top: 0,
-                    width: size * fill,
-                    height: size,
-                    overflow: "hidden",
-                  }}
-                >
-                  <View style={{ width: size, height: size }}>
-                    <Icon name="leaf" size={size} color={theme.colors.leafFill} />
+          const leaf =
+            Platform.OS === "android" ? (
+              <View style={{ width: size, height: size }}>
+                <Icon
+                  name="leaf"
+                  size={size}
+                  color={theme.colors.styleBackground}
+                />
+                {fill > 0 && (
+                  <View
+                    pointerEvents="none"
+                    style={{
+                      position: "absolute",
+                      left: 0,
+                      top: 0,
+                      width: size * fill,
+                      height: size,
+                      overflow: "hidden",
+                    }}
+                  >
+                    <View style={{ width: size, height: size }}>
+                      <Icon
+                        name="leaf"
+                        size={size}
+                        color={theme.colors.leafFill}
+                      />
+                    </View>
                   </View>
-                </View>
-              )}
-            </View>
-          ) : (
-            <Image
-              source={leafSource(fill)}
-              accessible={false}
-              contentFit="contain"
-              style={{ width: size, height: size }}
-            />
-          );
+                )}
+              </View>
+            ) : (
+              <Image
+                source={leafSource(fill)}
+                accessible={false}
+                contentFit="contain"
+                style={{ width: size, height: size }}
+              />
+            );
           return onChange ? (
             <Pressable
               key={index}
               accessibilityRole="button"
-              accessibilityLabel={`${label}: seleccionar ${index + 1} de 5`}
+              accessibilityLabel={tr("{0}: seleccionar {1} de 5", {
+                0: tr(label),
+                1: index + 1,
+              })}
               accessibilityState={{ selected: rating === index + 1, disabled }}
               disabled={disabled}
               onPress={() => onChange(index + 1)}

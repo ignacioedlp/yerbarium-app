@@ -435,3 +435,32 @@ Se restauró el collage botánico original detrás de la foto del envase, a opac
 
 - El texto auxiliar del encabezado (Filtros / Marcas) usa Text sin selección y con fondo transparente explícito, conservando styles.muted. Evita el tratamiento nativo del texto seleccionable heredado de Body en Android.
 - Pasaron TypeScript, 24 pruebas y exportaciones iOS/Android. Lint sin errores; warning previo moveCarousel en home.tsx. No se pudo confirmar visualmente el arreglo en Android: Argent no encontró dispositivos ni AVD disponibles.
+
+## Editar perfil: país e idioma — 2026-10-16
+
+- País reemplazado por selector e idioma agregado con las mismas seis opciones de país y cinco de idioma que la web. Ambos admiten «Sin especificar» y conservan valores existentes fuera de las sugerencias.
+- Selectores con nombres completos, iconos, filas de 56 puntos, estado seleccionado y cierre sin cambios. Se usa Modal nativo en formato pageSheet: la presentación de @expo/ui BottomSheet no resultó verificable en esta pantalla durante esta sesión.
+- TypeScript y 24 tests pasan. Lint sin errores; advertencia preexistente en home.tsx (`moveCarousel`). Exportaciones iOS y Android correctas.
+- iPhone 17 Pro / iOS 26.4: apertura y selección Argentina / Español (Argentina) verificadas por acciones de componentes mediante Argent debugger y observación de la UI. Los taps de Argent no activaron los elementos indicados por descubrimiento; queda pendiente validación táctil directa. No se guardaron cambios en la cuenta durante QA.
+- No hay emulador Android disponible; interacción Android y guardado contra la API no probados en esta pasada.
+
+### Banderas de perfil — 2026-10-16
+
+- Banderas SVG en las seis opciones de país y en el valor seleccionado del formulario, reutilizando CountryFlag; agregadas Bolivia y Chile. «Sin especificar» conserva el globo.
+- Comprobación visual en iPhone 17 Pro mediante Argent debugger: las seis banderas aparecen alineadas con los nombres. Se mantiene la limitación táctil de Argent descrita arriba.
+- TypeScript y 24 tests pasan; lint sin errores (misma advertencia preexistente). Exportaciones iOS y Android verificadas.
+
+### Banderas de idioma — 2026-10-16
+
+- Agregadas banderas a las cinco opciones de idioma y al idioma seleccionado: España (es), Argentina (es-AR), Portugal (pt), Brasil (pt-BR) y Reino Unido (en). «Sin especificar» y códigos no reconocidos conservan el icono de idioma.
+- Verificado visualmente el campo con Português y bandera de Portugal en iOS. La apertura solicitada por debugger no permaneció visible durante esta comprobación; no se modificaron valores de la cuenta.
+- TypeScript, 24 tests y exportaciones iOS/Android pasan. Lint sin errores; se mantiene la advertencia previa de home.tsx.
+
+## Traducciones de la app — 2026-10-16
+
+- Interfaz y cuatro guías editoriales traducidas para es, es-AR, pt, pt-BR y en. Navegación, formularios, accesibilidad, filtros, estados vacíos, errores conocidos, biblioteca, comparación, valoraciones y escalas sensoriales usan el idioma activo. Números, fechas y precios usan su configuración regional.
+- LocaleProvider toma el idioma de la cuenta después del guardado; si queda vacío usa el dispositivo. Conserva localmente solo el código de idioma para el inicio sin conexión/sin sesión. No se modificaron backend ni web. Los nombres y descripciones de productos, las biografías, las opiniones y los títulos originales de fuentes no se traducen automáticamente.
+- iPhone 17 Pro / iOS 26.4: catálogo en inglés, guía de preparación en pt-BR, login en pt y variantes es / es-AR verificados mediante cambios temporales del módulo de idioma con Argent debugger, sin escribir cambios en la cuenta. Se verificó también que la preferencia pt se recupera al reiniciar.
+- El runtime instalado carece de Intl.PluralRules e Intl.DisplayNames: se añadieron respaldos para plurales y nombres de países compatibles. Sin errores de JS en la revisión final. RNScreens emite una advertencia de composición de la hoja de autenticación que requiere una revisión independiente del layout existente.
+- TypeScript correcto, 35 tests pasan, lint sin errores (advertencia previa por moveCarousel sin uso en home.tsx). Exportaciones iOS y Android correctas.
+- Limitaciones: no hay sesión autenticada ni emulador Android disponible al finalizar QA; no se verificó el guardado de idioma contra la API ni la interacción en Android. La precedencia de preferencias, el cambio reactivo, la cobertura y la interpolación se verifican con tests; los taps de Argent siguen teniendo la limitación descrita en esta página.

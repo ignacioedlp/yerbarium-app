@@ -1,3 +1,4 @@
+import { tr, useLocale } from "@/i18n";
 import { useState } from "react";
 import { Pressable, Text, View } from "react-native";
 import { Icon } from "@/components/icon";
@@ -15,6 +16,7 @@ export function EditorialSourceLink({
   note: string;
   href: string;
 }) {
+  useLocale();
   const [error, setError] = useState(false);
   return (
     <View
@@ -23,7 +25,7 @@ export function EditorialSourceLink({
       <Pressable
         accessibilityRole="link"
         accessibilityLabel={name}
-        accessibilityHint="Abre el sitio de la fuente"
+        accessibilityHint={tr("Abre el sitio de la fuente")}
         onPress={() => {
           setError(false);
           void openExternal(href).catch(() => setError(true));
@@ -71,11 +73,15 @@ export function EditorialSourceLink({
             color: theme.colors.ink,
           }}
         >
-          {note}
+          {tr(note)}
         </Text>
       </Pressable>
       {error && (
-        <ErrorMessage message="No pudimos abrir el enlace. Volvé a tocar la fuente para reintentar." />
+        <ErrorMessage
+          message={tr(
+            "No pudimos abrir el enlace. Volvé a tocar la fuente para reintentar.",
+          )}
+        />
       )}
     </View>
   );

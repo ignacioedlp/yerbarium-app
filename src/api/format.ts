@@ -1,3 +1,4 @@
+import { tr } from "@/i18n/core";
 import type { TechnicalProfile } from "./types";
 
 const packageLabels: Record<string, string> = {
@@ -23,15 +24,21 @@ export function packageTypeLabel(value: string) {
   const key = trimmed.toLocaleLowerCase("es");
   // Preserve specific descriptions that are not part of the known vocabulary.
   return Object.hasOwn(packageLabels, key)
-    ? packageLabels[key]
-    : trimmed || "Sin información";
+    ? tr(packageLabels[key])
+    : trimmed || tr("Sin información");
 }
 
 export function aging(min: number | null, max: number | null) {
-  if (min === null && max === null) return "Sin información";
+  if (min === null && max === null) return tr("Sin información");
   if (min !== null && max !== null)
-    return min === max ? `${min} meses` : `${min}–${max} meses`;
-  return min !== null ? `Mínimo ${min} meses` : `Máximo ${max} meses`;
+    return min === max
+      ? min === 1
+        ? tr("1 mes")
+        : tr("{0} meses", { 0: min })
+      : tr("{0}–{1} meses", { 0: min, 1: max });
+  return min !== null
+    ? tr("Mínimo {0} meses", { 0: min })
+    : tr("Máximo {0} meses", { 0: max });
 }
 export function technicalRows(
   profile: TechnicalProfile | null,
@@ -39,44 +46,44 @@ export function technicalRows(
   if (!profile) return [];
   return [
     [
-      "Contenido de palo",
+      tr("Contenido de palo"),
       {
-        PRESENT: "Con palo",
-        REDUCED: "Palo reducido / despalada",
-        NONE: "Sin palo",
-        "": "Sin información",
+        PRESENT: tr("Con palo"),
+        REDUCED: tr("Palo reducido / despalada"),
+        NONE: tr("Sin palo"),
+        "": tr("Sin información"),
       }[profile.stem_content],
     ],
     [
-      "Estacionamiento",
+      tr("Estacionamiento"),
       aging(profile.aging_months_min, profile.aging_months_max),
     ],
     [
-      "Origen de hoja",
+      tr("Origen de hoja"),
       [profile.leaf_origin_country_code, profile.leaf_origin_description]
         .filter(Boolean)
-        .join(" · ") || "Sin información",
+        .join(" · ") || tr("Sin información"),
     ],
-    ["Secado", profile.drying_method || "Sin información"],
-    ["Molienda", profile.grind_description || "Sin información"],
+    [tr("Secado"), profile.drying_method || tr("Sin información")],
+    [tr("Molienda"), profile.grind_description || tr("Sin información")],
     [
-      "Hoja declarada",
+      tr("Hoja declarada"),
       profile.declared_leaf_percentage !== null
         ? `${profile.declared_leaf_percentage}%`
-        : "Sin información",
+        : tr("Sin información"),
     ],
     [
-      "Palo declarado",
+      tr("Palo declarado"),
       profile.declared_stem_percentage !== null
         ? `${profile.declared_stem_percentage}%`
-        : "Sin información",
+        : tr("Sin información"),
     ],
     [
-      "Polvo declarado",
+      tr("Polvo declarado"),
       profile.declared_dust_percentage !== null
         ? `${profile.declared_dust_percentage}%`
-        : "Sin información",
+        : tr("Sin información"),
     ],
-    ["Ingredientes", profile.ingredients || "Sin información"],
+    [tr("Ingredientes"), profile.ingredients || tr("Sin información")],
   ];
 }

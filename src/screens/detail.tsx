@@ -1,3 +1,4 @@
+import { tr, countLabel, useLocale, getLocale } from "@/i18n";
 import { PurchaseOptions } from "@/components/purchase-options";
 import { EditorialSourceLink } from "@/components/editorial-source-link";
 import { LeafRating } from "@/components/leaf-rating";
@@ -56,6 +57,7 @@ const TAB_OPTIONS = Object.entries(DETAIL_TABS).map(([key, label]) => ({
   label,
 }));
 export function Detail() {
+  useLocale();
   const { width } = useWindowDimensions();
   const galleryWidth = Math.min(420, width - theme.spacing.lg * 2);
   const { slug } = useLocalSearchParams<{ slug: string }>();
@@ -125,7 +127,7 @@ export function Detail() {
     reviews.data?.pages.flatMap((page) => page.results) ?? []
   ).filter((review) => review.id !== own.data?.id);
   const rows = technicalRows(yerba?.technical_profile ?? null).filter(
-    ([, value]) => value !== "Sin información",
+    ([, value]) => value !== tr("Sin información"),
   );
   return (
     <Page>
@@ -158,10 +160,15 @@ export function Detail() {
                   </Text>
                   <Pressable
                     accessibilityRole="button"
-                    accessibilityLabel={`${library.data?.is_favorite ? "Quitar" : "Guardar"} ${yerba.name} ${library.data?.is_favorite ? "de" : "en"} favoritas`}
+                    accessibilityLabel={tr(
+                      library.data?.is_favorite
+                        ? "Quitar {name} de favoritas"
+                        : "Guardar {name} en favoritas",
+                      { name: yerba.name },
+                    )}
                     accessibilityHint={
                       !user
-                        ? "Inicia sesión para guardar esta yerba"
+                        ? tr("Inicia sesión para guardar esta yerba")
                         : undefined
                     }
                     accessibilityState={{
@@ -183,8 +190,8 @@ export function Detail() {
                       if (!library.data) {
                         void library.refetch();
                         Alert.alert(
-                          "No pudimos cargar tus favoritas",
-                          "Volvé a intentarlo en un momento.",
+                          tr("No pudimos cargar tus favoritas"),
+                          tr("Volvé a intentarlo en un momento."),
                         );
                         return;
                       }
@@ -216,7 +223,9 @@ export function Detail() {
                 </View>
                 <Pressable
                   accessibilityRole="link"
-                  accessibilityLabel={`Conocer la marca ${yerba.brand.name}`}
+                  accessibilityLabel={tr("Conocer la marca {0}", {
+                    0: yerba.brand.name,
+                  })}
                   onPress={() =>
                     router.push({
                       pathname: "/marcas/[slug]",
@@ -232,12 +241,12 @@ export function Detail() {
                       fontSize: 17,
                     }}
                   >
-                    {yerba.brand.name} · Ver marca
+                    {yerba.brand.name} {tr("· Ver marca")}
                   </Text>
                 </Pressable>
                 <Pressable
                   accessibilityRole="button"
-                  accessibilityLabel="Ver opiniones de esta yerba"
+                  accessibilityLabel={tr("Ver opiniones de esta yerba")}
                   onPress={() => setTab("reviews")}
                   style={{ minHeight: 44, justifyContent: "center" }}
                 >
@@ -245,10 +254,16 @@ export function Detail() {
                   yerba.stats.rating_average !== null ? (
                     <View style={{ gap: theme.spacing.xs }}>
                       <LeafRating value={yerba.stats.rating_average} />
-                      <Body muted>{yerba.stats.review_count} opiniones</Body>
+                      <Body muted>
+                        {countLabel(
+                          yerba.stats.review_count,
+                          "{count} opinión",
+                          "{count} opiniones",
+                        )}
+                      </Body>
                     </View>
                   ) : (
-                    <Body>Todavía sin opiniones</Body>
+                    <Body>{tr("Todavía sin opiniones")}</Body>
                   )}
                 </Pressable>
               </View>
@@ -257,7 +272,7 @@ export function Detail() {
                   horizontal
                   showsHorizontalScrollIndicator={false}
                   contentContainerStyle={{ gap: theme.spacing.md }}
-                  accessibilityLabel="Galería de la yerba"
+                  accessibilityLabel={tr("Galería de la yerba")}
                 >
                   {(yerba.images.length ? yerba.images : [null]).map(
                     (image, index) => (
@@ -297,7 +312,7 @@ export function Detail() {
                               fontSize: 12,
                             }}
                           >
-                            Imagen de producto no disponible
+                            {tr("Imagen de producto no disponible")}
                           </Text>
                         )}
                       </View>
@@ -316,32 +331,34 @@ export function Detail() {
                 }}
               >
                 <SummaryFact
-                  label="Elaboración"
+                  label={tr("Elaboración")}
                   countryCode={yerba.manufacturing_country_code}
                   value={
                     yerba.manufacturing_country_code
                       ? countryLabel(yerba.manufacturing_country_code)
-                      : "No informada"
+                      : tr("No informada")
                   }
                 />
                 <SummaryFact
-                  label="Tradición"
+                  label={tr("Tradición")}
                   countryCode={yerba.tradition_country_code}
                   value={
                     yerba.tradition_country_code
                       ? countryLabel(yerba.tradition_country_code)
-                      : "No informada"
+                      : tr("No informada")
                   }
                 />
                 {yerba.styles.length > 0 && (
                   <SummaryFact
-                    label="Estilo"
-                    value={yerba.styles.map((style) => style.name).join(" · ")}
+                    label={tr("Estilo")}
+                    value={yerba.styles
+                      .map((style) => tr(style.name))
+                      .join(" · ")}
                   />
                 )}
               </View>
               {yerba.is_discontinued && (
-                <Body muted>Producto discontinuado</Body>
+                <Body muted>{tr("Producto discontinuado")}</Body>
               )}
               <View style={{ gap: theme.spacing.sm }}>
                 {user && (
@@ -359,7 +376,9 @@ export function Detail() {
                           key={key}
                           compact
                           label={
-                            key === "is_tried" ? "Probada" : "Quiero probar"
+                            key === "is_tried"
+                              ? tr("Probada")
+                              : tr("Quiero probar")
                           }
                           secondary={!library.data?.[key]}
                           selected={library.data?.[key]}
@@ -378,7 +397,7 @@ export function Detail() {
                   <View style={styles.row}>
                     <Button
                       compact
-                      label="Comprar"
+                      label={tr("Comprar")}
                       expanded={purchaseSlug === slug}
                       onPress={() =>
                         setPurchaseSlug(purchaseSlug === slug ? null : slug)
@@ -396,7 +415,7 @@ export function Detail() {
                     <ErrorMessage message={sessionError} />
                     <Button
                       compact
-                      label="Restaurar sesión"
+                      label={tr("Restaurar sesión")}
                       onPress={() => {
                         void restore();
                       }}
@@ -421,15 +440,15 @@ export function Detail() {
               <AnimatedTabContent activeKey={tab}>
                 {tab === "info" && (
                   <View style={{ gap: theme.spacing.md }}>
-                    <Title>Sobre esta yerba</Title>
+                    <Title>{tr("Sobre esta yerba")}</Title>
                     <Body>
                       {yerba.description ||
                         yerba.short_description ||
-                        "Todavía no hay una descripción publicada."}
+                        tr("Todavía no hay una descripción publicada.")}
                     </Body>
                     {yerba.presentations.length > 0 && (
                       <>
-                        <SectionHeading>Presentaciones</SectionHeading>
+                        <SectionHeading>{tr("Presentaciones")}</SectionHeading>
                         {yerba.presentations.map((item, index) => (
                           <DetailRow
                             key={index}
@@ -442,7 +461,7 @@ export function Detail() {
                     {!!yerba.presentation_availability?.length && (
                       <>
                         <SectionHeading>
-                          Disponibilidad documentada
+                          {tr("Disponibilidad documentada")}
                         </SectionHeading>
                         {yerba.presentation_availability.map((item) => (
                           <View
@@ -453,14 +472,20 @@ export function Detail() {
                               label={`${item.weight_grams} g`}
                               value={
                                 {
-                                  AVAILABLE: "Disponible",
-                                  UNAVAILABLE: "No disponible",
-                                  UNKNOWN: "Sin confirmar",
+                                  AVAILABLE: tr("Disponible"),
+                                  UNAVAILABLE: tr("No disponible"),
+                                  UNKNOWN: tr("Sin confirmar"),
                                 }[item.status]
                               }
                             />
                             {item.verified_at && (
-                              <Body muted>Verificado: {item.verified_at}</Body>
+                              <Body muted>
+                                {tr("Verificado: {date}", {
+                                  date: new Date(
+                                    item.verified_at,
+                                  ).toLocaleDateString(getLocale()),
+                                })}
+                              </Body>
                             )}
                             {item.source && (
                               <ExternalLink
@@ -476,20 +501,29 @@ export function Detail() {
                 )}
                 {tab === "profile" && (
                   <View style={{ gap: theme.spacing.md }}>
-                    <Title>Perfil técnico</Title>
+                    <Title>{tr("Perfil técnico")}</Title>
                     {rows.length ? (
                       rows.map(([label, value]) => (
                         <DetailRow key={label} label={label} value={value} />
                       ))
                     ) : (
                       <Body muted>
-                        No hay datos técnicos publicados para esta yerba.
+                        {tr(
+                          "No hay datos técnicos publicados para esta yerba.",
+                        )}
                       </Body>
                     )}
-                    <SectionHeading>Perfil de la comunidad</SectionHeading>
+                    <SectionHeading>
+                      {tr("Perfil de la comunidad")}
+                    </SectionHeading>
                     <Body muted>
-                      Promedios de la ronda, desde{" "}
-                      {yerba.sensory_profile.minimum_evaluators} evaluadores.
+                      {tr("Promedios de la ronda, desde")}{" "}
+                      {countLabel(
+                        yerba.sensory_profile.minimum_evaluators,
+                        "{count} evaluador",
+                        "{count} evaluadores",
+                      )}
+                      .
                     </Body>
                     {yerba.sensory_profile.attributes
                       .filter(
@@ -502,13 +536,17 @@ export function Detail() {
                           key={attribute.attribute}
                           style={{ gap: theme.spacing.xs }}
                         >
-                          <Body>{sensoryLabels[attribute.attribute]}</Body>
+                          <Body>{tr(sensoryLabels[attribute.attribute])}</Body>
                           <LeafRating
                             value={attribute.average}
-                            label={sensoryLabels[attribute.attribute]}
+                            label={tr(sensoryLabels[attribute.attribute])}
                           />
                           <Body muted>
-                            {attribute.evaluator_count} evaluadores
+                            {countLabel(
+                              attribute.evaluator_count,
+                              "{count} evaluador",
+                              "{count} evaluadores",
+                            )}
                           </Body>
                         </View>
                       ))}
@@ -516,32 +554,33 @@ export function Detail() {
                       (attribute) => !attribute.has_sufficient_evidence,
                     ) && (
                       <Body muted>
-                        Algunos atributos todavía no reúnen suficientes
-                        evaluaciones.
+                        {tr(
+                          "Algunos atributos todavía no reúnen suficientes evaluaciones.",
+                        )}
                       </Body>
                     )}
                     {yerba.sensory_profile.attributes.length === 0 && (
                       <Body muted>
-                        Todavía no hay evaluaciones sensoriales.
+                        {tr("Todavía no hay evaluaciones sensoriales.")}
                       </Body>
                     )}
                   </View>
                 )}
                 {tab === "reviews" && (
                   <View style={{ gap: theme.spacing.md }}>
-                    <Title>Opiniones de la ronda</Title>
+                    <Title>{tr("Opiniones de la ronda")}</Title>
                     {user ? (
                       <QueryState query={own}>
                         {own.data && (
                           <>
                             <DetailReview review={own.data} />
                             <Body muted>
-                              Tu opinión:{" "}
+                              {tr("Tu opinión:")}{" "}
                               {
                                 {
-                                  PUBLISHED: "Publicada",
-                                  PENDING: "Pendiente de moderación",
-                                  HIDDEN: "Oculta",
+                                  PUBLISHED: tr("Publicada"),
+                                  PENDING: tr("Pendiente de moderación"),
+                                  HIDDEN: tr("Oculta"),
                                 }[own.data.status]
                               }
                             </Body>
@@ -552,8 +591,8 @@ export function Detail() {
                             compact
                             label={
                               own.data
-                                ? "Editar mi opinión"
-                                : "Compartir mi opinión"
+                                ? tr("Editar mi opinión")
+                                : tr("Compartir mi opinión")
                             }
                             disabled={!online}
                             onPress={() =>
@@ -567,16 +606,16 @@ export function Detail() {
                             <Button
                               compact
                               secondary
-                              label="Borrar mi opinión"
+                              label={tr("Borrar mi opinión")}
                               disabled={deletion.isPending || !online}
                               onPress={() =>
                                 Alert.alert(
-                                  "¿Borrar tu opinión?",
-                                  "Podés publicar una nueva después.",
+                                  tr("¿Borrar tu opinión?"),
+                                  tr("Podés publicar una nueva después."),
                                   [
-                                    { text: "Cancelar", style: "cancel" },
+                                    { text: tr("Cancelar"), style: "cancel" },
                                     {
-                                      text: "Borrar",
+                                      text: tr("Borrar"),
                                       style: "destructive",
                                       onPress: () => deletion.mutate(),
                                     },
@@ -596,14 +635,16 @@ export function Detail() {
                       <Button
                         compact
                         secondary
-                        label="Ingresar para opinar"
+                        label={tr("Ingresar para opinar")}
                         onPress={() => router.push("/ingresar")}
                       />
                     )}
                     <QueryState query={reviews}>
                       {!publicReviews.length && !own.data && (
                         <Body muted>
-                          Todavía no hay opiniones. Podés compartir la primera.
+                          {tr(
+                            "Todavía no hay opiniones. Podés compartir la primera.",
+                          )}
                         </Body>
                       )}
                       {publicReviews.slice(0, visibleReviews).map((review) => (
@@ -615,7 +656,7 @@ export function Detail() {
                       <Button
                         compact
                         secondary
-                        label="Ver más opiniones"
+                        label={tr("Ver más opiniones")}
                         disabled={reviews.isFetchingNextPage}
                         onPress={() => {
                           setVisibleReviews((count) => count + 3);
@@ -631,10 +672,12 @@ export function Detail() {
                 )}
                 {tab === "sources" && (
                   <View style={{ gap: theme.spacing.md }}>
-                    <Title>Procedencia de la información</Title>
+                    <Title>{tr("Procedencia de la información")}</Title>
                     {!yerba.sources.length && (
                       <Body muted>
-                        Todavía no hay fuentes documentadas para esta yerba.
+                        {tr(
+                          "Todavía no hay fuentes documentadas para esta yerba.",
+                        )}
                       </Body>
                     )}
                     {yerba.sources.map((source, index) => (
@@ -643,11 +686,16 @@ export function Detail() {
                         name={source.title || source.publisher}
                         publisher={source.publisher}
                         href={source.url}
-                        note={`${source.is_official ? "Fuente oficial · " : ""}Consultado ${source.accessed_at}`}
+                        note={tr("{0}Consultado {1}", {
+                          0: source.is_official ? "Fuente oficial · " : "",
+                          1: source.accessed_at,
+                        })}
                       />
                     ))}
                     {yerba.images.some((image) => image.attribution) && (
-                      <SectionHeading>Créditos de imágenes</SectionHeading>
+                      <SectionHeading>
+                        {tr("Créditos de imágenes")}
+                      </SectionHeading>
                     )}
                     {yerba.images.map(
                       (image) =>
@@ -663,11 +711,13 @@ export function Detail() {
                                 : ""}
                             </Body>
                             <ExternalLink
-                              label="Fuente de imagen"
+                              label={tr("Fuente de imagen")}
                               url={image.attribution.source_url}
                             />
                             <ExternalLink
-                              label={`Licencia ${image.attribution.license_code}`}
+                              label={tr("Licencia {0}", {
+                                0: image.attribution.license_code,
+                              })}
                               url={image.attribution.license_url}
                             />
                           </View>
@@ -693,6 +743,7 @@ function SummaryFact({
   value: string;
   countryCode?: string;
 }) {
+  useLocale();
   const showFlag =
     !!countryCode &&
     ["AR", "BR", "PY", "UY"].includes(countryCode.toUpperCase());
@@ -709,7 +760,7 @@ function SummaryFact({
           fontSize: 13,
         }}
       >
-        {label}
+        {tr(label)}
       </Text>
       {showFlag ? (
         <View style={{ minHeight: 19, justifyContent: "center" }}>
@@ -731,6 +782,7 @@ function SummaryFact({
   );
 }
 function SectionHeading({ children }: React.PropsWithChildren) {
+  useLocale();
   return (
     <Text
       accessibilityRole="header"
@@ -752,6 +804,7 @@ function DetailRow({
   label: string;
   value: React.ReactNode;
 }) {
+  useLocale();
   return (
     <View
       style={{
@@ -771,7 +824,7 @@ function DetailRow({
           fontSize: 14,
         }}
       >
-        {label}
+        {tr(label)}
       </Text>
       {typeof value === "string" ? (
         <Text
@@ -792,6 +845,7 @@ function DetailRow({
   );
 }
 function DetailReview({ review }: { review: Review }) {
+  useLocale();
   const [expanded, setExpanded] = React.useState(false);
   const sensory = Object.entries(review.sensory ?? {}).filter(
     ([, value]) => value !== null,
@@ -815,7 +869,7 @@ function DetailReview({ review }: { review: Review }) {
       >
         <Pressable
           accessibilityRole="link"
-          accessibilityLabel={`Ver perfil de ${review.username}`}
+          accessibilityLabel={tr("Ver perfil de {0}", { 0: review.username })}
           onPress={() =>
             router.push({
               pathname: "/usuarios/[username]",
@@ -843,17 +897,19 @@ function DetailReview({ review }: { review: Review }) {
       {review.comment && <Body>{review.comment}</Body>}
       {review.flavor_notes.length > 0 && (
         <Body muted>
-          {review.flavor_notes.map((note) => note.name).join(" · ")}
+          {review.flavor_notes.map((note) => tr(note.name)).join(" · ")}
         </Body>
       )}
       <Body muted>
-        {new Date(review.created_at).toLocaleDateString("es-AR")}
+        {new Date(review.created_at).toLocaleDateString(getLocale())}
       </Body>
       {sensory.length > 0 && (
         <Button
           compact
           secondary
-          label={expanded ? "Ocultar evaluación" : "Ver evaluación sensorial"}
+          label={
+            expanded ? tr("Ocultar evaluación") : tr("Ver evaluación sensorial")
+          }
           onPress={() => setExpanded(!expanded)}
         />
       )}
@@ -861,11 +917,11 @@ function DetailReview({ review }: { review: Review }) {
         sensory.map(([key, value]) => (
           <DetailRow
             key={key}
-            label={sensoryLabels[key as keyof typeof sensoryLabels]}
+            label={tr(sensoryLabels[key as keyof typeof sensoryLabels])}
             value={
               <LeafRating
                 value={value!}
-                label={sensoryLabels[key as keyof typeof sensoryLabels]}
+                label={tr(sensoryLabels[key as keyof typeof sensoryLabels])}
                 size={16}
               />
             }

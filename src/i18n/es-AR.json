@@ -1,0 +1,8 @@
+{
+  "This field is required.": "Este campo es obligatorio.",
+  "This field may not be blank.": "Este campo no puede estar vacío.",
+  "Enter a valid email address.": "Ingresá un email válido.",
+  "This password is too common.": "Esta contraseña es demasiado común.",
+  "This password is entirely numeric.": "Esta contraseña solo contiene números.",
+  "This password is too short. It must contain at least 8 characters.": "Esta contraseña es demasiado corta. Debe tener al menos 8 caracteres."
+}

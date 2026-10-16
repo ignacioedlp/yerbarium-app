@@ -1,3 +1,4 @@
+import { tr } from "@/i18n/core";
 import { ApiError } from "./client";
 export type TokenPair = { access: string; refresh: string };
 export class SessionManager {
@@ -53,10 +54,10 @@ export class SessionManager {
       try {
         const pair = await this.renew(token);
         if (generation !== this.generation)
-          throw new ApiError("La sesión cambió.", 401);
+          throw new ApiError(tr("La sesión cambió."), 401);
         await this.persist(() => this.store.set(pair.refresh));
         if (generation !== this.generation)
-          throw new ApiError("La sesión cambió.", 401);
+          throw new ApiError(tr("La sesión cambió."), 401);
         this.access = pair.access;
         this.refreshToken = pair.refresh;
         this.changed(true);

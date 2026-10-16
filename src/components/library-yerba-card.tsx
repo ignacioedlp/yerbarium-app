@@ -1,3 +1,4 @@
+import { tr, useLocale } from "@/i18n";
 import {
   useQuery,
   useQueryClient,
@@ -19,6 +20,7 @@ export function LibraryYerbaCard({
   yerba: LibraryEntry["yerba"];
   index?: number;
 }) {
+  useLocale();
   const client = useQueryClient();
   const complete =
     yerba.stats !== undefined &&
@@ -44,15 +46,15 @@ export function LibraryYerbaCard({
       <YerbaCard
         yerba={complete ? yerba : (catalog.data ?? yerba)}
         index={index}
-        loading={
-          !complete && catalog.fetchStatus === "fetching"
-        }
+        loading={!complete && catalog.fetchStatus === "fetching"}
       />
       {!complete && catalog.isError && !catalog.data && (
         <>
-          <ErrorMessage message="No pudimos cargar los detalles de esta yerba." />
+          <ErrorMessage
+            message={tr("No pudimos cargar los detalles de esta yerba.")}
+          />
           <Button
-            label="Reintentar detalles"
+            label={tr("Reintentar detalles")}
             compact
             secondary
             onPress={() => {

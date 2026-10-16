@@ -1,3 +1,4 @@
+import { tr, useLocale, getLocale } from "@/i18n";
 import { LeafRating } from "@/components/leaf-rating";
 import {
   ContentLoadingTransition,
@@ -111,6 +112,7 @@ export function Body({
   children,
   muted = false,
 }: React.PropsWithChildren<{ muted?: boolean }>) {
+  useLocale();
   return (
     <Text selectable style={muted ? styles.muted : styles.body}>
       {children}
@@ -118,6 +120,7 @@ export function Body({
   );
 }
 export function Title({ children }: React.PropsWithChildren) {
+  useLocale();
   return (
     <Text accessibilityRole="header" style={styles.title}>
       {children}
@@ -129,6 +132,7 @@ export function Page({
   fullBleed = false,
   safeTop = false,
 }: React.PropsWithChildren<{ fullBleed?: boolean; safeTop?: boolean }>) {
+  useLocale();
   return (
     <KeyboardAvoidingView
       style={{ flex: 1, backgroundColor: t.colors.background }}
@@ -152,6 +156,7 @@ export function Page({
   );
 }
 export function Card({ children }: React.PropsWithChildren) {
+  useLocale();
   return (
     <View style={styles.card}>
       <Paper />
@@ -182,6 +187,7 @@ export function Button({
   selectedBackgroundColor?: string;
   expanded?: boolean;
 }) {
+  useLocale();
   const filled = (!secondary || selected) && !destructive;
   return (
     <Pressable
@@ -237,6 +243,7 @@ export function Field({
   error?: string;
   inputRef?: React.Ref<TextInput>;
 }) {
+  useLocale();
   return (
     <View style={{ gap: t.spacing.xs }}>
       <Text
@@ -259,21 +266,23 @@ export function Field({
   );
 }
 export function ErrorMessage({ message }: { message: string }) {
+  useLocale();
   return (
     <Text
       selectable
       accessibilityRole="alert"
       style={[styles.body, { color: t.colors.error }]}
     >
-      {message}
+      {tr(message)}
     </Text>
   );
 }
 export function OfflineBanner() {
+  useLocale();
   const net = useNetInfo();
   return net.isConnected === false || net.isInternetReachable === false ? (
     <Card>
-      <Body>Sin conexión. Mostramos la información guardada.</Body>
+      <Body>{tr("Sin conexión. Mostramos la información guardada.")}</Body>
     </Card>
   ) : null;
 }
@@ -299,6 +308,7 @@ export function QueryState({
   yerbaCards?: boolean;
   skeleton?: SkeletonVariant;
 }>) {
+  useLocale();
   if (
     yerbaCards &&
     query.fetchStatus === "fetching" &&
@@ -323,14 +333,16 @@ export function QueryState({
           <>
             <ErrorMessage message={normalizeError(query.error).message} />
             <Button
-              label="Reintentar"
+              label={tr("Reintentar")}
               onPress={() => {
                 void query.refetch();
               }}
             />
           </>
         ) : (
-          <Body>Conectate para cargar esta información por primera vez.</Body>
+          <Body>
+            {tr("Conectate para cargar esta información por primera vez.")}
+          </Body>
         )}
       </Card>
     );
@@ -349,13 +361,18 @@ function QueryContent({
   query: { error: unknown; refetch: () => unknown };
   empty?: boolean;
 }>) {
+  useLocale();
   return (
     <>
       {query.error && (
         <Card>
-          <ErrorMessage message="No pudimos actualizar. Mostramos los datos guardados." />
+          <ErrorMessage
+            message={tr(
+              "No pudimos actualizar. Mostramos los datos guardados.",
+            )}
+          />
           <Button
-            label="Reintentar"
+            label={tr("Reintentar")}
             secondary
             onPress={() => {
               void query.refetch();
@@ -365,8 +382,8 @@ function QueryContent({
       )}
       {empty ? (
         <Card>
-          <Title>No encontramos resultados</Title>
-          <Body>Probá otra búsqueda o quitá los filtros.</Body>
+          <Title>{tr("No encontramos resultados")}</Title>
+          <Body>{tr("Probá otra búsqueda o quitá los filtros.")}</Body>
         </Card>
       ) : (
         children
@@ -375,29 +392,34 @@ function QueryContent({
   );
 }
 export function RequireSession({ children }: React.PropsWithChildren) {
+  useLocale();
   const session = useSession();
   if (!session.user)
     return (
       <Card>
-        <Title>Tu ronda empieza acá</Title>
+        <Title>{tr("Tu ronda empieza acá")}</Title>
         <Body>
-          Ingresá para guardar yerbas, compartir opiniones y armar tu
-          biblioteca.
+          {tr(
+            "Ingresá para guardar yerbas, compartir opiniones y armar tu biblioteca.",
+          )}
         </Body>
         {session.error && (
           <>
             <ErrorMessage message={session.error} />
             <Button
-              label="Restaurar sesión"
+              label={tr("Restaurar sesión")}
               onPress={() => {
                 void session.restore();
               }}
             />
           </>
         )}
-        <Button label="Ingresar" onPress={() => router.push("/ingresar")} />
         <Button
-          label="Crear cuenta"
+          label={tr("Ingresar")}
+          onPress={() => router.push("/ingresar")}
+        />
+        <Button
+          label={tr("Crear cuenta")}
           secondary
           onPress={() => router.push("/registro")}
         />
@@ -409,6 +431,7 @@ export async function openExternal(url: string) {
   if (/^https?:\/\//i.test(url)) await Linking.openURL(url);
 }
 export function ExternalLink({ label, url }: { label: string; url: string }) {
+  useLocale();
   const [error, setError] = React.useState(false);
   return (
     <>
@@ -420,7 +443,7 @@ export function ExternalLink({ label, url }: { label: string; url: string }) {
           void openExternal(url).catch(() => setError(true));
         }}
       />
-      {error && <ErrorMessage message="No pudimos abrir el enlace." />}
+      {error && <ErrorMessage message={tr("No pudimos abrir el enlace.")} />}
     </>
   );
 }
@@ -442,6 +465,7 @@ export function YerbaCard({
       >
     >;
 }) {
+  useLocale();
   const comparison = useComparison();
   const { user } = useSession();
   const activeUser = React.useRef(user?.username);
@@ -469,7 +493,10 @@ export function YerbaCard({
       });
     },
     onError: (error) =>
-      Alert.alert("No pudimos guardar la yerba", normalizeError(error).message),
+      Alert.alert(
+        tr("No pudimos guardar la yerba"),
+        normalizeError(error).message,
+      ),
   });
   const [failedUrl, setFailedUrl] = React.useState<string>();
   const image = yerba.images?.[0];
@@ -490,25 +517,30 @@ export function YerbaCard({
         <Paper />
         <Pressable
           accessibilityRole="button"
-          accessibilityLabel={`Ver ${yerba.brand.name} ${yerba.name}`}
-          accessibilityHint="Mantené presionado para agregar o quitar de la comparación"
+          accessibilityLabel={tr("Ver {0} {1}", {
+            0: yerba.brand.name,
+            1: yerba.name,
+          })}
+          accessibilityHint={tr(
+            "Mantené presionado para agregar o quitar de la comparación",
+          )}
           onLongPress={() =>
-            Alert.alert(yerba.name, "Comparación de yerbas", [
+            Alert.alert(yerba.name, tr("Comparación de yerbas"), [
               {
                 text: selected
-                  ? "Quitar de comparación"
-                  : "Agregar a comparación",
+                  ? tr("Quitar de comparación")
+                  : tr("Agregar a comparación"),
                 onPress: () => comparison.toggle(yerba.slug),
               },
               ...(comparison.slugs.length
                 ? [
                     {
-                      text: "Ver comparación",
+                      text: tr("Ver comparación"),
                       onPress: () => router.push("/comparar"),
                     },
                   ]
                 : []),
-              { text: "Cancelar", style: "cancel" },
+              { text: tr("Cancelar"), style: "cancel" },
             ])
           }
           onPress={() =>
@@ -575,7 +607,7 @@ export function YerbaCard({
                   {yerba.brand.name.slice(0, 2).toUpperCase()}
                 </Text>
                 <Text style={[styles.muted, { textAlign: "center" }]}>
-                  Imagen no disponible
+                  {tr("Imagen no disponible")}
                 </Text>
               </View>
             )}
@@ -601,8 +633,8 @@ export function YerbaCard({
                 )}
                 <Text style={[styles.muted, { flex: 1, fontSize: 12 }]}>
                   {rated
-                    ? `${rating.toLocaleString("es-AR", { minimumFractionDigits: 1, maximumFractionDigits: 1 })} · ${yerba.stats.review_count} ${yerba.stats.review_count === 1 ? "opinión" : "opiniones"}`
-                    : "Sin opiniones todavía"}
+                    ? `${rating.toLocaleString(getLocale(), { minimumFractionDigits: 1, maximumFractionDigits: 1 })} · ${yerba.stats.review_count} ${yerba.stats.review_count === 1 ? tr("opinión") : tr("opiniones")}`
+                    : tr("Sin opiniones todavía")}
                 </Text>
               </View>
             )}
@@ -631,7 +663,7 @@ export function YerbaCard({
                     },
                   ]}
                 >
-                  {yerba.styles.map((style) => style.name).join(" · ")}
+                  {yerba.styles.map((style) => tr(style.name)).join(" · ")}
                 </Text>
               </View>
             )}
@@ -645,7 +677,7 @@ export function YerbaCard({
                 }}
               >
                 <Text style={[styles.muted, { fontSize: 12 }]}>
-                  Elaboración
+                  {tr("Elaboración")}
                 </Text>
                 <CountryFlag
                   code={yerba.manufacturing_country_code}
@@ -655,7 +687,7 @@ export function YerbaCard({
             )}
             {yerba.is_discontinued && (
               <Text style={[styles.muted, { color: t.colors.amber }]}>
-                Discontinuada
+                {tr("Discontinuada")}
               </Text>
             )}
             {!!yerba.short_description && (
@@ -673,14 +705,19 @@ export function YerbaCard({
             )}
             {selected && (
               <Text style={[styles.muted, { fontFamily: t.fonts.bold }]}>
-                En comparación
+                {tr("En comparación")}
               </Text>
             )}
           </View>
         </Pressable>
         <Pressable
           accessibilityRole="button"
-          accessibilityLabel={`${favorite ? "Quitar" : "Guardar"} ${yerba.name} ${favorite ? "de" : "en"} favoritas`}
+          accessibilityLabel={tr(
+            favorite
+              ? "Quitar {name} de favoritas"
+              : "Guardar {name} en favoritas",
+            { name: yerba.name },
+          )}
           accessibilityState={{
             selected: favorite,
             disabled:
@@ -697,8 +734,8 @@ export function YerbaCard({
             if (!library.data) {
               void library.refetch();
               Alert.alert(
-                "No pudimos cargar tus favoritas",
-                "Volvé a intentarlo en un momento.",
+                tr("No pudimos cargar tus favoritas"),
+                tr("Volvé a intentarlo en un momento."),
               );
               return;
             }
@@ -731,14 +768,26 @@ export function YerbaCard({
 }
 
 export function countryLabel(code: string) {
-  return (
-    (
-      {
-        AR: "Argentina",
-        UY: "Uruguay",
-        PY: "Paraguay",
-        BR: "Brasil",
-      } as Record<string, string>
-    )[code] || code
-  );
+  const names: Record<string, string> = {
+    AR: "Argentina",
+    UY: "Uruguay",
+    PY: "Paraguay",
+    BR: "Brasil",
+    BO: "Bolivia",
+    CL: "Chile",
+    ES: "España",
+    PT: "Portugal",
+    GB: "Reino Unido",
+  };
+  const normalized = code.toUpperCase();
+  if (Object.hasOwn(names, normalized)) return tr(names[normalized]);
+  try {
+    return typeof Intl.DisplayNames === "function"
+      ? new Intl.DisplayNames([getLocale()], { type: "region" }).of(
+          normalized,
+        ) || code
+      : code;
+  } catch {
+    return code;
+  }
 }

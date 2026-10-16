@@ -1,3 +1,4 @@
+import { tr, useLocale } from "@/i18n";
 import React from "react";
 import { router } from "expo-router";
 import { Image } from "expo-image";
@@ -15,6 +16,7 @@ import { SectionHeading } from "./editorial";
 import { QueryState, styles } from "./ui";
 
 export function CommunityPodium() {
+  useLocale();
   const ranking = useResource<CommunityRanking>(
     "community/rankings/yerbas/?limit=3",
   );
@@ -29,9 +31,9 @@ export function CommunityPodium() {
   return (
     <View style={{ gap: t.spacing.md }} testID="community-podium">
       <View style={{ gap: t.spacing.sm }}>
-        <SectionHeading title="Mejor valoradas por la comunidad" />
+        <SectionHeading title={tr("Mejor valoradas por la comunidad")} />
         <Text style={styles.muted}>
-          El podio combina puntuación y cantidad de opiniones.
+          {tr("El podio combina puntuación y cantidad de opiniones.")}
         </Text>
       </View>
       <QueryState query={ranking}>
@@ -49,8 +51,9 @@ export function CommunityPodium() {
           </View>
         ) : (
           <Text style={styles.body}>
-            Todavía no hay yerbas valoradas por la comunidad. Compartí tu
-            opinión desde la ficha de una yerba.
+            {tr(
+              "Todavía no hay yerbas valoradas por la comunidad. Compartí tu opinión desde la ficha de una yerba.",
+            )}
           </Text>
         )}
       </QueryState>
@@ -65,14 +68,19 @@ function PodiumYerba({
   yerba: RankedYerba;
   stacked: boolean;
 }) {
+  useLocale();
   const [failedUrl, setFailedUrl] = React.useState<string>();
   const winner = yerba.rank === 1;
 
   return (
     <Pressable
       accessibilityRole="button"
-      accessibilityLabel={`Puesto ${yerba.rank}: ${yerba.brand.name} ${yerba.name}`}
-      accessibilityHint="Abrir ficha de la yerba"
+      accessibilityLabel={tr("Puesto {0}: {1} {2}", {
+        0: yerba.rank,
+        1: yerba.brand.name,
+        2: yerba.name,
+      })}
+      accessibilityHint={tr("Abrir ficha de la yerba")}
       onPress={() =>
         router.push({
           pathname: "/yerbas/[slug]",
@@ -120,7 +128,7 @@ function PodiumYerba({
             />
           ) : (
             <Text style={[styles.muted, { textAlign: "center" }]}>
-              Imagen no disponible
+              {tr("Imagen no disponible")}
             </Text>
           )}
         </View>

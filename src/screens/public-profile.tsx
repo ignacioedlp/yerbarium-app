@@ -1,3 +1,4 @@
+import { tr, useLocale } from "@/i18n";
 import { View } from "react-native";
 import { LibraryYerbaCard } from "@/components/library-yerba-card";
 import { YerbaCardSkeletons } from "@/components/yerba-card-loading";
@@ -28,6 +29,7 @@ const COLLECTION_TABS: AnimatedTabOption<LibraryCollection>[] = [
 ];
 
 export function PublicProfile() {
+  useLocale();
   const { username } = useLocalSearchParams<{ username: string }>();
   const { user } = useSession();
   const path = `profiles/${encodeURIComponent(username)}/`;
@@ -83,13 +85,13 @@ export function PublicProfile() {
         </View>
         {isBlocked ? (
           <View style={{ gap: theme.spacing.sm }}>
-            <Body>Bloqueaste a @{username}.</Body>
+            <Body>{tr("Bloqueaste a @{username}.", { username })}</Body>
           </View>
         ) : (
           <>
             {profile.data?.is_private ? (
               <Card>
-                <Body>Este perfil es privado.</Body>
+                <Body>{tr("Este perfil es privado.")}</Body>
               </Card>
             ) : (
               <>
@@ -109,7 +111,9 @@ export function PublicProfile() {
                 <AnimatedTabContent activeKey={state}>
                   <QueryState query={library} yerbaCards>
                     {library.data?.pages[0]?.count === 0 ? (
-                      <Body>Esta colección todavía no tiene yerbas.</Body>
+                      <Body>
+                        {tr("Esta colección todavía no tiene yerbas.")}
+                      </Body>
                     ) : (
                       <View style={{ gap: theme.spacing.md }}>
                         {library.data?.pages
@@ -127,7 +131,7 @@ export function PublicProfile() {
                   {library.isFetchingNextPage && <YerbaCardSkeletons />}
                   {library.hasNextPage && (
                     <Button
-                      label="Cargar más"
+                      label={tr("Cargar más")}
                       disabled={library.isFetchingNextPage}
                       onPress={() => {
                         void library.fetchNextPage();

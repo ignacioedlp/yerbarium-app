@@ -1,3 +1,4 @@
+import { tr, countLabel, getLocale, useLocale } from "@/i18n";
 import React, { useEffect, useState } from "react";
 import {
   FlatList,
@@ -34,6 +35,7 @@ import { BrandListItem, YerbaMateListItem, YerbaStyle } from "@/api/types";
 import { useComparison } from "@/providers/comparison";
 type Mode = "catalog" | "search" | "brands";
 export function Explore() {
+  useLocale();
   const params = useLocalSearchParams<{
     style?: string;
     brand?: string;
@@ -57,6 +59,7 @@ function ExploreContent({
   initialBrand: string;
   initialMode: Mode;
 }) {
+  useLocale();
   const [mode, setMode] = useState<Mode>(
     ["catalog", "search", "brands"].includes(initialMode)
       ? initialMode === "search"
@@ -115,7 +118,7 @@ function ExploreContent({
             contentContainerStyle={{ gap: t.spacing.sm }}
           >
             <Button
-              label="Todos"
+              label={tr("Todos")}
               compact
               secondary
               selected={!style}
@@ -127,7 +130,7 @@ function ExploreContent({
               .map((item) => (
                 <Button
                   key={item.slug}
-                  label={item.name}
+                  label={tr(item.name)}
                   compact
                   secondary
                   selected={style === item.slug}
@@ -137,7 +140,7 @@ function ExploreContent({
               ))}
             {taxonomy.hasNextPage && (
               <Button
-                label="Más estilos"
+                label={tr("Más estilos")}
                 compact
                 secondary
                 onPress={() => {
@@ -155,11 +158,17 @@ function ExploreContent({
             }}
           >
             <Text style={styles.muted}>
-              {yerbas.data?.pages[0]?.count ?? "…"} yerbas en el catálogo
+              {yerbas.data
+                ? countLabel(
+                    yerbas.data.pages[0].count,
+                    "{count} yerba en el catálogo",
+                    "{count} yerbas en el catálogo",
+                  )
+                : tr("Cargando…")}
             </Text>
             <Pressable
               accessibilityRole="button"
-              accessibilityLabel="Abrir filtros"
+              accessibilityLabel={tr("Abrir filtros")}
               onPress={() => setFilters(true)}
               style={{
                 flexDirection: "row",
@@ -176,7 +185,8 @@ function ExploreContent({
                   color: t.colors.green,
                 }}
               >
-                Filtros{activeFilters ? ` (${activeFilters})` : ""}
+                {tr("Filtros")}
+                {activeFilters ? ` (${activeFilters})` : ""}
               </Text>
             </Pressable>
           </View>
@@ -185,10 +195,15 @@ function ExploreContent({
       {mode === "search" && debounced && (
         <View style={styles.row}>
           <Text style={styles.muted}>
-            {yerbas.data?.pages[0]?.count ?? "…"} resultados para “{debounced}”
+            {tr(
+              yerbas.data?.pages[0]?.count === 1
+                ? "{count} resultado para “{query}”"
+                : "{count} resultados para “{query}”",
+              { count: yerbas.data?.pages[0]?.count ?? "…", query: debounced },
+            )}
           </Text>
           <Button
-            label="Volver al catálogo"
+            label={tr("Volver al catálogo")}
             compact
             secondary
             onPress={() => setMode("catalog")}
@@ -197,7 +212,7 @@ function ExploreContent({
       )}
       {comparison.slugs.length > 0 && (
         <Button
-          label={`Comparar ${comparison.slugs.length} yerbas`}
+          label={tr("Comparar {0} yerbas", { 0: comparison.slugs.length })}
           onPress={() => router.push("/comparar")}
         />
       )}
@@ -232,7 +247,7 @@ function ExploreContent({
             { fontSize: 34, lineHeight: 38, textTransform: "none" },
           ]}
         >
-          Explorar
+          {tr("Explorar")}
         </Text>
         <SearchBox
           autoFocus={initialMode === "search"}
@@ -296,7 +311,7 @@ function ExploreContent({
               )}
               {brands.hasNextPage && (
                 <Button
-                  label="Más marcas"
+                  label={tr("Más marcas")}
                   disabled={brands.isFetchingNextPage}
                   onPress={() => {
                     void brands.fetchNextPage();
@@ -342,8 +357,8 @@ function ExploreContent({
             <View style={{ padding: t.spacing.lg }}>
               {mode === "search" && !debounced ? (
                 <Card>
-                  <Title>¿Qué yerba tenés en mente?</Title>
-                  <Body>Buscá por nombre de yerba o marca.</Body>
+                  <Title>{tr("¿Qué yerba tenés en mente?")}</Title>
+                  <Body>{tr("Buscá por nombre de yerba o marca.")}</Body>
                 </Card>
               ) : (
                 <QueryState query={yerbas} yerbaCards empty />
@@ -358,7 +373,11 @@ function ExploreContent({
               {yerbas.isFetchingNextPage && <YerbaCardSkeletons />}
               {yerbas.hasNextPage && (
                 <Button
-                  label={yerbas.isFetchingNextPage ? "Cargando…" : "Más yerbas"}
+                  label={
+                    yerbas.isFetchingNextPage
+                      ? tr("Cargando…")
+                      : tr("Más yerbas")
+                  }
                   disabled={yerbas.isFetchingNextPage}
                   onPress={() => {
                     void yerbas.fetchNextPage();
@@ -397,12 +416,13 @@ function ExploreContent({
   );
 }
 function BrandTile({ brand }: { brand: BrandListItem }) {
+  useLocale();
   const [failedUrl, setFailedUrl] = useState<string>();
   const hasImage = Boolean(brand.image_url && brand.image_url !== failedUrl);
   return (
     <Pressable
       accessibilityRole="button"
-      accessibilityLabel={`Ver marca ${brand.name}`}
+      accessibilityLabel={tr("Ver marca {0}", { 0: brand.name })}
       onPress={() =>
         router.push({
           pathname: "/marcas/[slug]",
@@ -471,6 +491,7 @@ function CatalogFiltersSheet({
   onClose: () => void;
   onApply: (filters: CatalogFilters) => void;
 }) {
+  useLocale();
   const [draft, setDraft] = useState(initial);
   const [choosingBrand, setChoosingBrand] = useState(false);
   const [brandSearch, setBrandSearch] = useState("");
@@ -480,7 +501,7 @@ function CatalogFiltersSheet({
     value
       .normalize("NFD")
       .replace(/[\u0300-\u036f]/g, "")
-      .toLocaleLowerCase("es");
+      .toLocaleLowerCase(getLocale());
   const matchingBrands = brandItems.filter((item) =>
     normalize(item.name).includes(normalize(brandSearch.trim())),
   );
@@ -510,11 +531,11 @@ function CatalogFiltersSheet({
       <Text
         style={{ fontFamily: t.fonts.bold, fontSize: 16, color: t.colors.ink }}
       >
-        {label}
+        {tr(label)}
       </Text>
       <View
         accessibilityRole="radiogroup"
-        accessibilityLabel={label}
+        accessibilityLabel={tr(label)}
         style={{ flexDirection: "row", flexWrap: "wrap", gap: t.spacing.sm }}
       >
         {options.map(([value, name]) => {
@@ -523,7 +544,7 @@ function CatalogFiltersSheet({
             <Pressable
               key={value}
               accessibilityRole="radio"
-              accessibilityLabel={`${label}: ${name}`}
+              accessibilityLabel={`${tr(label)}: ${tr(name)}`}
               accessibilityState={{ checked: selected }}
               onPress={() =>
                 setDraft((current) => ({ ...current, [key]: value }))
@@ -553,7 +574,7 @@ function CatalogFiltersSheet({
                   flexShrink: 1,
                 }}
               >
-                {name}
+                {tr(name)}
               </Text>
             </Pressable>
           );
@@ -619,7 +640,7 @@ function CatalogFiltersSheet({
             {choosingBrand && (
               <Pressable
                 accessibilityRole="button"
-                accessibilityLabel="Volver a filtros"
+                accessibilityLabel={tr("Volver a filtros")}
                 onPress={() => {
                   Keyboard.dismiss();
                   setChoosingBrand(false);
@@ -636,19 +657,19 @@ function CatalogFiltersSheet({
               </Pressable>
             )}
             <View style={{ flex: 1, gap: t.spacing.xs }}>
-              <Title>{choosingBrand ? "Marcas" : "Filtros"}</Title>
+              <Title>{choosingBrand ? tr("Marcas") : tr("Filtros")}</Title>
               <Text
                 selectable={false}
                 style={[styles.muted, { backgroundColor: "transparent" }]}
               >
                 {choosingBrand
-                  ? "Elegí una marca para filtrar."
-                  : "Encontrá una yerba a tu manera."}
+                  ? tr("Elegí una marca para filtrar.")
+                  : tr("Encontrá una yerba a tu manera.")}
               </Text>
             </View>
             <Pressable
               accessibilityRole="button"
-              accessibilityLabel="Cerrar filtros"
+              accessibilityLabel={tr("Cerrar filtros")}
               onPress={onClose}
               style={({ pressed }) => ({
                 width: 44,
@@ -687,8 +708,8 @@ function CatalogFiltersSheet({
                   <TextInput
                     value={brandSearch}
                     onChangeText={setBrandSearch}
-                    accessibilityLabel="Buscar marca"
-                    placeholder="Buscar marca…"
+                    accessibilityLabel={tr("Buscar marca")}
+                    placeholder={tr("Buscar marca…")}
                     placeholderTextColor={t.colors.muted}
                     autoCorrect={false}
                     autoCapitalize="none"
@@ -707,7 +728,7 @@ function CatalogFiltersSheet({
                   {!!brandSearch && (
                     <Pressable
                       accessibilityRole="button"
-                      accessibilityLabel="Limpiar búsqueda de marcas"
+                      accessibilityLabel={tr("Limpiar búsqueda de marcas")}
                       onPress={() => setBrandSearch("")}
                       style={{
                         minWidth: 44,
@@ -730,22 +751,26 @@ function CatalogFiltersSheet({
                   paddingHorizontal: t.spacing.lg,
                   paddingBottom: t.spacing.lg,
                 }}
-                ListHeaderComponent={brandRow("", "Todas las marcas")}
+                ListHeaderComponent={brandRow("", tr("Todas las marcas"))}
                 renderItem={({ item }) => brandRow(item.slug, item.name)}
                 ListEmptyComponent={
                   !brands.isPending && !brands.hasNextPage && !brands.error ? (
-                    <Body muted>No encontramos marcas con ese nombre.</Body>
+                    <Body muted>
+                      {tr("No encontramos marcas con ese nombre.")}
+                    </Body>
                   ) : null
                 }
                 ListFooterComponent={
                   <View style={{ gap: t.spacing.sm, paddingTop: t.spacing.sm }}>
-                    {brands.isFetching && <Body muted>Cargando marcas…</Body>}
+                    {brands.isFetching && (
+                      <Body muted>{tr("Cargando marcas…")}</Body>
+                    )}
                     {brands.error && <QueryState query={brands} />}
                     {brands.hasNextPage &&
                       !brands.isFetching &&
                       !!brands.error && (
                         <Button
-                          label="Reintentar cargar más marcas"
+                          label={tr("Reintentar cargar más marcas")}
                           secondary
                           onPress={() => {
                             void brands.fetchNextPage();
@@ -775,11 +800,15 @@ function CatalogFiltersSheet({
                     color: t.colors.ink,
                   }}
                 >
-                  Marca
+                  {tr("Marca")}
                 </Text>
                 <Pressable
                   accessibilityRole="button"
-                  accessibilityLabel={`Elegir marca: ${draft.brand ? (selectedBrand?.name ?? "Marca seleccionada") : "Todas las marcas"}`}
+                  accessibilityLabel={tr("Elegir marca: {0}", {
+                    0: draft.brand
+                      ? (selectedBrand?.name ?? tr("Marca seleccionada"))
+                      : tr("Todas las marcas"),
+                  })}
                   onPress={() => setChoosingBrand(true)}
                   style={({ pressed }) => ({
                     minHeight: 56,
@@ -807,28 +836,28 @@ function CatalogFiltersSheet({
                     }}
                   >
                     {draft.brand
-                      ? (selectedBrand?.name ?? "Marca seleccionada")
-                      : "Todas las marcas"}
+                      ? (selectedBrand?.name ?? tr("Marca seleccionada"))
+                      : tr("Todas las marcas")}
                   </Text>
                   <Icon name="arrow" size={20} />
                 </Pressable>
               </View>
-              {pick("country", "País de elaboración", [
-                ["", "Todos"],
+              {pick("country", tr("País de elaboración"), [
+                ["", tr("Todos")],
                 ...["AR", "UY", "PY", "BR"].map(
                   (code) => [code, countryLabel(code)] as [string, string],
                 ),
               ])}
-              {pick("tradition", "Tradición", [
-                ["", "Todas"],
+              {pick("tradition", tr("Tradición"), [
+                ["", tr("Todas")],
                 ...["AR", "UY", "PY", "BR"].map(
                   (code) => [code, countryLabel(code)] as [string, string],
                 ),
               ])}
-              {pick("discontinued", "Estado", [
-                ["", "Todos"],
-                ["false", "Vigentes"],
-                ["true", "Discontinuados"],
+              {pick("discontinued", tr("Estado"), [
+                ["", tr("Todos")],
+                ["false", tr("Vigentes")],
+                ["true", tr("Discontinuados")],
               ])}
             </ScrollView>
           )}
@@ -841,9 +870,12 @@ function CatalogFiltersSheet({
                 borderColor: t.colors.subtleBorder,
               }}
             >
-              <Button label="Aplicar filtros" onPress={() => onApply(draft)} />
               <Button
-                label="Limpiar filtros"
+                label={tr("Aplicar filtros")}
+                onPress={() => onApply(draft)}
+              />
+              <Button
+                label={tr("Limpiar filtros")}
                 secondary
                 onPress={() =>
                   setDraft({

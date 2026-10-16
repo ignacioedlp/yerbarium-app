@@ -20,7 +20,10 @@ export type IconName =
   | "eye"
   | "eyeOff"
   | "external"
-  | "more";
+  | "more"
+  | "globe"
+  | "language"
+  | "chevronDown";
 export type IconProps = { name: IconName; size?: number; color?: string };
 const names = {
   search: "magnify",
@@ -43,6 +46,9 @@ const names = {
   eyeOff: "eye-off-outline",
   external: "open-in-new",
   more: "dots-vertical",
+  globe: "earth",
+  language: "translate",
+  chevronDown: "chevron-down",
 } as const;
 export function Icon({
   name,

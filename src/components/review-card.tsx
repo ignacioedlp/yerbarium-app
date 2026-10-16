@@ -1,9 +1,11 @@
+import { tr, useLocale, getLocale } from "@/i18n";
 import { View } from "react-native";
 import { LeafRating } from "@/components/leaf-rating";
 import { router } from "expo-router";
 import { Body, Button, Card } from "./ui";
 import { Review, sensoryLabels } from "@/api/community-types";
 export function ReviewCard({ review }: { review: Review }) {
+  useLocale();
   return (
     <Card>
       <Button
@@ -24,21 +26,21 @@ export function ReviewCard({ review }: { review: Review }) {
           .map(([key, value]) => (
             <View key={key} style={{ gap: 4 }}>
               <Body muted>
-                {sensoryLabels[key as keyof typeof sensoryLabels]}
+                {tr(sensoryLabels[key as keyof typeof sensoryLabels])}
               </Body>
               <LeafRating
-                label={sensoryLabels[key as keyof typeof sensoryLabels]}
+                label={tr(sensoryLabels[key as keyof typeof sensoryLabels])}
                 value={value!}
               />
             </View>
           ))}
       {review.flavor_notes.length > 0 && (
         <Body muted>
-          {review.flavor_notes.map((note) => note.name).join(" · ")}
+          {review.flavor_notes.map((note) => tr(note.name)).join(" · ")}
         </Body>
       )}
       <Body muted>
-        {new Date(review.created_at).toLocaleDateString("es-AR")}
+        {new Date(review.created_at).toLocaleDateString(getLocale())}
       </Body>
     </Card>
   );

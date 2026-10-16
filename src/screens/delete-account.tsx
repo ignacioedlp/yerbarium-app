@@ -1,3 +1,4 @@
+import { tr, useLocale } from "@/i18n";
 import React from "react";
 import { Alert } from "react-native";
 import { router, Stack } from "expo-router";
@@ -16,6 +17,7 @@ import {
 import { useSession } from "@/providers/session";
 
 export function DeleteAccount() {
+  useLocale();
   const session = useSession();
   const online = useCanWrite();
   const [password, setPassword] = React.useState("");
@@ -30,12 +32,14 @@ export function DeleteAccount() {
   function confirmDeletion() {
     if (!password) return;
     Alert.alert(
-      "Eliminar tu cuenta",
-      "Se borrarán tu perfil, tu biblioteca y tus opiniones. Esta acción no se puede deshacer.",
+      tr("Eliminar tu cuenta"),
+      tr(
+        "Se borrarán tu perfil, tu biblioteca y tus opiniones. Esta acción no se puede deshacer.",
+      ),
       [
-        { text: "Cancelar", style: "cancel" },
+        { text: tr("Cancelar"), style: "cancel" },
         {
-          text: "Eliminar cuenta",
+          text: tr("Eliminar cuenta"),
           style: "destructive",
           onPress: () => deletion.mutate(),
         },
@@ -45,14 +49,17 @@ export function DeleteAccount() {
 
   return (
     <Page>
-      <Stack.Screen options={{ title: "Eliminar cuenta", headerShown: true }} />
-      <Title>Eliminar cuenta</Title>
+      <Stack.Screen
+        options={{ title: tr("Eliminar cuenta"), headerShown: true }}
+      />
+      <Title>{tr("Eliminar cuenta")}</Title>
       <Body>
-        Esta acción elimina tu perfil, biblioteca y opiniones. Para confirmar,
-        volvé a ingresar tu contraseña.
+        {tr(
+          "Esta acción elimina tu perfil, biblioteca y opiniones. Para confirmar, volvé a ingresar tu contraseña.",
+        )}
       </Body>
       <Field
-        label="Contraseña actual"
+        label={tr("Contraseña actual")}
         value={password}
         onChangeText={setPassword}
         secureTextEntry
@@ -65,7 +72,9 @@ export function DeleteAccount() {
         <ErrorMessage message={normalizeError(deletion.error).message} />
       )}
       <Button
-        label={deletion.isPending ? "Eliminando…" : "Eliminar mi cuenta"}
+        label={
+          deletion.isPending ? tr("Eliminando…") : tr("Eliminar mi cuenta")
+        }
         destructive
         disabled={!online || !password || deletion.isPending}
         onPress={confirmDeletion}

@@ -1,3 +1,4 @@
+import { tr, countLabel, useLocale } from "@/i18n";
 import React from "react";
 import { Pressable, Text, View } from "react-native";
 import Animated, {
@@ -25,6 +26,7 @@ export function AnimatedTabContent({
   activeKey,
   children,
 }: React.PropsWithChildren<{ activeKey: string }>) {
+  useLocale();
   const reducedMotion = useReducedMotion();
   return (
     <Animated.View
@@ -45,6 +47,7 @@ export function AnimatedTabs<Key extends string>({
   selected: Key;
   onSelect: (key: Key) => void;
 }) {
+  useLocale();
   const [tabsWidth, setTabsWidth] = React.useState(0);
   const indicatorX = useSharedValue(0);
   const selectedIndex = options.findIndex((option) => option.key === selected);
@@ -80,8 +83,8 @@ export function AnimatedTabs<Key extends string>({
           accessibilityState={{ selected: selected === key }}
           accessibilityLabel={
             count === undefined
-              ? label
-              : `${label}, ${count} ${count === 1 ? "elemento" : "elementos"}`
+              ? tr(label)
+              : `${tr(label)}, ${countLabel(count, "{count} elemento", "{count} elementos")}`
           }
           onPress={() => onSelect(key)}
           style={({ pressed }) => ({
@@ -112,7 +115,7 @@ export function AnimatedTabs<Key extends string>({
                 flexShrink: 1,
               }}
             >
-              {label}
+              {tr(label)}
             </Text>
             {count !== undefined && (
               <Text

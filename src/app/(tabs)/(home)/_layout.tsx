@@ -1,6 +1,8 @@
+import { useLocale } from "@/i18n";
 import { Stack } from "expo-router";
 import { theme } from "@/theme";
 export default function Layout() {
+  useLocale();
   return (
     <Stack
       screenOptions={{

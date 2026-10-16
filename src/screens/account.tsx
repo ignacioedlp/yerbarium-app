@@ -1,3 +1,4 @@
+import { tr, useLocale } from "@/i18n";
 import { learningLinks } from "@/content/learning";
 import { AuthField, AuthSheet, AuthSwitch } from "@/components/auth-sheet";
 import React from "react";
@@ -26,6 +27,11 @@ import { EmailVerificationStatus } from "@/screens/email-actions";
 import { Account } from "@/api/account-types";
 import { Host, Switch } from "@expo/ui";
 import { theme } from "@/theme";
+import {
+  ProfileSelect,
+  profileCountries,
+  profileLanguages,
+} from "@/components/profile-select";
 const loginSchema = z.object({
   identifier: z.string().trim().min(1, "Ingresá tu usuario o email."),
   password: z.string().min(1, "Ingresá tu contraseña."),
@@ -39,6 +45,7 @@ const termsUrl = "https://yerbarium.vercel.app/terminos-y-condiciones/";
 const privacyUrl = "https://yerbarium.vercel.app/privacidad/";
 // Auth inputs own their native editing buffer; onChangeText keeps RHF in sync.
 function LoginForm() {
+  useLocale();
   const passwordInput = React.useRef<TextInput>(null);
   const session = useSession(),
     online = useCanWrite();
@@ -53,18 +60,18 @@ function LoginForm() {
   });
   return (
     <AuthSheet
-      title="Bienvenido de nuevo"
-      description="Ingresá con tu usuario o email."
+      title={tr("Bienvenido de nuevo")}
+      description={tr("Ingresá con tu usuario o email.")}
       pending={mutation.isPending}
       actions={
         <>
           <Button
-            label={mutation.isPending ? "Ingresando…" : "Ingresar"}
+            label={mutation.isPending ? tr("Ingresando…") : tr("Ingresar")}
             disabled={mutation.isPending || !online}
             onPress={form.handleSubmit((values) => mutation.mutate(values))}
           />
           <Button
-            label="¿Olvidaste tu contraseña?"
+            label={tr("¿Olvidaste tu contraseña?")}
             secondary
             disabled={mutation.isPending}
             onPress={() => router.replace("/recuperar-contrasena")}
@@ -80,7 +87,9 @@ function LoginForm() {
           name={name}
           render={({ field, fieldState }) => (
             <AuthField
-              label={name === "identifier" ? "Usuario o email" : "Contraseña"}
+              label={
+                name === "identifier" ? tr("Usuario o email") : tr("Contraseña")
+              }
               defaultValue=""
               editable={!mutation.isPending}
               inputRef={(input) => {
@@ -112,6 +121,7 @@ function LoginForm() {
   );
 }
 function RegistrationForm() {
+  useLocale();
   const [legalLinkError, setLegalLinkError] = React.useState(false);
   const emailInput = React.useRef<TextInput>(null);
   const passwordInput = React.useRef<TextInput>(null);
@@ -135,8 +145,8 @@ function RegistrationForm() {
   });
   return (
     <AuthSheet
-      title="Sumate a Yerbarium"
-      description="Guardá tus yerbas y compartí lo que descubrís."
+      title={tr("Sumate a Yerbarium")}
+      description={tr("Guardá tus yerbas y compartí lo que descubrís.")}
       pending={mutation.isPending}
       actions={
         <>
@@ -149,7 +159,7 @@ function RegistrationForm() {
               color: theme.colors.muted,
             }}
           >
-            Al crear una cuenta, aceptás los{" "}
+            {tr("Al crear una cuenta, aceptás los")}{" "}
             <Text
               accessibilityRole="link"
               onPress={() => {
@@ -164,9 +174,9 @@ function RegistrationForm() {
                 textDecorationLine: "underline",
               }}
             >
-              Términos y Condiciones
+              {tr("Términos y Condiciones")}
             </Text>
-            . Consultá la{" "}
+            . {tr("Consultá la")}{" "}
             <Text
               accessibilityRole="link"
               onPress={() => {
@@ -181,15 +191,17 @@ function RegistrationForm() {
                 textDecorationLine: "underline",
               }}
             >
-              Política de privacidad
+              {tr("Política de privacidad")}
             </Text>
             .
           </Text>
           {legalLinkError && (
-            <ErrorMessage message="No pudimos abrir el enlace legal." />
+            <ErrorMessage message={tr("No pudimos abrir el enlace legal.")} />
           )}
           <Button
-            label={mutation.isPending ? "Creando cuenta…" : "Crear cuenta"}
+            label={
+              mutation.isPending ? tr("Creando cuenta…") : tr("Crear cuenta")
+            }
             disabled={!online || mutation.isPending}
             onPress={form.handleSubmit((values) => mutation.mutate(values))}
           />
@@ -205,9 +217,11 @@ function RegistrationForm() {
           render={({ field, fieldState }) => (
             <AuthField
               label={
-                { username: "Usuario", email: "Email", password: "Contraseña" }[
-                  name
-                ]
+                {
+                  username: tr("Usuario"),
+                  email: tr("Email"),
+                  password: tr("Contraseña"),
+                }[name]
               }
               defaultValue=""
               editable={!mutation.isPending}
@@ -230,7 +244,9 @@ function RegistrationForm() {
               }}
               keyboardType={name === "email" ? "email-address" : "default"}
               hint={
-                name === "password" ? "Usá al menos 8 caracteres." : undefined
+                name === "password"
+                  ? tr("Usá al menos 8 caracteres.")
+                  : undefined
               }
               secureTextEntry={name === "password"}
               textContentType={
@@ -252,16 +268,19 @@ function RegistrationForm() {
   );
 }
 export function Login() {
+  useLocale();
   return <LoginForm />;
 }
 export function Registration() {
+  useLocale();
   return <RegistrationForm />;
 }
 export function Profile() {
+  useLocale();
   const session = useSession();
   return (
     <Page safeTop>
-      <Title>Perfil</Title>
+      <Title>{tr("Perfil")}</Title>
       <RequireSession>
         <View style={{ gap: theme.spacing.sm }}>
           <Title>{session.user?.display_name}</Title>
@@ -277,7 +296,7 @@ export function Profile() {
               <View
                 accessible
                 accessibilityRole="image"
-                accessibilityLabel="Email verificado"
+                accessibilityLabel={tr("Email verificado")}
               >
                 <Icon name="verified" size={18} />
               </View>
@@ -285,16 +304,16 @@ export function Profile() {
           </View>
           <EmailVerificationStatus />
           <HandNote rotate={false}>
-            {session.user?.bio || "Contá un poco sobre vos y tu ronda."}
+            {session.user?.bio || tr("Contá un poco sobre vos y tu ronda.")}
           </HandNote>
         </View>
         <View style={{ gap: theme.spacing.sm }}>
           <Button
-            label="Editar perfil"
+            label={tr("Editar perfil")}
             onPress={() => router.push("/editar-perfil")}
           />
           <Button
-            label="Ver perfil público"
+            label={tr("Ver perfil público")}
             secondary
             fullWidth
             onPress={() =>
@@ -307,9 +326,9 @@ export function Profile() {
         </View>
       </RequireSession>
       <View style={{ gap: theme.spacing.sm }}>
-        <Title>Aprende</Title>
+        <Title>{tr("Aprende")}</Title>
         <Body>
-          Un catálogo y una comunidad para conocer mejor la yerba mate.
+          {tr("Un catálogo y una comunidad para conocer mejor la yerba mate.")}
         </Body>
         <View style={{ borderTopWidth: 1, borderColor: theme.colors.border }}>
           {learningLinks.map(({ article, label }) => (
@@ -340,7 +359,7 @@ export function Profile() {
                   color: theme.colors.green,
                 }}
               >
-                {label}
+                {tr(label)}
               </Text>
               <Icon name="arrow" size={18} />
             </Pressable>
@@ -350,12 +369,12 @@ export function Profile() {
       {session.user ? (
         <View style={{ gap: theme.spacing.sm }}>
           <Button
-            label="Cerrar sesión"
+            label={tr("Cerrar sesión")}
             secondary
             onPress={() => void session.logout()}
           />
           <Button
-            label="Eliminar cuenta"
+            label={tr("Eliminar cuenta")}
             secondary
             destructive
             onPress={() => router.push("/eliminar-cuenta" as Href)}
@@ -373,10 +392,11 @@ const profileSchema = z.object({
     .trim()
     .regex(/^([a-zA-Z]{2})?$/, "Usá un código de país de dos letras.")
     .transform((value) => value.toUpperCase()),
-  language_code: z.string().min(1),
+  language_code: z.string(),
   is_private: z.boolean(),
 });
 function ProfileForm({ user }: { user: Account }) {
+  useLocale();
   const session = useSession(),
     online = useCanWrite();
   const client = useQueryClient();
@@ -390,7 +410,7 @@ function ProfileForm({ user }: { user: Account }) {
       display_name: user.display_name,
       bio: user.bio,
       country_code: user.country_code,
-      language_code: user.language_code || "es",
+      language_code: user.language_code || "",
       is_private: user.is_private,
     },
   });
@@ -417,7 +437,7 @@ function ProfileForm({ user }: { user: Account }) {
         name="display_name"
         render={({ field, fieldState }) => (
           <Field
-            label="Nombre para mostrar"
+            label={tr("Nombre para mostrar")}
             value={field.value}
             onChangeText={field.onChange}
             error={fieldState.error?.message}
@@ -429,7 +449,7 @@ function ProfileForm({ user }: { user: Account }) {
         name="bio"
         render={({ field }) => (
           <Field
-            label="Sobre vos"
+            label={tr("Sobre vos")}
             value={field.value}
             onChangeText={field.onChange}
             multiline
@@ -440,16 +460,37 @@ function ProfileForm({ user }: { user: Account }) {
         control={form.control}
         name="country_code"
         render={({ field, fieldState }) => (
-          <Field
-            label="País (AR, UY, PY, BR…)"
+          <ProfileSelect
+            label={tr("País")}
+            icon="globe"
             value={field.value}
-            onChangeText={field.onChange}
-            autoCapitalize="characters"
-            maxLength={2}
+            options={profileCountries}
+            onChange={field.onChange}
+            onBlur={field.onBlur}
+            disabled={mutation.isPending}
             error={fieldState.error?.message}
           />
         )}
       />
+      <Controller
+        control={form.control}
+        name="language_code"
+        render={({ field, fieldState }) => (
+          <ProfileSelect
+            label={tr("Idioma de la app")}
+            icon="language"
+            value={field.value}
+            options={profileLanguages}
+            onChange={field.onChange}
+            onBlur={field.onBlur}
+            disabled={mutation.isPending}
+            error={fieldState.error?.message}
+          />
+        )}
+      />
+      <Body muted>
+        {tr("Usamos el idioma de tu dispositivo si lo dejás sin especificar.")}
+      </Body>
       <Controller
         control={form.control}
         name="is_private"
@@ -460,7 +501,7 @@ function ProfileForm({ user }: { user: Account }) {
             colorScheme="light"
           >
             <Switch
-              label="Perfil privado"
+              label={tr("Perfil privado")}
               value={field.value}
               onValueChange={field.onChange}
             />
@@ -468,18 +509,18 @@ function ProfileForm({ user }: { user: Account }) {
         )}
       />
       <Body muted>
-        En un perfil privado solo se muestran tu usuario y tu nombre.
+        {tr("En un perfil privado solo se muestran tu usuario y tu nombre.")}
       </Body>
       {mutation.error && (
         <ErrorMessage message={normalizeError(mutation.error).message} />
       )}
       <Button
-        label={mutation.isPending ? "Guardando…" : "Guardar cambios"}
+        label={mutation.isPending ? tr("Guardando…") : tr("Guardar cambios")}
         disabled={!online || mutation.isPending}
         onPress={form.handleSubmit((values) => mutation.mutate(values))}
       />
       <Button
-        label="Cancelar"
+        label={tr("Cancelar")}
         secondary
         disabled={mutation.isPending}
         onPress={() => router.back()}
@@ -488,6 +529,7 @@ function ProfileForm({ user }: { user: Account }) {
   );
 }
 export function EditProfile() {
+  useLocale();
   const { user } = useSession();
   return (
     <Page>

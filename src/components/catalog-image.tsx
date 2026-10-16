@@ -1,3 +1,4 @@
+import { tr, useLocale } from "@/i18n";
 import { useState } from "react";
 import { View } from "react-native";
 import { Image } from "expo-image";
@@ -12,11 +13,12 @@ export function CatalogImage({
   label: string;
   height?: number;
 }) {
+  useLocale();
   const [failed, setFailed] = useState(false);
   return failed ? (
     <View
       accessibilityRole="image"
-      accessibilityLabel="Imagen de producto no disponible"
+      accessibilityLabel={tr("Imagen de producto no disponible")}
       style={{
         height,
         justifyContent: "center",
@@ -24,7 +26,7 @@ export function CatalogImage({
         backgroundColor: theme.colors.sage,
       }}
     >
-      <Body muted>Imagen no disponible</Body>
+      <Body muted>{tr("Imagen no disponible")}</Body>
     </View>
   ) : (
     <Image

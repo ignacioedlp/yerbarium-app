@@ -1,3 +1,4 @@
+import { tr } from "@/i18n/core";
 import {
   create,
   isAxiosError,
@@ -26,17 +27,18 @@ export function normalizeError(error: unknown): ApiError {
     const fields: Record<string, string[]> = {};
     if (body && typeof body === "object")
       for (const [key, value] of Object.entries(body))
-        if (Array.isArray(value)) fields[key] = value.map(String);
+        if (Array.isArray(value))
+          fields[key] = value.map((message) => tr(String(message)));
     return new ApiError(
       typeof body?.detail === "string"
-        ? body.detail
+        ? tr(body.detail)
         : Object.values(fields).flat().join(" ") ||
-            "No pudimos conectar. Revisá tu conexión e intentá de nuevo.",
+            tr("No pudimos conectar. Revisá tu conexión e intentá de nuevo."),
       error.response?.status || 0,
       fields,
     );
   }
-  return new ApiError("Ocurrió un problema. Intentá de nuevo.");
+  return new ApiError(tr("Ocurrió un problema. Intentá de nuevo."));
 }
 export const publicApi = create({
   baseURL: `${apiBaseUrl}/api/v1/`,
@@ -61,7 +63,7 @@ export function connectAuth(auth: {
     const value = config as RetriedConfig;
     value.sessionGeneration ??= auth.generation();
     if (value.sessionGeneration !== auth.generation())
-      throw new ApiError("La sesión cambió.", 401);
+      throw new ApiError(tr("La sesión cambió."), 401);
     const token = auth.access();
     if (token) config.headers.Authorization = `Bearer ${token}`;
     return config;
@@ -83,7 +85,7 @@ export function connectAuth(auth: {
         if (!auth.access() || sentToken === `Bearer ${auth.access()}`)
           await auth.refresh();
         if (config.sessionGeneration !== auth.generation())
-          throw new ApiError("La sesión cambió.", 401);
+          throw new ApiError(tr("La sesión cambió."), 401);
         return privateApi.request(config);
       }
       throw normalizeError(error);

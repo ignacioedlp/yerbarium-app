@@ -1,7 +1,14 @@
+import { tr, useLocale } from "@/i18n";
 import React from "react";
 import { router } from "expo-router";
 import { Image } from "expo-image";
-import { View, Text, Pressable, ScrollView, useWindowDimensions } from "react-native";
+import {
+  View,
+  Text,
+  Pressable,
+  ScrollView,
+  useWindowDimensions,
+} from "react-native";
 import { Page, QueryState, YerbaCard, styles } from "@/components/ui";
 import { Paper, SearchBox, SectionHeading } from "@/components/editorial";
 import { Icon } from "@/components/icon";
@@ -12,6 +19,7 @@ import { learningLinks } from "@/content/learning";
 import { CommunityPodium } from "@/components/community-podium";
 
 export function Home() {
+  useLocale();
   const { width: windowWidth } = useWindowDimensions();
   const carouselRef = React.useRef<ScrollView>(null);
   const carouselIndex = React.useRef(0);
@@ -37,7 +45,8 @@ export function Home() {
 
   const moveCarousel = (direction: -1 | 1) => {
     if (featured.length < 2) return;
-    const next = (carouselIndex.current + direction + featured.length) % featured.length;
+    const next =
+      (carouselIndex.current + direction + featured.length) % featured.length;
     carouselIndex.current = next;
     carouselRef.current?.scrollTo({ x: next * carouselStep, animated: true });
   };
@@ -70,8 +79,11 @@ export function Home() {
               },
             ]}
           >
-            Tu{"\n"}próxima{"\n"}
-            <Text style={{ color: t.colors.lime }}>yerba.</Text>
+            {tr("Tu")}
+            {"\n"}
+            {tr("próxima")}
+            {"\n"}
+            <Text style={{ color: t.colors.lime }}>{tr("yerba.")}</Text>
           </Text>
         </View>
         <Image
@@ -92,10 +104,10 @@ export function Home() {
         onSubmit={() =>
           router.push({ pathname: "/explorar", params: { mode: "search" } })
         }
-        placeholder="Buscar yerbas o marcas…"
+        placeholder={tr("Buscar yerbas o marcas…")}
       />
       <View style={{ gap: 12 }}>
-        <SectionHeading title="Explorá por estilo" />
+        <SectionHeading title={tr("Explorá por estilo")} />
         <QueryState
           query={taxonomy}
           skeleton="chips"
@@ -126,7 +138,7 @@ export function Home() {
                 })}
               >
                 <Text style={[styles.body, { fontSize: 14 }]}>
-                  {style.name}
+                  {tr(style.name)}
                 </Text>
               </Pressable>
             ))}
@@ -136,8 +148,8 @@ export function Home() {
       <CommunityPodium />
       <View style={{ gap: 16 }}>
         <SectionHeading
-          title="Yerbas destacadas"
-          action="Ver todas"
+          title={tr("Yerbas destacadas")}
+          action={tr("Ver todas")}
           onPress={() => router.push("/explorar")}
         />
         <QueryState
@@ -146,7 +158,9 @@ export function Home() {
           empty={yerbas.data?.pages[0]?.count === 0}
         >
           <View
-            onLayout={(event) => setCarouselWidth(event.nativeEvent.layout.width)}
+            onLayout={(event) =>
+              setCarouselWidth(event.nativeEvent.layout.width)
+            }
             onTouchStart={() => setCarouselPaused(true)}
             onTouchEnd={() => setCarouselPaused(false)}
           >
@@ -159,12 +173,12 @@ export function Home() {
               showsHorizontalScrollIndicator={false}
               contentContainerStyle={{ gap: 12 }}
               onMomentumScrollEnd={(event) => {
-                carouselIndex.current = Math.round(
-                  event.nativeEvent.contentOffset.x / carouselStep,
-                ) % Math.max(featured.length, 1);
+                carouselIndex.current =
+                  Math.round(event.nativeEvent.contentOffset.x / carouselStep) %
+                  Math.max(featured.length, 1);
                 setActiveCarouselIndex(carouselIndex.current);
               }}
-              accessibilityLabel="Yerbas destacadas, carrusel"
+              accessibilityLabel={tr("Yerbas destacadas, carrusel")}
             >
               {featured.map((yerba, index) => (
                 <View key={yerba.slug} style={{ width: cardWidth }}>
@@ -174,7 +188,7 @@ export function Home() {
             </ScrollView>
             {featured.length > 1 && (
               <View
-                accessibilityLabel="Paginación de yerbas destacadas"
+                accessibilityLabel={tr("Paginación de yerbas destacadas")}
                 style={{
                   flexDirection: "row",
                   justifyContent: "center",
@@ -187,8 +201,14 @@ export function Home() {
                   <Pressable
                     key={yerba.slug}
                     accessibilityRole="button"
-                    accessibilityLabel={`Ver yerba ${index + 1} de ${featured.length}: ${yerba.name}`}
-                    accessibilityState={{ selected: activeCarouselIndex === index }}
+                    accessibilityLabel={tr("Ver yerba {0} de {1}: {2}", {
+                      0: index + 1,
+                      1: featured.length,
+                      2: yerba.name,
+                    })}
+                    accessibilityState={{
+                      selected: activeCarouselIndex === index,
+                    }}
                     onPress={() => {
                       carouselIndex.current = index;
                       setActiveCarouselIndex(index);
@@ -215,9 +235,9 @@ export function Home() {
         </QueryState>
       </View>
       <View style={{ gap: t.spacing.sm }}>
-        <SectionHeading title="Aprende" />
+        <SectionHeading title={tr("Aprende")} />
         <Text style={styles.body}>
-          Un catálogo y una comunidad para conocer mejor la yerba mate.
+          {tr("Un catálogo y una comunidad para conocer mejor la yerba mate.")}
         </Text>
         <View style={{ borderTopWidth: 1, borderColor: t.colors.subtleBorder }}>
           {learningLinks.map(({ article, label }) => (
@@ -248,7 +268,7 @@ export function Home() {
                   color: t.colors.green,
                 }}
               >
-                {label}
+                {tr(label)}
               </Text>
               <Icon name="arrow" size={18} />
             </Pressable>

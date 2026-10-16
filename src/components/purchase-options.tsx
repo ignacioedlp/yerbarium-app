@@ -1,3 +1,4 @@
+import { tr, getLocale, useLocale } from "@/i18n";
 import { useState } from "react";
 import { Pressable, Text, View } from "react-native";
 import type { YerbaPurchaseLink } from "@/api/types";
@@ -13,6 +14,7 @@ export function PurchaseOptions({
   slug: string;
   links: YerbaPurchaseLink[];
 }) {
+  useLocale();
   const [failedLink, setFailedLink] = useState<number | null>(null);
   return (
     <View
@@ -27,11 +29,12 @@ export function PurchaseOptions({
         accessibilityRole="header"
         style={{ fontFamily: t.fonts.bold, fontSize: 20, color: t.colors.ink }}
       >
-        Dónde comprar
+        {tr("Dónde comprar")}
       </Text>
       <Body muted>
-        Vas a una tienda externa. Confirmá el precio y la disponibilidad antes
-        de comprar.
+        {tr(
+          "Vas a una tienda externa. Confirmá el precio y la disponibilidad antes de comprar.",
+        )}
       </Body>
       {[...links]
         .sort((a, b) => a.priority - b.priority || a.id - b.id)
@@ -39,7 +42,7 @@ export function PurchaseOptions({
           <View key={link.id}>
             <Pressable
               accessibilityRole="link"
-              accessibilityHint="Abre la tienda en el navegador"
+              accessibilityHint={tr("Abre la tienda en el navegador")}
               onPress={() => {
                 setFailedLink(null);
                 trackAnalyticsEvent("purchase_provider_clicked", {
@@ -73,10 +76,10 @@ export function PurchaseOptions({
                 >
                   {link.provider}
                 </Text>
-                {link.is_official && <Body muted>Tienda oficial</Body>}
+                {link.is_official && <Body muted>{tr("Tienda oficial")}</Body>}
                 {link.price !== null && (
                   <Body muted>
-                    {new Intl.NumberFormat("es-AR", {
+                    {new Intl.NumberFormat(getLocale(), {
                       style: "currency",
                       currency: link.currency,
                       currencyDisplay: "code",
@@ -87,14 +90,19 @@ export function PurchaseOptions({
               <Icon name="external" size={20} />
             </Pressable>
             {failedLink === link.id && (
-              <ErrorMessage message="No pudimos abrir la tienda. Volvé a tocar el enlace para intentarlo de nuevo." />
+              <ErrorMessage
+                message={tr(
+                  "No pudimos abrir la tienda. Volvé a tocar el enlace para intentarlo de nuevo.",
+                )}
+              />
             )}
           </View>
         ))}
       {links.some((link) => link.affiliate_url) && (
         <Body muted>
-          Algunos enlaces son de afiliados. Yerbarium puede recibir una comisión
-          por tu compra.
+          {tr(
+            "Algunos enlaces son de afiliados. Yerbarium puede recibir una comisión por tu compra.",
+          )}
         </Body>
       )}
     </View>

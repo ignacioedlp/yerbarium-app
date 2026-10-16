@@ -1,3 +1,4 @@
+import { tr, useLocale } from "@/i18n";
 import React, { useState } from "react";
 import { View } from "react-native";
 import { router, useLocalSearchParams } from "expo-router";
@@ -12,6 +13,7 @@ export function EmailActionScreen({
 }: {
   mode: "request" | "reset" | "verify";
 }) {
+  useLocale();
   const params = useLocalSearchParams<{ token?: string | string[] }>();
   const token = typeof params.token === "string" ? params.token : "";
   const session = useSession();
@@ -50,8 +52,12 @@ export function EmailActionScreen({
       } catch {
         setSyncError(
           mode === "reset"
-            ? "La contraseña ya cambió. Iniciá sesión con la nueva contraseña."
-            : "El email ya se verificó. Volvé a Perfil y actualizá el estado cuando tengas conexión.",
+            ? tr(
+                "La contraseña ya cambió. Iniciá sesión con la nueva contraseña.",
+              )
+            : tr(
+                "El email ya se verificó. Volvé a Perfil y actualizá el estado cuando tengas conexión.",
+              ),
         );
       }
     },
@@ -62,7 +68,7 @@ export function EmailActionScreen({
       mode === "request" &&
       !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email.trim())
     ) {
-      setValidation("Ingresá un email válido.");
+      setValidation(tr("Ingresá un email válido."));
       return;
     }
     if (
@@ -70,7 +76,7 @@ export function EmailActionScreen({
       (password.length < 8 || password !== confirmation)
     ) {
       setValidation(
-        "Usá al menos ocho caracteres y repetí la misma contraseña.",
+        tr("Usá al menos ocho caracteres y repetí la misma contraseña."),
       );
       return;
     }
@@ -84,17 +90,17 @@ export function EmailActionScreen({
     <AuthSheet
       title={
         mode === "reset"
-          ? "Nueva contraseña"
+          ? tr("Nueva contraseña")
           : mode === "verify"
-            ? "Verificá tu email"
-            : "Recuperá tu cuenta"
+            ? tr("Verificá tu email")
+            : tr("Recuperá tu cuenta")
       }
       description={
         mode === "reset"
-          ? "Elegí una contraseña segura para volver a ingresar."
+          ? tr("Elegí una contraseña segura para volver a ingresar.")
           : mode === "verify"
-            ? "Confirmá que este email te pertenece."
-            : "Te enviamos un enlace para cambiar tu contraseña."
+            ? tr("Confirmá que este email te pertenece.")
+            : tr("Te enviamos un enlace para cambiar tu contraseña.")
       }
       pending={mutation.isPending}
       showClose={mode === "reset"}
@@ -107,14 +113,14 @@ export function EmailActionScreen({
               <Button
                 label={
                   mutation.isPending
-                    ? "Procesando…"
+                    ? tr("Procesando…")
                     : mode === "reset"
-                      ? "Guardar contraseña"
+                      ? tr("Guardar contraseña")
                       : mode === "verify" && token
-                        ? "Verificar mi email"
+                        ? tr("Verificar mi email")
                         : mode === "verify"
-                          ? "Reenviar verificación"
-                          : "Enviar enlace"
+                          ? tr("Reenviar verificación")
+                          : tr("Enviar enlace")
                 }
                 disabled={mutation.isPending || !online}
                 onPress={submit}
@@ -122,7 +128,7 @@ export function EmailActionScreen({
             )}
           {(missing || Boolean(mutation.error && token)) && (
             <Button
-              label="Solicitar otro enlace"
+              label={tr("Solicitar otro enlace")}
               secondary
               onPress={() =>
                 router.replace(
@@ -137,8 +143,8 @@ export function EmailActionScreen({
             <Button
               label={
                 mode === "verify"
-                  ? "Volver a la verificación"
-                  : "Volver al formulario"
+                  ? tr("Volver a la verificación")
+                  : tr("Volver al formulario")
               }
               secondary
               onPress={() => mutation.reset()}
@@ -147,8 +153,8 @@ export function EmailActionScreen({
           <Button
             label={
               mode === "verify" && session.user
-                ? "Ir a mi perfil"
-                : "Ir a ingresar"
+                ? tr("Ir a mi perfil")
+                : tr("Ir a ingresar")
             }
             secondary
             disabled={mutation.isPending}
@@ -165,20 +171,31 @@ export function EmailActionScreen({
     >
       {needsSession ? (
         <Body>
-          Ingresá a tu cuenta para reenviar la verificación a tu email.
+          {tr("Ingresá a tu cuenta para reenviar la verificación a tu email.")}
         </Body>
       ) : alreadyVerified ? (
-        <Body>Tu email ya está verificado.</Body>
+        <Body>{tr("Tu email ya está verificado.")}</Body>
       ) : missing ? (
-        <ErrorMessage message="El enlace no es válido. Solicitá uno nuevo." />
+        <ErrorMessage
+          message={tr("El enlace no es válido. Solicitá uno nuevo.")}
+        />
       ) : mutation.isSuccess ? (
         <View accessibilityLiveRegion="polite">
-          <Body>{mutation.data.detail}</Body>
+          <Body>
+            {tr(
+              mode === "reset"
+                ? "Tu contraseña se actualizó."
+                : mode === "verify" && token
+                  ? "Tu email ya está verificado."
+                  : "Si el email corresponde a una cuenta, recibirás un enlace. Revisá tu bandeja de entrada.",
+            )}
+          </Body>
           {syncError ? <Body>{syncError}</Body> : null}
           {!token && (
             <Body>
-              Si no llega, revisá spam. Esperá un minuto antes de pedir otro
-              enlace.
+              {tr(
+                "Si no llega, revisá spam. Esperá un minuto antes de pedir otro enlace.",
+              )}
             </Body>
           )}
         </View>
@@ -186,14 +203,15 @@ export function EmailActionScreen({
         <>
           {mode === "verify" && !token && (
             <Body>
-              Enviamos automáticamente un enlace de verificación a{" "}
-              {session.user?.email} al crear tu cuenta. Abrilo para confirmar tu
-              email. Si no lo encontrás, revisá spam o reenviá el correo.
+              {tr(
+                "Enviamos automáticamente un enlace de verificación a {email} al crear tu cuenta. Abrilo para confirmar tu email. Si no lo encontrás, revisá spam o reenviá el correo.",
+                { email: session.user?.email },
+              )}
             </Body>
           )}
           {mode === "request" && (
             <AuthField
-              label="Email de tu cuenta"
+              label={tr("Email de tu cuenta")}
               value={email}
               onChangeText={setEmail}
               keyboardType="email-address"
@@ -207,7 +225,7 @@ export function EmailActionScreen({
           {mode === "reset" && (
             <>
               <AuthField
-                label="Nueva contraseña"
+                label={tr("Nueva contraseña")}
                 value={password}
                 onChangeText={setPassword}
                 secureTextEntry
@@ -217,7 +235,7 @@ export function EmailActionScreen({
                 editable={!mutation.isPending}
               />
               <AuthField
-                label="Repetí la contraseña"
+                label={tr("Repetí la contraseña")}
                 value={confirmation}
                 onChangeText={setConfirmation}
                 secureTextEntry
@@ -239,35 +257,39 @@ export function EmailActionScreen({
 }
 
 export function ForgotPassword() {
+  useLocale();
   return <EmailActionScreen mode="request" />;
 }
 export function ResetPassword() {
+  useLocale();
   return <EmailActionScreen mode="reset" />;
 }
 export function VerifyEmail() {
+  useLocale();
   return <EmailActionScreen mode="verify" />;
 }
 
 export function EmailVerificationStatus() {
+  useLocale();
   const session = useSession();
   const online = useCanWrite();
   const refresh = useMutation({ mutationFn: session.reload });
   if (session.user?.email_verified) return null;
   return (
     <View style={{ gap: 8 }}>
-      <Body>Tu email está pendiente de verificación.</Body>
+      <Body>{tr("Tu email está pendiente de verificación.")}</Body>
       {!session.user?.email_verified && (
         <>
           <Button
-            label="Verificar email"
+            label={tr("Verificar email")}
             secondary
             onPress={() => router.push("/verificar-email")}
           />
           <Button
             label={
               refresh.isPending
-                ? "Actualizando…"
-                : "Ya lo verifiqué: actualizar"
+                ? tr("Actualizando…")
+                : tr("Ya lo verifiqué: actualizar")
             }
             secondary
             disabled={!online || refresh.isPending}

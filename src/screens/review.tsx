@@ -1,3 +1,4 @@
+import { tr, useLocale, getLocale } from "@/i18n";
 import { FlavorNotePicker } from "@/components/flavor-note-picker";
 import { LeafRating } from "@/components/leaf-rating";
 import { Icon } from "@/components/icon";
@@ -44,6 +45,7 @@ const schema = z.object({
   comment: z.string(),
 });
 function ReviewForm({ slug, review }: { slug: string; review: Review | null }) {
+  useLocale();
   const online = useCanWrite(),
     client = useQueryClient();
   const notes = usePages<FlavorNote>("flavor-notes/");
@@ -99,8 +101,12 @@ function ReviewForm({ slug, review }: { slug: string; review: Review | null }) {
   });
   return (
     <>
-      <Title>{review ? "Editá tu opinión" : "¿Cómo fue tu ronda?"}</Title>
-      <Body>Una puntuación alcanza. Podés completar los detalles después.</Body>
+      <Title>
+        {review ? tr("Editá tu opinión") : tr("¿Cómo fue tu ronda?")}
+      </Title>
+      <Body>
+        {tr("Una puntuación alcanza. Podés completar los detalles después.")}
+      </Body>
       <Controller
         control={form.control}
         name="rating"
@@ -115,7 +121,7 @@ function ReviewForm({ slug, review }: { slug: string; review: Review | null }) {
                 gap: theme.spacing.sm,
               }}
             >
-              <Title>Tu puntuación</Title>
+              <Title>{tr("Tu puntuación")}</Title>
               <Text
                 accessibilityLiveRegion="polite"
                 style={{
@@ -125,7 +131,7 @@ function ReviewForm({ slug, review }: { slug: string; review: Review | null }) {
                   fontVariant: ["tabular-nums"],
                 }}
               >
-                {field.value.toLocaleString("es-AR", {
+                {field.value.toLocaleString(getLocale(), {
                   minimumFractionDigits: 1,
                   maximumFractionDigits: 1,
                 })}{" "}
@@ -147,16 +153,18 @@ function ReviewForm({ slug, review }: { slug: string; review: Review | null }) {
                       key={control}
                       accessible
                       accessibilityRole="adjustable"
-                      accessibilityLabel="Tu puntuación"
+                      accessibilityLabel={tr("Tu puntuación")}
                       accessibilityValue={{
                         min: 1,
                         max: 5,
                         now: field.value,
-                        text: `${field.value.toLocaleString("es-AR")} de 5`,
+                        text: tr("{0} de 5", {
+                          0: field.value.toLocaleString(getLocale()),
+                        }),
                       }}
                       accessibilityActions={[
-                        { name: "increment", label: "Subir medio punto" },
-                        { name: "decrement", label: "Bajar medio punto" },
+                        { name: "increment", label: tr("Subir medio punto") },
+                        { name: "decrement", label: tr("Bajar medio punto") },
                       ]}
                       onAccessibilityAction={({ nativeEvent }) => {
                         if (nativeEvent.actionName === "increment")
@@ -180,8 +188,8 @@ function ReviewForm({ slug, review }: { slug: string; review: Review | null }) {
                     accessibilityRole="button"
                     accessibilityLabel={
                       decrease
-                        ? "Bajar puntuación medio punto"
-                        : "Subir puntuación medio punto"
+                        ? tr("Bajar puntuación medio punto")
+                        : tr("Subir puntuación medio punto")
                     }
                     accessibilityState={{ disabled }}
                     disabled={disabled}
@@ -212,14 +220,16 @@ function ReviewForm({ slug, review }: { slug: string; review: Review | null }) {
             </View>
             {fieldState.error && (
               <ErrorMessage
-                message={fieldState.error.message || "Revisá la puntuación."}
+                message={
+                  fieldState.error.message || tr("Revisá la puntuación.")
+                }
               />
             )}
           </Card>
         )}
       />
       <Button
-        label={expanded ? "Ocultar detalles" : "¿Querés contar más?"}
+        label={expanded ? tr("Ocultar detalles") : tr("¿Querés contar más?")}
         secondary
         onPress={() => setExpanded(!expanded)}
       />
@@ -230,27 +240,30 @@ function ReviewForm({ slug, review }: { slug: string; review: Review | null }) {
             name="comment"
             render={({ field }) => (
               <Field
-                label="Tu comentario (opcional)"
+                label={tr("Tu comentario (opcional)")}
                 multiline
                 value={field.value}
                 onChangeText={field.onChange}
               />
             )}
           />
-          <Title>Evaluación sensorial</Title>
+          <Title>{tr("Evaluación sensorial")}</Title>
           <Body muted>
-            Usá 1 para el nivel más bajo y 5 para el más alto. No evaluar deja
-            el atributo sin valoración.
+            {tr(
+              "Usá 1 para el nivel más bajo y 5 para el más alto. No evaluar deja el atributo sin valoración.",
+            )}
           </Body>
           {(Object.keys(sensoryLabels) as SensoryKey[]).map((key) => (
             <Card key={key}>
-              <Body>{sensoryLabels[key]}</Body>
+              <Body>{tr(sensoryLabels[key])}</Body>
               <Body muted>
-                {sensoryFields.find((field) => field.key === key)?.help}
+                {tr(
+                  sensoryFields.find((field) => field.key === key)?.help || "",
+                )}
               </Body>
               <LeafRating
                 value={sensory[key] ?? null}
-                label={sensoryLabels[key]}
+                label={tr(sensoryLabels[key])}
                 size={30}
                 onChange={(value) => {
                   setSensory((current) => ({ ...current, [key]: value }));
@@ -259,17 +272,17 @@ function ReviewForm({ slug, review }: { slug: string; review: Review | null }) {
               />
               {(sensory[key] ?? null) !== null && (
                 <Body muted>
-                  {
+                  {tr(
                     sensoryFields.find((field) => field.key === key)?.levels[
                       sensory[key]! - 1
-                    ]
-                  }
+                    ] || "",
+                  )}
                 </Body>
               )}
               <Button
                 compact
                 secondary
-                label="No evaluar"
+                label={tr("No evaluar")}
                 selected={(sensory[key] ?? null) === null}
                 onPress={() => {
                   setSensory((current) => ({ ...current, [key]: null }));
@@ -278,9 +291,9 @@ function ReviewForm({ slug, review }: { slug: string; review: Review | null }) {
               />
             </Card>
           ))}
-          <Title>Notas que percibiste</Title>
+          <Title>{tr("Notas que percibiste")}</Title>
           <Body muted>
-            Podés seleccionar varias, aunque no evalúes ningún atributo.
+            {tr("Podés seleccionar varias, aunque no evalúes ningún atributo.")}
           </Body>
           <QueryState query={notes}>
             <FlavorNotePicker
@@ -299,7 +312,7 @@ function ReviewForm({ slug, review }: { slug: string; review: Review | null }) {
           </QueryState>
           {notes.hasNextPage && (
             <Button
-              label="Más notas"
+              label={tr("Más notas")}
               secondary
               disabled={notes.isFetchingNextPage}
               onPress={() => {
@@ -310,7 +323,7 @@ function ReviewForm({ slug, review }: { slug: string; review: Review | null }) {
           <Button
             compact
             secondary
-            label="Limpiar notas"
+            label={tr("Limpiar notas")}
             disabled={!selected.length || mutation.isPending}
             onPress={() => {
               setSelected([]);
@@ -325,16 +338,16 @@ function ReviewForm({ slug, review }: { slug: string; review: Review | null }) {
       <Button
         label={
           mutation.isPending
-            ? "Guardando…"
+            ? tr("Guardando…")
             : review
-              ? "Guardar opinión"
-              : "Publicar opinión"
+              ? tr("Guardar opinión")
+              : tr("Publicar opinión")
         }
         disabled={!online || mutation.isPending}
         onPress={form.handleSubmit((values) => mutation.mutate(values))}
       />
       <Button
-        label="Cancelar"
+        label={tr("Cancelar")}
         secondary
         disabled={mutation.isPending}
         onPress={() => router.back()}
@@ -343,6 +356,7 @@ function ReviewForm({ slug, review }: { slug: string; review: Review | null }) {
   );
 }
 export function ReviewScreen() {
+  useLocale();
   const { slug } = useLocalSearchParams<{ slug: string }>();
   const { user } = useSession();
   const own = useQuery({
@@ -371,9 +385,9 @@ export function ReviewScreen() {
         }}
       >
         <EditorialHero
-          title="Tu experiencia"
-          accent="suma a la ronda"
-          description="Cada opinión ayuda a conocer mejor una yerba."
+          title={tr("Tu experiencia")}
+          accent={tr("suma a la ronda")}
+          description={tr("Cada opinión ayuda a conocer mejor una yerba.")}
           compact
         />
       </View>

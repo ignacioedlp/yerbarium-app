@@ -1,15 +1,9 @@
+import { tr, countLabel, getLocale, useLocale } from "@/i18n";
 import { LeafRating } from "@/components/leaf-rating";
 import { useQueries } from "@tanstack/react-query";
 import { router } from "expo-router";
 import { ScrollView, View, Text } from "react-native";
-import {
-  Page,
-  Title,
-  Body,
-  Button,
-  Card,
-  QueryState,
-} from "@/components/ui";
+import { Page, Title, Body, Button, Card, QueryState } from "@/components/ui";
 import { useComparison } from "@/providers/comparison";
 import { get } from "@/api/client";
 import { technicalRows } from "@/api/format";
@@ -18,6 +12,7 @@ import { sensoryLabels } from "@/api/community-types";
 import { theme } from "@/theme";
 import { EditorialHero } from "@/components/editorial";
 export function Compare() {
+  useLocale();
   const { slugs, toggle, clear } = useComparison();
   const queries = useQueries({
     queries: slugs.map((slug) => ({
@@ -45,13 +40,14 @@ export function Compare() {
     [
       "Estilos",
       (y: YerbaMateDetail) =>
-        y.styles.map((style) => style.name).join(" · ") || "Sin información",
+        y.styles.map((style) => tr(style.name)).join(" · ") ||
+        "Sin información",
     ],
     [
       "Promedio",
       (y: YerbaMateDetail) =>
         y.stats.rating_average
-          ? `${y.stats.rating_average} / 5 (${y.stats.review_count})`
+          ? `${Number(y.stats.rating_average).toLocaleString(getLocale())} / 5 (${y.stats.review_count})`
           : "Sin opiniones",
     ],
     [
@@ -74,7 +70,7 @@ export function Compare() {
       label,
       (y: YerbaMateDetail) =>
         technicalRows(y.technical_profile).find(
-          ([key]) => key === label,
+          ([key]) => key === tr(label),
         )?.[1] || "Sin información",
     ]),
     ...Object.entries(sensoryLabels).map(([key, label]) => [
@@ -84,7 +80,10 @@ export function Compare() {
           (item) => item.attribute === key,
         );
         return attribute?.has_sufficient_evidence
-          ? `${attribute.average} / 5 · ${attribute.evaluator_count} evaluadores`
+          ? tr("{0} / 5 · {1} evaluadores", {
+              0: attribute.average,
+              1: attribute.evaluator_count,
+            })
           : "Sin evidencia suficiente";
       },
     ]),
@@ -98,20 +97,22 @@ export function Compare() {
         }}
       >
         <EditorialHero
-          title="Elegí conociendo"
-          accent="cada diferencia"
-          description="Orígenes, estilos y perfiles. Compará las yerbas a tu manera."
+          title={tr("Elegí conociendo")}
+          accent={tr("cada diferencia")}
+          description={tr(
+            "Orígenes, estilos y perfiles. Compará las yerbas a tu manera.",
+          )}
           compact
         />
       </View>
       <Body>
-        Elegí entre dos y cuatro yerbas y compará sus características.
+        {tr("Elegí entre dos y cuatro yerbas y compará sus características.")}
       </Body>
       {slugs.length < 2 && (
         <Card>
-          <Title>Elegí al menos dos yerbas</Title>
+          <Title>{tr("Elegí al menos dos yerbas")}</Title>
           <Button
-            label="Explorar catálogo"
+            label={tr("Explorar catálogo")}
             onPress={() => router.push("/explorar")}
           />
         </Card>
@@ -119,8 +120,10 @@ export function Compare() {
 
       {ready && (
         <>
-          <Title>Comparación</Title>
-          <Body muted>Deslizá hacia los lados para ver todas las yerbas.</Body>
+          <Title>{tr("Comparación")}</Title>
+          <Body muted>
+            {tr("Deslizá hacia los lados para ver todas las yerbas.")}
+          </Body>
           <ScrollView horizontal showsHorizontalScrollIndicator>
             <View
               style={{
@@ -139,7 +142,7 @@ export function Compare() {
                 }}
               >
                 {[
-                  "Característica",
+                  tr("Característica"),
                   ...queries.map((query) => query.data!.name),
                 ].map((name, index) => (
                   <View
@@ -169,7 +172,7 @@ export function Compare() {
                       }}
                       numberOfLines={2}
                     >
-                      {name}
+                      {index === 0 ? tr(name) : name}
                     </Text>
                   </View>
                 ))}
@@ -218,8 +221,11 @@ export function Compare() {
                               size={16}
                             />
                             <Body muted>
-                              {queries[index - 1].data!.stats.review_count}{" "}
-                              opiniones
+                              {countLabel(
+                                queries[index - 1].data!.stats.review_count,
+                                "{count} opinión",
+                                "{count} opiniones",
+                              )}
                             </Body>
                           </View>
                         ) : index > 0 &&
@@ -242,7 +248,7 @@ export function Compare() {
                                 (a) => sensoryLabels[a.attribute] === label,
                               )!.average
                             }
-                            label={label}
+                            label={tr(label)}
                             size={16}
                           />
                         ) : (
@@ -258,7 +264,7 @@ export function Compare() {
                               flexShrink: 1,
                             }}
                           >
-                            {cell}
+                            {index > 0 && label === "Marca" ? cell : tr(cell)}
                           </Text>
                         )}
                       </View>
@@ -269,8 +275,9 @@ export function Compare() {
             </View>
           </ScrollView>
           <Body muted>
-            Las filas resaltadas muestran diferencias. Los valores desconocidos
-            se conservan como tales.
+            {tr(
+              "Las filas resaltadas muestran diferencias. Los valores desconocidos se conservan como tales.",
+            )}
           </Body>
         </>
       )}
@@ -281,7 +288,7 @@ export function Compare() {
               <>
                 <Title>{query.data.name}</Title>
                 <Button
-                  label="Ver ficha"
+                  label={tr("Ver ficha")}
                   secondary
                   onPress={() =>
                     router.push({
@@ -294,14 +301,14 @@ export function Compare() {
             )}
           </QueryState>
           <Button
-            label="Quitar"
+            label={tr("Quitar")}
             secondary
             onPress={() => toggle(slugs[index])}
           />
         </Card>
       ))}
       {slugs.length > 0 && (
-        <Button label="Limpiar comparación" secondary onPress={clear} />
+        <Button label={tr("Limpiar comparación")} secondary onPress={clear} />
       )}
     </Page>
   );
