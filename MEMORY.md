@@ -69,3 +69,17 @@ Environment inspector snapshot (2026-10-13, before dependency correction):
 # Visual conventions
 
 - Toda puntuación de 0 a 5 y toda escala sensorial debe usar las cinco hojas SVG de la web mediante `LeafRating` (`src/components/leaf-rating.tsx`). Relleno progresivo, parcial para decimales; no estrellas ni barras rectangulares para estas escalas. Mantener el nombre y valor en accesibilidad. La selección de notas conserva pasos de 0,5.
+
+## Environment inspection — 2026-10-15
+
+```json
+{"app_root":"yerbarium-app","backend_root":"../yerba-plataform","is_react_native":true,"is_expo":true,"is_native_ios":false,"is_native_android":false,"platforms":["ios","android"],"expo_version":"~57.0.28","react_native_version":"0.86.3","package_manager":"bun","native_dirs":{"ios":true,"android":true},"app_id":"app.yerbarium.mobile","scheme":"yerbarium","start":"bun run start","build_ios":"bun run ios","build_android":"bun run android","typecheck":"bun run typecheck","lint":"bun run lint","test":"bun run test","exports":["bun run export:ios","bun run export:android"],"metro_port":8081,"argent_available":true,"running_target":{"platform":"ios","name":"iPhone 17 Pro","udid":"9D6BF627-7CFD-4103-913A-EDFA79173694","runtime":"iOS 26.4"}}
+```
+
+Inicio consulta `community/rankings/yerbas/?limit=3` como recurso público. El orden lo define la API (puntuación combinada con cantidad de opiniones); no ordenar por promedio en el cliente. `CommunityPodium` muestra 2º–1º–3º y pasa a orden natural vertical con fuente ampliada o pantalla angosta. Guardar/editar una opinión invalida la consulta del ranking.
+
+## Environment inspection — filter controls, 2026-10-15
+
+```json
+{"app_root":"yerbarium-app","is_react_native":true,"is_expo":true,"is_native_ios":false,"is_native_android":false,"platforms":["ios","android"],"versions":{"expo":"~57.0.28","react_native":"0.86.3","react":"19.2.3"},"package_manager":"bun","bundle_id":"app.yerbarium.mobile","scheme":"yerbarium","metro_port":8081,"native_projects":{"ios_workspace":"ios/Yerbarium.xcworkspace","ios_podfile":true,"android_gradle":true},"commands":{"start":"bun run start","ios":"bun run ios","android":"bun run android","typecheck":"bun run typecheck","lint":"bun run lint","test":"bun run test","export_ios":"bun run export:ios","export_android":"bun run export:android"},"running_target":"9D6BF627-7CFD-4103-913A-EDFA79173694","android_avds":[]}
+```

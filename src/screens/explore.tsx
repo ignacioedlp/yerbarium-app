@@ -6,10 +6,12 @@ import {
   Text,
   ScrollView,
   Pressable,
+  TextInput,
+  Keyboard,
 } from "react-native";
 import { router, useLocalSearchParams } from "expo-router";
 import { Image } from "expo-image";
-import { BottomSheet, Host, Picker, RNHostView } from "@expo/ui";
+import { BottomSheet, RNHostView } from "@expo/ui";
 import {
   Title,
   Body,
@@ -426,7 +428,12 @@ function BrandTile({ brand }: { brand: BrandListItem }) {
           source={brand.image_url!}
           accessible={false}
           contentFit="cover"
-          style={{ position: "absolute", inset: 0, width: "100%", height: "100%" }}
+          style={{
+            position: "absolute",
+            inset: 0,
+            width: "100%",
+            height: "100%",
+          }}
           onError={() => setFailedUrl(brand.image_url || undefined)}
         />
       ) : (
@@ -465,43 +472,134 @@ function CatalogFiltersSheet({
   onApply: (filters: CatalogFilters) => void;
 }) {
   const [draft, setDraft] = useState(initial);
+  const [choosingBrand, setChoosingBrand] = useState(false);
+  const [brandSearch, setBrandSearch] = useState("");
+  const brandItems = brands.data?.pages.flatMap((page) => page.results) ?? [];
+  const selectedBrand = brandItems.find((item) => item.slug === draft.brand);
+  const normalize = (value: string) =>
+    value
+      .normalize("NFD")
+      .replace(/[\u0300-\u036f]/g, "")
+      .toLocaleLowerCase("es");
+  const matchingBrands = brandItems.filter((item) =>
+    normalize(item.name).includes(normalize(brandSearch.trim())),
+  );
+
+  const { hasNextPage, isFetching, error, fetchNextPage } = brands;
+
+  // The API has no brand-name search. Load the remaining pages while browsing
+  // brands so the local search includes the entire catalog, not just page one.
+  useEffect(() => {
+    if (choosingBrand && hasNextPage && !isFetching && !error) {
+      void fetchNextPage();
+    }
+  }, [choosingBrand, hasNextPage, isFetching, error, fetchNextPage]);
+
+  const chooseBrand = (slug: string) => {
+    setDraft((current) => ({ ...current, brand: slug }));
+    Keyboard.dismiss();
+    setChoosingBrand(false);
+    setBrandSearch("");
+  };
   const pick = (
     key: keyof CatalogFilters,
     label: string,
     options: [string, string][],
   ) => (
-    <View
-      style={{
-        gap: t.spacing.sm,
-        paddingVertical: t.spacing.md,
-        borderBottomWidth: 1,
-        borderColor: t.colors.subtleBorder,
-      }}
-    >
+    <View style={{ gap: t.spacing.sm, paddingVertical: t.spacing.md }}>
       <Text
         style={{ fontFamily: t.fonts.bold, fontSize: 16, color: t.colors.ink }}
       >
         {label}
       </Text>
-      <Host matchContents seedColor={t.colors.green} colorScheme="light">
-        <Picker
-          selectedValue={draft[key]}
-          onValueChange={(value) =>
-            setDraft((current) => ({ ...current, [key]: value }))
-          }
-        >
-          {options.map(([value, label]) => (
-            <Picker.Item key={value} value={value} label={label} />
-          ))}
-        </Picker>
-      </Host>
+      <View
+        accessibilityRole="radiogroup"
+        accessibilityLabel={label}
+        style={{ flexDirection: "row", flexWrap: "wrap", gap: t.spacing.sm }}
+      >
+        {options.map(([value, name]) => {
+          const selected = draft[key] === value;
+          return (
+            <Pressable
+              key={value}
+              accessibilityRole="radio"
+              accessibilityLabel={`${label}: ${name}`}
+              accessibilityState={{ checked: selected }}
+              onPress={() =>
+                setDraft((current) => ({ ...current, [key]: value }))
+              }
+              style={({ pressed }) => ({
+                minHeight: 44,
+                paddingHorizontal: 14,
+                paddingVertical: 10,
+                borderRadius: t.radius.pill,
+                borderWidth: 1,
+                borderColor: selected ? t.colors.green : t.colors.border,
+                backgroundColor: selected ? t.colors.green : t.colors.cream,
+                flexDirection: "row",
+                alignItems: "center",
+                gap: 6,
+                opacity: pressed ? 0.7 : 1,
+              })}
+            >
+              {selected && (
+                <Icon name="check" size={16} color={t.colors.cream} />
+              )}
+              <Text
+                style={{
+                  fontFamily: t.fonts.bold,
+                  fontSize: 14,
+                  color: selected ? t.colors.cream : t.colors.ink,
+                  flexShrink: 1,
+                }}
+              >
+                {name}
+              </Text>
+            </Pressable>
+          );
+        })}
+      </View>
     </View>
   );
+  const brandRow = (slug: string, name: string) => {
+    const selected = draft.brand === slug;
+    return (
+      <Pressable
+        accessibilityRole="radio"
+        accessibilityLabel={name}
+        accessibilityState={{ checked: selected }}
+        onPress={() => chooseBrand(slug)}
+        style={({ pressed }) => ({
+          minHeight: 56,
+          paddingVertical: 14,
+          paddingHorizontal: t.spacing.md,
+          borderRadius: t.radius.control,
+          flexDirection: "row",
+          alignItems: "center",
+          gap: t.spacing.md,
+          backgroundColor: selected ? t.colors.selected : "transparent",
+          opacity: pressed ? 0.65 : 1,
+        })}
+      >
+        <Text
+          style={{
+            flex: 1,
+            fontFamily: selected ? t.fonts.bold : t.fonts.body,
+            fontSize: 16,
+            color: t.colors.ink,
+          }}
+        >
+          {name}
+        </Text>
+        {selected && <Icon name="check" />}
+      </Pressable>
+    );
+  };
   return (
     <BottomSheet
       isPresented
       onDismiss={onClose}
-      snapPoints={[{ fraction: 0.8 }, "full"]}
+      snapPoints={["full"]}
       containerColor={t.colors.background}
       contentPadding={0}
       testID="catalog-filters-sheet"
@@ -518,9 +616,32 @@ function CatalogFiltersSheet({
               gap: t.spacing.md,
             }}
           >
+            {choosingBrand && (
+              <Pressable
+                accessibilityRole="button"
+                accessibilityLabel="Volver a filtros"
+                onPress={() => {
+                  Keyboard.dismiss();
+                  setChoosingBrand(false);
+                  setBrandSearch("");
+                }}
+                style={{
+                  minWidth: 44,
+                  minHeight: 44,
+                  alignItems: "center",
+                  justifyContent: "center",
+                }}
+              >
+                <Icon name="arrowLeft" />
+              </Pressable>
+            )}
             <View style={{ flex: 1, gap: t.spacing.xs }}>
-              <Title>Filtros</Title>
-              <Body muted>Encontrá una yerba a tu manera.</Body>
+              <Title>{choosingBrand ? "Marcas" : "Filtros"}</Title>
+              <Body muted>
+                {choosingBrand
+                  ? "Elegí una marca para filtrar."
+                  : "Encontrá una yerba a tu manera."}
+              </Body>
             </View>
             <Pressable
               accessibilityRole="button"
@@ -539,74 +660,200 @@ function CatalogFiltersSheet({
               <Icon name="close" />
             </Pressable>
           </View>
-          <ScrollView
-            style={{ flex: 1 }}
-            keyboardShouldPersistTaps="handled"
-            contentContainerStyle={{
-              paddingHorizontal: t.spacing.lg,
-              paddingBottom: t.spacing.md,
-            }}
-          >
-            {pick("brand", "Marca", [
-              ["", "Todas las marcas"],
-              ...(brands.data?.pages
-                .flatMap((page) => page.results)
-                .map((brand) => [brand.slug, brand.name] as [string, string]) ||
-                []),
-            ])}
-            {brands.error && <QueryState query={brands} />}
-            {brands.hasNextPage && (
-              <Button
-                label="Cargar más marcas"
-                compact
-                secondary
-                disabled={brands.isFetchingNextPage}
-                onPress={() => {
-                  void brands.fetchNextPage();
+          {choosingBrand ? (
+            <View style={{ flex: 1 }}>
+              <View
+                style={{
+                  paddingHorizontal: t.spacing.lg,
+                  paddingBottom: t.spacing.sm,
                 }}
+              >
+                <View
+                  style={{
+                    flexDirection: "row",
+                    alignItems: "center",
+                    gap: t.spacing.sm,
+                    borderWidth: 1,
+                    borderColor: t.colors.border,
+                    borderRadius: t.radius.control,
+                    backgroundColor: t.colors.cream,
+                    paddingHorizontal: t.spacing.md,
+                  }}
+                >
+                  <Icon name="search" />
+                  <TextInput
+                    value={brandSearch}
+                    onChangeText={setBrandSearch}
+                    accessibilityLabel="Buscar marca"
+                    placeholder="Buscar marca…"
+                    placeholderTextColor={t.colors.muted}
+                    autoCorrect={false}
+                    autoCapitalize="none"
+                    selectionColor={t.colors.green}
+                    returnKeyType="search"
+                    onSubmitEditing={Keyboard.dismiss}
+                    style={{
+                      flex: 1,
+                      minHeight: 48,
+                      paddingVertical: 10,
+                      fontFamily: t.fonts.body,
+                      fontSize: 16,
+                      color: t.colors.ink,
+                    }}
+                  />
+                  {!!brandSearch && (
+                    <Pressable
+                      accessibilityRole="button"
+                      accessibilityLabel="Limpiar búsqueda de marcas"
+                      onPress={() => setBrandSearch("")}
+                      style={{
+                        minWidth: 44,
+                        minHeight: 44,
+                        alignItems: "center",
+                        justifyContent: "center",
+                      }}
+                    >
+                      <Icon name="close" size={20} />
+                    </Pressable>
+                  )}
+                </View>
+              </View>
+              <FlatList
+                data={matchingBrands}
+                keyExtractor={(item) => item.slug}
+                keyboardShouldPersistTaps="handled"
+                keyboardDismissMode="on-drag"
+                contentContainerStyle={{
+                  paddingHorizontal: t.spacing.lg,
+                  paddingBottom: t.spacing.lg,
+                }}
+                ListHeaderComponent={brandRow("", "Todas las marcas")}
+                renderItem={({ item }) => brandRow(item.slug, item.name)}
+                ListEmptyComponent={
+                  !brands.isPending && !brands.hasNextPage && !brands.error ? (
+                    <Body muted>No encontramos marcas con ese nombre.</Body>
+                  ) : null
+                }
+                ListFooterComponent={
+                  <View style={{ gap: t.spacing.sm, paddingTop: t.spacing.sm }}>
+                    {brands.isFetching && <Body muted>Cargando marcas…</Body>}
+                    {brands.error && <QueryState query={brands} />}
+                    {brands.hasNextPage &&
+                      !brands.isFetching &&
+                      !!brands.error && (
+                        <Button
+                          label="Reintentar cargar más marcas"
+                          secondary
+                          onPress={() => {
+                            void brands.fetchNextPage();
+                          }}
+                        />
+                      )}
+                  </View>
+                }
               />
-            )}
-            {pick("country", "País de elaboración", [
-              ["", "Todos los países"],
-              ...["AR", "UY", "PY", "BR"].map(
-                (code) => [code, countryLabel(code)] as [string, string],
-              ),
-            ])}
-            {pick("tradition", "Tradición", [
-              ["", "Todas las tradiciones"],
-              ...["AR", "UY", "PY", "BR"].map(
-                (code) => [code, countryLabel(code)] as [string, string],
-              ),
-            ])}
-            {pick("discontinued", "Estado", [
-              ["", "Todos"],
-              ["false", "Vigentes"],
-              ["true", "Discontinuados"],
-            ])}
-          </ScrollView>
-          <View
-            style={{
-              padding: t.spacing.lg,
-              gap: t.spacing.sm,
-              borderTopWidth: 1,
-              borderColor: t.colors.subtleBorder,
-            }}
-          >
-            <Button label="Aplicar filtros" onPress={() => onApply(draft)} />
-            <Button
-              label="Limpiar filtros"
-              secondary
-              onPress={() =>
-                setDraft({
-                  style: "",
-                  brand: "",
-                  country: "",
-                  tradition: "",
-                  discontinued: "",
-                })
-              }
-            />
-          </View>
+            </View>
+          ) : (
+            <ScrollView
+              style={{ flex: 1 }}
+              keyboardShouldPersistTaps="handled"
+              contentContainerStyle={{
+                paddingHorizontal: t.spacing.lg,
+                paddingBottom: t.spacing.md,
+              }}
+            >
+              <View
+                style={{ gap: t.spacing.sm, paddingVertical: t.spacing.md }}
+              >
+                <Text
+                  style={{
+                    fontFamily: t.fonts.bold,
+                    fontSize: 16,
+                    color: t.colors.ink,
+                  }}
+                >
+                  Marca
+                </Text>
+                <Pressable
+                  accessibilityRole="button"
+                  accessibilityLabel={`Elegir marca: ${draft.brand ? (selectedBrand?.name ?? "Marca seleccionada") : "Todas las marcas"}`}
+                  onPress={() => setChoosingBrand(true)}
+                  style={({ pressed }) => ({
+                    minHeight: 56,
+                    borderWidth: 1,
+                    borderColor: draft.brand ? t.colors.green : t.colors.border,
+                    borderRadius: t.radius.control,
+                    paddingHorizontal: t.spacing.md,
+                    paddingVertical: 12,
+                    flexDirection: "row",
+                    alignItems: "center",
+                    gap: t.spacing.sm,
+                    backgroundColor: draft.brand
+                      ? t.colors.selected
+                      : t.colors.cream,
+                    opacity: pressed ? 0.7 : 1,
+                  })}
+                >
+                  <Icon name="search" size={20} />
+                  <Text
+                    style={{
+                      flex: 1,
+                      fontFamily: t.fonts.bold,
+                      fontSize: 16,
+                      color: t.colors.ink,
+                    }}
+                  >
+                    {draft.brand
+                      ? (selectedBrand?.name ?? "Marca seleccionada")
+                      : "Todas las marcas"}
+                  </Text>
+                  <Icon name="arrow" size={20} />
+                </Pressable>
+              </View>
+              {pick("country", "País de elaboración", [
+                ["", "Todos"],
+                ...["AR", "UY", "PY", "BR"].map(
+                  (code) => [code, countryLabel(code)] as [string, string],
+                ),
+              ])}
+              {pick("tradition", "Tradición", [
+                ["", "Todas"],
+                ...["AR", "UY", "PY", "BR"].map(
+                  (code) => [code, countryLabel(code)] as [string, string],
+                ),
+              ])}
+              {pick("discontinued", "Estado", [
+                ["", "Todos"],
+                ["false", "Vigentes"],
+                ["true", "Discontinuados"],
+              ])}
+            </ScrollView>
+          )}
+          {!choosingBrand && (
+            <View
+              style={{
+                padding: t.spacing.lg,
+                gap: t.spacing.sm,
+                borderTopWidth: 1,
+                borderColor: t.colors.subtleBorder,
+              }}
+            >
+              <Button label="Aplicar filtros" onPress={() => onApply(draft)} />
+              <Button
+                label="Limpiar filtros"
+                secondary
+                onPress={() =>
+                  setDraft({
+                    style: "",
+                    brand: "",
+                    country: "",
+                    tradition: "",
+                    discontinued: "",
+                  })
+                }
+              />
+            </View>
+          )}
         </View>
       </RNHostView>
     </BottomSheet>

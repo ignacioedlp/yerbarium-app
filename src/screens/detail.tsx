@@ -39,7 +39,7 @@ import {
   sensoryLabels,
 } from "@/api/community-types";
 import { normalizeError, get, write } from "@/api/client";
-import { technicalRows } from "@/api/format";
+import { packageTypeLabel, technicalRows } from "@/api/format";
 import { useSession } from "@/providers/session";
 import { Icon } from "@/components/icon";
 import { AnimatedTabContent, AnimatedTabs } from "@/components/animated-tabs";
@@ -434,7 +434,7 @@ export function Detail() {
                           <DetailRow
                             key={index}
                             label={`${item.weight_grams} g`}
-                            value={`${item.package_type}${item.barcode ? ` · ${item.barcode}` : ""}`}
+                            value={`${packageTypeLabel(item.package_type)}${item.barcode ? ` · ${item.barcode}` : ""}`}
                           />
                         ))}
                       </>

@@ -9,6 +9,7 @@ import { theme as t } from "@/theme";
 import { usePages, useResource } from "@/hooks/queries";
 import { YerbaMateListItem, PaginatedResponse, YerbaStyle } from "@/api/types";
 import { learningLinks } from "@/content/learning";
+import { CommunityPodium } from "@/components/community-podium";
 
 export function Home() {
   const { width: windowWidth } = useWindowDimensions();
@@ -132,6 +133,7 @@ export function Home() {
           </ScrollView>
         </QueryState>
       </View>
+      <CommunityPodium />
       <View style={{ gap: 16 }}>
         <SectionHeading
           title="Yerbas destacadas"

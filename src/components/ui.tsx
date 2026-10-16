@@ -659,7 +659,15 @@ export function YerbaCard({
               </Text>
             )}
             {!!yerba.short_description && (
-              <Text numberOfLines={3} style={[styles.muted, { fontSize: 12 }]}>
+              <Text
+                numberOfLines={3}
+                style={[
+                  styles.muted,
+                  // The botanical image starts at 35% of the card. Keep the
+                  // description inside that edge, while headings stay wider.
+                  { fontSize: 12, maxWidth: "60%" },
+                ]}
+              >
                 {yerba.short_description}
               </Text>
             )}
