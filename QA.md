@@ -430,3 +430,8 @@ Se restauró el collage botánico original detrás de la foto del envase, a opac
 - Agregados channel production y preview a sus perfiles en eas.json. Se conservan URL, projectId y política appVersion existentes. Los proyectos nativos están ignorados por Git; EAS Build aplicará la configuración mediante CNG.
 - Validación de JSON, canales, correspondencia URL/projectId y runtime correcta. Pasaron 24 pruebas y exportaciones Android/iOS. Lint sin errores, con warning previo moveCarousel en home.tsx. Typecheck detectó cuatro errores de rutas tipadas existentes en account.tsx y email-actions.tsx, fuera del cambio de configuración.
 - eas update:configure falló por ENOTFOUND api.expo.dev; los canales se completaron siguiendo https://docs.expo.dev/eas-update/getting-started/. No se pudo verificar la asociación remota canal/rama, build instalada ni update publicada. No se creó ni publicó una build o actualización. La nueva configuración del canal requiere una nueva build de tienda.
+
+### Fondo del subtítulo de filtros — 2026-10-16
+
+- El texto auxiliar del encabezado (Filtros / Marcas) usa Text sin selección y con fondo transparente explícito, conservando styles.muted. Evita el tratamiento nativo del texto seleccionable heredado de Body en Android.
+- Pasaron TypeScript, 24 pruebas y exportaciones iOS/Android. Lint sin errores; warning previo moveCarousel en home.tsx. No se pudo confirmar visualmente el arreglo en Android: Argent no encontró dispositivos ni AVD disponibles.

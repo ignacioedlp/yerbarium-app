@@ -637,11 +637,14 @@ function CatalogFiltersSheet({
             )}
             <View style={{ flex: 1, gap: t.spacing.xs }}>
               <Title>{choosingBrand ? "Marcas" : "Filtros"}</Title>
-              <Body muted>
+              <Text
+                selectable={false}
+                style={[styles.muted, { backgroundColor: "transparent" }]}
+              >
                 {choosingBrand
                   ? "Elegí una marca para filtrar."
                   : "Encontrá una yerba a tu manera."}
-              </Body>
+              </Text>
             </View>
             <Pressable
               accessibilityRole="button"
