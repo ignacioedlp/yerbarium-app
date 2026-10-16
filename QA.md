@@ -355,3 +355,10 @@ Se restauró el collage botánico original detrás de la foto del envase, a opac
 - Revisada una previsualización circular del recorte adaptativo. No hay dispositivos ni AVD Android disponibles en Argent; pendiente comprobar el launcher instalado con un nuevo build nativo. El cambio no se aplica mediante OTA ni recarga de Metro.
 - Pasaron tipos, 15 pruebas y exportaciones Hermes iOS/Android. Lint sin errores, con la advertencia previa de `moveCarousel` en `home.tsx`.
 >>>>>>> Stashed changes
+
+### 2026-10-14 — Restauración de verificación y recuperación
+
+- Restaurados desde el cambio original `f3a152f` los ocho archivos de implementación que había eliminado/modificado el revert `793c74b`: rutas, pantallas de email, tipo de cuenta, ingreso/registro, perfil y AuthSheet. Se conservan los ajustes posteriores del ícono Android.
+- Recuperación desde Ingresar, nueva contraseña con confirmación, verificación después de registrarse, reenvío a la dirección de la cuenta y actualización/insignia en Perfil. Los cuatro endpoints coinciden con `apps/api/accounts/urls.py` del proyecto hermano.
+- Pasaron TypeScript, 15 pruebas existentes y exportaciones Hermes iOS/Android. Lint sin errores, con la advertencia previa de `moveCarousel` en `home.tsx`. `git diff --check` correcto.
+- No se pudo completar la revisión visual: el development client iOS instalado mostró error de conexión a Metro; al intentar conectarlo por IPv6 volvió al inicio del simulador. Metro iniciado para esta comprobación se detuvo al terminar. Sin Android disponible. Pendientes el recorrido visual y la prueba completa mediante correo real; no se enviaron correos ni se cambiaron contraseñas.
