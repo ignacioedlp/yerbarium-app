@@ -423,3 +423,10 @@ Se restauró el collage botánico original detrás de la foto del envase, a opac
 - Recuperación desde Ingresar, nueva contraseña con confirmación, verificación después de registrarse, reenvío a la dirección de la cuenta y actualización/insignia en Perfil. Los cuatro endpoints coinciden con `apps/api/accounts/urls.py` del proyecto hermano.
 - Pasaron TypeScript, 15 pruebas existentes y exportaciones Hermes iOS/Android. Lint sin errores, con la advertencia previa de `moveCarousel` en `home.tsx`. `git diff --check` correcto.
 - No se pudo completar la revisión visual: el development client iOS instalado mostró error de conexión a Metro; al intentar conectarlo por IPv6 volvió al inicio del simulador. Metro iniciado para esta comprobación se detuvo al terminar. Sin Android disponible. Pendientes el recorrido visual y la prueba completa mediante correo real; no se enviaron correos ni se cambiaron contraseñas.
+
+
+### Canales de EAS Update — 2026-10-16
+
+- Agregados channel production y preview a sus perfiles en eas.json. Se conservan URL, projectId y política appVersion existentes. Los proyectos nativos están ignorados por Git; EAS Build aplicará la configuración mediante CNG.
+- Validación de JSON, canales, correspondencia URL/projectId y runtime correcta. Pasaron 24 pruebas y exportaciones Android/iOS. Lint sin errores, con warning previo moveCarousel en home.tsx. Typecheck detectó cuatro errores de rutas tipadas existentes en account.tsx y email-actions.tsx, fuera del cambio de configuración.
+- eas update:configure falló por ENOTFOUND api.expo.dev; los canales se completaron siguiendo https://docs.expo.dev/eas-update/getting-started/. No se pudo verificar la asociación remota canal/rama, build instalada ni update publicada. No se creó ni publicó una build o actualización. La nueva configuración del canal requiere una nueva build de tienda.
