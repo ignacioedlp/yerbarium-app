@@ -314,8 +314,6 @@ Se restauró el collage botánico original detrás de la foto del envase, a opac
 - QueryState mantiene un contenedor estable para las variantes de contenido y cruza las opacidades del skeleton y los datos durante 280 ms con Reanimated en el hilo UI. Los datos disponibles desde el inicio se muestran directamente; Reduce Motion omite el fundido. Las tarjetas de yerbas conservan su transición existente.
 - En iPhone 17 Pro / iOS 26.4 se comprobó el skeleton de chips de estilos y el retorno a los datos reales mediante estado temporal de la consulta, restaurado al terminar. Expo Go mostró inicialmente un error de ExpoAsset; reiniciar y reabrir el proyecto permitió continuar. Variables temporales eliminadas.
 - TypeScript, lint sin errores (tres warnings previos), 15 pruebas y exportaciones Hermes iOS/Android pasaron; detector de diseño sin hallazgos. Sin evaluación de fluidez en build release/dispositivo físico de menor rendimiento, Android o Reduce Motion activado.
-<<<<<<< Updated upstream
-=======
 
 ## 2026-10-14 — Recuperación de contraseña y verificación de email
 
@@ -354,7 +352,6 @@ Se restauró el collage botánico original detrás de la foto del envase, a opac
 - Reducido el mate un 20% (540 → 432 px en el lienzo de 1024 px), centrado y con escala idéntica en foreground y máscara monocromática. Regenerados SVG/PNG y los recursos adaptativos del proyecto Android local mediante el generador de Expo.
 - Revisada una previsualización circular del recorte adaptativo. No hay dispositivos ni AVD Android disponibles en Argent; pendiente comprobar el launcher instalado con un nuevo build nativo. El cambio no se aplica mediante OTA ni recarga de Metro.
 - Pasaron tipos, 15 pruebas y exportaciones Hermes iOS/Android. Lint sin errores, con la advertencia previa de `moveCarousel` en `home.tsx`.
->>>>>>> Stashed changes
 
 ## 2026-10-15 — Podio de la comunidad en Inicio
 
@@ -420,3 +417,9 @@ Se restauró el collage botánico original detrás de la foto del envase, a opac
 - La ficha móvil usa packageTypeLabel: bag/bolsa/paquete/package/packet → Paquete, box/caja → Caja, paper bag → Paquete de papel, tin/can/lata → Lata y jar/frasco → Frasco. Ignora mayúsculas y espacios externos. Descripciones específicas desconocidas se conservan; valor vacío muestra Sin información. No modifica registros, pesos ni códigos de barras. La web y la API no fueron modificadas.
 - AX de iPhone 17 Pro confirmó 500 g / Paquete en Andresito Despalada. Sin dispositivo Android disponible.
 - TypeScript y 24 pruebas correctos (9 casos de formato incluidos). Lint sin errores con warning previo moveCarousel; exportaciones iOS/Android correctas antes de añadir la comprobación de propiedad propia al diccionario.
+### 2026-10-14 — Restauración de verificación y recuperación
+
+- Restaurados desde el cambio original `f3a152f` los ocho archivos de implementación que había eliminado/modificado el revert `793c74b`: rutas, pantallas de email, tipo de cuenta, ingreso/registro, perfil y AuthSheet. Se conservan los ajustes posteriores del ícono Android.
+- Recuperación desde Ingresar, nueva contraseña con confirmación, verificación después de registrarse, reenvío a la dirección de la cuenta y actualización/insignia en Perfil. Los cuatro endpoints coinciden con `apps/api/accounts/urls.py` del proyecto hermano.
+- Pasaron TypeScript, 15 pruebas existentes y exportaciones Hermes iOS/Android. Lint sin errores, con la advertencia previa de `moveCarousel` en `home.tsx`. `git diff --check` correcto.
+- No se pudo completar la revisión visual: el development client iOS instalado mostró error de conexión a Metro; al intentar conectarlo por IPv6 volvió al inicio del simulador. Metro iniciado para esta comprobación se detuvo al terminar. Sin Android disponible. Pendientes el recorrido visual y la prueba completa mediante correo real; no se enviaron correos ni se cambiaron contraseñas.

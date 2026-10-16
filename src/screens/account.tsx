@@ -22,6 +22,7 @@ import {
 } from "@/components/ui";
 import { useSession } from "@/providers/session";
 import { normalizeError, write } from "@/api/client";
+import { EmailVerificationStatus } from "@/screens/email-actions";
 import { Account } from "@/api/account-types";
 import { Host, Switch } from "@expo/ui";
 import { theme } from "@/theme";
@@ -61,6 +62,12 @@ function LoginForm() {
             label={mutation.isPending ? "Ingresando…" : "Ingresar"}
             disabled={mutation.isPending || !online}
             onPress={form.handleSubmit((values) => mutation.mutate(values))}
+          />
+          <Button
+            label="¿Olvidaste tu contraseña?"
+            secondary
+            disabled={mutation.isPending}
+            onPress={() => router.replace("/recuperar-contrasena")}
           />
           <AuthSwitch register={false} pending={mutation.isPending} />
         </>
@@ -117,7 +124,7 @@ function RegistrationForm() {
   const mutation = useMutation({
     mutationFn: async (values: z.infer<typeof registrationSchema>) =>
       session.login("register", values),
-    onSuccess: () => router.back(),
+    onSuccess: () => router.replace("/verificar-email"),
     onError: (error) => {
       for (const [key, messages] of Object.entries(
         normalizeError(error).fields,
@@ -258,7 +265,25 @@ export function Profile() {
       <RequireSession>
         <View style={{ gap: theme.spacing.sm }}>
           <Title>{session.user?.display_name}</Title>
-          <Body muted>@{session.user?.username}</Body>
+          <View
+            style={{
+              flexDirection: "row",
+              alignItems: "center",
+              gap: theme.spacing.xs,
+            }}
+          >
+            <Body muted>@{session.user?.username}</Body>
+            {session.user?.email_verified && (
+              <View
+                accessible
+                accessibilityRole="image"
+                accessibilityLabel="Email verificado"
+              >
+                <Icon name="verified" size={18} />
+              </View>
+            )}
+          </View>
+          <EmailVerificationStatus />
           <HandNote rotate={false}>
             {session.user?.bio || "Contá un poco sobre vos y tu ronda."}
           </HandNote>
