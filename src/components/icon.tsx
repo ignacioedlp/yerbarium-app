@@ -9,6 +9,8 @@ export type IconName =
   | "filter"
   | "close"
   | "check"
+  | "plus"
+  | "minus"
   | "verified"
   | "book"
   | "heartFilled"
@@ -29,6 +31,8 @@ const names = {
   filter: "tune-variant",
   close: "close",
   check: "check",
+  plus: "plus",
+  minus: "minus",
   verified: "check-decagram",
   book: "book-open-outline",
   heart: "heart-outline",

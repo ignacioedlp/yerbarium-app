@@ -1,9 +1,10 @@
 import { FlavorNotePicker } from "@/components/flavor-note-picker";
 import { LeafRating } from "@/components/leaf-rating";
+import { Icon } from "@/components/icon";
 import { EditorialHero } from "@/components/editorial";
 import { theme } from "@/theme";
 import React, { useState } from "react";
-import { View } from "react-native";
+import { Pressable, Text, View } from "react-native";
 import { useLocalSearchParams, router } from "expo-router";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { Controller, useForm } from "react-hook-form";
@@ -29,7 +30,6 @@ import {
   QueryState,
   RequireSession,
   useCanWrite,
-  styles,
 } from "@/components/ui";
 import { sensoryFields } from "@/api/sensory-fields";
 const schema = z.object({
@@ -90,6 +90,9 @@ function ReviewForm({ slug, review }: { slug: string; review: Review | null }) {
         }),
         client.invalidateQueries({ queryKey: ["public", "yerbas/"] }),
         client.invalidateQueries({ queryKey: ["public", "search/"] }),
+        client.invalidateQueries({
+          queryKey: ["public", "community/rankings/yerbas/?limit=3"],
+        }),
       ]);
       router.back();
     },
@@ -103,27 +106,109 @@ function ReviewForm({ slug, review }: { slug: string; review: Review | null }) {
         name="rating"
         render={({ field, fieldState }) => (
           <Card>
-            <Title>Tu puntuación</Title>
-            <LeafRating
-              value={field.value}
-              onChange={field.onChange}
-              size={30}
-            />
-            <View style={styles.row}>
-              <Button
-                compact
-                secondary
-                label="Bajar 0,5"
-                disabled={field.value <= 1}
-                onPress={() => field.onChange(Math.max(1, field.value - 0.5))}
-              />
-              <Button
-                compact
-                secondary
-                label="Subir 0,5"
-                disabled={field.value >= 5}
-                onPress={() => field.onChange(Math.min(5, field.value + 0.5))}
-              />
+            <View
+              style={{
+                flexDirection: "row",
+                alignItems: "center",
+                justifyContent: "space-between",
+                flexWrap: "wrap",
+                gap: theme.spacing.sm,
+              }}
+            >
+              <Title>Tu puntuación</Title>
+              <Text
+                accessibilityLiveRegion="polite"
+                style={{
+                  color: theme.colors.green,
+                  fontFamily: theme.fonts.bold,
+                  fontSize: 18,
+                  fontVariant: ["tabular-nums"],
+                }}
+              >
+                {field.value.toLocaleString("es-AR", {
+                  minimumFractionDigits: 1,
+                  maximumFractionDigits: 1,
+                })}{" "}
+                / 5
+              </Text>
+            </View>
+            <View
+              style={{
+                flexDirection: "row",
+                alignItems: "center",
+                justifyContent: "space-between",
+                gap: theme.spacing.sm,
+              }}
+            >
+              {(["minus", "leaves", "plus"] as const).map((control) => {
+                if (control === "leaves")
+                  return (
+                    <View
+                      key={control}
+                      accessible
+                      accessibilityRole="adjustable"
+                      accessibilityLabel="Tu puntuación"
+                      accessibilityValue={{
+                        min: 1,
+                        max: 5,
+                        now: field.value,
+                        text: `${field.value.toLocaleString("es-AR")} de 5`,
+                      }}
+                      accessibilityActions={[
+                        { name: "increment", label: "Subir medio punto" },
+                        { name: "decrement", label: "Bajar medio punto" },
+                      ]}
+                      onAccessibilityAction={({ nativeEvent }) => {
+                        if (nativeEvent.actionName === "increment")
+                          field.onChange(Math.min(5, field.value + 0.5));
+                        if (nativeEvent.actionName === "decrement")
+                          field.onChange(Math.max(1, field.value - 0.5));
+                      }}
+                    >
+                      <LeafRating
+                        value={field.value}
+                        showValue={false}
+                        size={26}
+                      />
+                    </View>
+                  );
+                const decrease = control === "minus";
+                const disabled = decrease ? field.value <= 1 : field.value >= 5;
+                return (
+                  <Pressable
+                    key={control}
+                    accessibilityRole="button"
+                    accessibilityLabel={
+                      decrease
+                        ? "Bajar puntuación medio punto"
+                        : "Subir puntuación medio punto"
+                    }
+                    accessibilityState={{ disabled }}
+                    disabled={disabled}
+                    onPress={() =>
+                      field.onChange(
+                        Math.max(
+                          1,
+                          Math.min(5, field.value + (decrease ? -0.5 : 0.5)),
+                        ),
+                      )
+                    }
+                    style={({ pressed }) => ({
+                      width: 44,
+                      height: 44,
+                      flexShrink: 0,
+                      borderRadius: theme.radius.pill,
+                      borderWidth: 1,
+                      borderColor: theme.colors.border,
+                      alignItems: "center",
+                      justifyContent: "center",
+                      opacity: disabled ? 0.45 : pressed ? 0.7 : 1,
+                    })}
+                  >
+                    <Icon name={control} size={24} />
+                  </Pressable>
+                );
+              })}
             </View>
             {fieldState.error && (
               <ErrorMessage

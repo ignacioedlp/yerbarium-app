@@ -1,4 +1,32 @@
 import type { TechnicalProfile } from "./types";
+
+const packageLabels: Record<string, string> = {
+  bag: "Paquete",
+  bolsa: "Paquete",
+  paquete: "Paquete",
+  package: "Paquete",
+  packet: "Paquete",
+  "paper bag": "Paquete de papel",
+  "bolsa de papel": "Paquete de papel",
+  "paquete de papel": "Paquete de papel",
+  box: "Caja",
+  caja: "Caja",
+  tin: "Lata",
+  can: "Lata",
+  lata: "Lata",
+  jar: "Frasco",
+  frasco: "Frasco",
+};
+
+export function packageTypeLabel(value: string) {
+  const trimmed = value.trim();
+  const key = trimmed.toLocaleLowerCase("es");
+  // Preserve specific descriptions that are not part of the known vocabulary.
+  return Object.hasOwn(packageLabels, key)
+    ? packageLabels[key]
+    : trimmed || "Sin información";
+}
+
 export function aging(min: number | null, max: number | null) {
   if (min === null && max === null) return "Sin información";
   if (min !== null && max !== null)

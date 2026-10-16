@@ -314,8 +314,6 @@ Se restauró el collage botánico original detrás de la foto del envase, a opac
 - QueryState mantiene un contenedor estable para las variantes de contenido y cruza las opacidades del skeleton y los datos durante 280 ms con Reanimated en el hilo UI. Los datos disponibles desde el inicio se muestran directamente; Reduce Motion omite el fundido. Las tarjetas de yerbas conservan su transición existente.
 - En iPhone 17 Pro / iOS 26.4 se comprobó el skeleton de chips de estilos y el retorno a los datos reales mediante estado temporal de la consulta, restaurado al terminar. Expo Go mostró inicialmente un error de ExpoAsset; reiniciar y reabrir el proyecto permitió continuar. Variables temporales eliminadas.
 - TypeScript, lint sin errores (tres warnings previos), 15 pruebas y exportaciones Hermes iOS/Android pasaron; detector de diseño sin hallazgos. Sin evaluación de fluidez en build release/dispositivo físico de menor rendimiento, Android o Reduce Motion activado.
-<<<<<<< Updated upstream
-=======
 
 ## 2026-10-14 — Recuperación de contraseña y verificación de email
 
@@ -354,8 +352,71 @@ Se restauró el collage botánico original detrás de la foto del envase, a opac
 - Reducido el mate un 20% (540 → 432 px en el lienzo de 1024 px), centrado y con escala idéntica en foreground y máscara monocromática. Regenerados SVG/PNG y los recursos adaptativos del proyecto Android local mediante el generador de Expo.
 - Revisada una previsualización circular del recorte adaptativo. No hay dispositivos ni AVD Android disponibles en Argent; pendiente comprobar el launcher instalado con un nuevo build nativo. El cambio no se aplica mediante OTA ni recarga de Metro.
 - Pasaron tipos, 15 pruebas y exportaciones Hermes iOS/Android. Lint sin errores, con la advertencia previa de `moveCarousel` en `home.tsx`.
->>>>>>> Stashed changes
 
+## 2026-10-15 — Podio de la comunidad en Inicio
+
+- Nueva sección encima de Yerbas destacadas, conectada a `community/rankings/yerbas/?limit=3`. Respeta los puestos del backend; presenta imagen real, marca, nombre, promedio en hojas y cantidad de opiniones. Primero al centro entre segundo y tercero; con menos de tres resultados conserva los disponibles. Pantalla menor a 350 pt o fontScale mayor a 1,3 usa filas verticales en orden natural.
+- Reutiliza QueryState para carga, error, reintento, caché y desconexión; mensaje propio cuando no hay valoraciones. Imagen ausente o fallida tiene texto alternativo. Guardar/editar una opinión invalida el ranking; eliminar opiniones ya invalida todas las consultas públicas.
+- Pasaron TypeScript, lint sin errores (advertencia previa moveCarousel en home.tsx), las 15 pruebas existentes y exportaciones Hermes iOS/Android en /private/tmp/yerbarium-podium-ios y /private/tmp/yerbarium-podium-android. Detector de diseño sin hallazgos; git diff --check correcto.
+- Confirmado visualmente en iPhone 17 Pro / iOS 26.4 con datos reales: composición 2º–1º–3º encima de destacadas, fotografías, hojas, promedios y opiniones. Accesibilidad anuncia puesto, producto, promedio y opiniones. Captura: /var/folders/8p/dkj73qk9569f7x7931_v6bkr0000gn/T/simserver-q3nK06/media/876247000-1792105751900.png.
+- Dos taps inyectados por Argent sobre el primero no provocaron navegación. Se verificó el callback onPress desde el depurador y abrió correctamente la ficha real Canarias Sabor Original. Pendiente confirmación táctil manual, revisión visual Android/tablet/texto ampliado y recorridos de carga/error/vacío/offline. No se modificaron valoraciones ni datos del servidor.
+
+### Ajuste visual del podio
+
+- Se retiraron los contenedores individuales, sus fondos y bordes. Imágenes con área de 188 pt (antes 128), a todo el ancho disponible; en formato vertical usan 120 × 152 pt. Se retiraron las hojas y el promedio numérico; permanecen marca, nombre, cantidad de opiniones y puesto.
+- Confirmado visualmente con datos reales en iPhone 17 Pro / iOS 26.4. Captura: /var/folders/8p/dkj73qk9569f7x7931_v6bkr0000gn/T/simserver-U6vMvZ/media/658762000-1792105967669.png.
+- TypeScript, las 15 pruebas y exportaciones iOS/Android correctos; lint sin errores con el warning previo moveCarousel. Detector sin hallazgos. Sin nueva revisión visual Android ni texto ampliado.
+
+### Podio sin cantidad de opiniones
+
+- Se retiró el número de opiniones del contenido visible y de accesibilidad, junto con su contenedor. El podio conserva imagen, marca, nombre y puesto.
+
+### Colores de medallas en el podio
+
+- Bases oro, plata y bronce para los puestos 1, 2 y 3; números en tinta oscura. Tokens compartidos en theme/index.ts. Confirmado visualmente en iPhone 17 Pro / iOS 26.4: /var/folders/8p/dkj73qk9569f7x7931_v6bkr0000gn/T/simserver-hFB2cr/media/156347000-1792106077200.png.
+- TypeScript y 15 pruebas correctos; lint sin errores, con advertencia previa moveCarousel. Sin revisión visual Android.
+
+### Números de puestos en blanco
+
+- Los números 1º, 2º y 3º usan el token white sobre las bases oro, plata y bronce, por pedido del usuario. TypeScript y diff --check correctos; sin nueva revisión visual para este ajuste de color.
+
+### Escala de imágenes del podio
+
+- La columna del ganador tiene 25% más espacio relativo. Las imágenes usan contain, alineación inferior y límites de altura 180/140/112 pt para primero/segundo/tercero; modo vertical conserva 152 pt. Esto compensa la distinta proporción de los paquetes sin deformarlos ni recortarlos.
+- Inspección visual iPhone 17 Pro / iOS 26.4 confirmó mayor presencia del primero tras ampliar su columna. Último ajuste reduce la altura máxima del tercero de 124 a 112 pt. Captura previa a esa reducción: /var/folders/8p/dkj73qk9569f7x7931_v6bkr0000gn/T/simserver-ss7fY1/media/613684000-1792106300627.png.
+- TypeScript, 15 pruebas, lint sin errores (warning previo moveCarousel), detector y exportaciones iOS/Android correctos antes del ajuste final de 12 pt. No se revisó visualmente Android ni otras futuras fotografías del ranking.
+
+### Alternativa a dropdowns de filtros — 2026-10-15
+
+- País, tradición y estado: botones de selección única visibles, distribuidos en filas, verde + check para selección y roles radio/checked. Marca: lista virtualizada con búsqueda local sin distinguir acentos/mayúsculas; completa las páginas usando la consulta existente de TanStack Query. Conserva borrador hasta aplicar; limpiar incluye estilo. Sin dependencias nuevas.
+- BottomSheet nativo abre a altura completa: la inspección de la altura parcial detectó acciones recortadas; con altura completa se confirmaron todas las secciones y ambos botones visibles. Contenido central desplazable para pantallas más pequeñas o fuentes ampliadas.
+- Inspección visual en iPhone 17 Pro / iOS 26.4. Panel final: `/private/tmp/yerbarium-filtros-ios.png`. Búsqueda de Canarias y selección comprobadas vía callbacks reales con Argent debugger-evaluate; se verificó país Uruguay marcado y estado aplicado: marca `canarias`, país `UY`, panel cerrado. Limpiar y aplicar restablecieron filtros al terminar.
+- Limitación: gesture-tap informó éxito pero los toques no cambiaron la UI, incluso en las pestañas nativas después de recargar. La comprobación funcional usó callbacks desde el runtime; no equivale a un recorrido táctil completo. No se verificó interacción con teclado visible, VoiceOver/TalkBack, fuente ampliada ni un dispositivo Android (sin dispositivos ni AVD disponibles).
+- TypeScript, 15 pruebas, Prettier, diff --check y exportaciones iOS/Android correctos sobre el cambio final. Lint sin errores; conserva el warning previo de `moveCarousel` en Inicio. Detector Impeccable sin hallazgos.
+
+### Ancho de descripción de YerbaCard — 2026-10-16
+
+- Descripción limitada al 60% de la columna de texto (aproximadamente un tercio de la tarjeta), con el límite existente de tres líneas. Conserva ancho del título e imágenes. Cambio compartido para iOS y Android.
+- Confirmado visualmente con las tarjetas reales de Amanda Tradicional y Andresito Despalada en iPhone 17 Pro / iOS 26.4: descripción separada de hojas y paquetes. Captura: `/var/folders/8p/dkj73qk9569f7x7931_v6bkr0000gn/T/simserver-gS44yu/media/212846000-1792155270230.png`. Sin emulador Android disponible.
+- TypeScript, 15 pruebas, exportaciones iOS/Android correctos; lint sin errores con warning previo `moveCarousel` en Inicio. Hook de diseño sin hallazgos deterministas; sidecar de DESIGN.md previamente desactualizado, sin regenerarlo fuera del alcance.
+
+### Botones de puntuación — 2026-10-16
+
+- Reemplazados «Bajar 0,5» / «Subir 0,5» por iconos menos y más: SF Symbols en iOS y Material en Android, botones circulares de 48 puntos. Conservan pasos de 0,5, límites 1–5, estados deshabilitados y etiquetas accesibles que explican el incremento.
+- Confirmados visualmente ambos iconos en iPhone 17 Pro / iOS 26.4. Captura: `/var/folders/8p/dkj73qk9569f7x7931_v6bkr0000gn/T/simserver-NYIeSt/media/844750000-1792155414868.png`. Sin recorrido táctil ni revisión visual Android; no se publicó ninguna opinión.
+- TypeScript, 15 pruebas, Prettier, diff --check y exportaciones iOS/Android correctos. Lint sin errores; warning previo `moveCarousel` en Inicio.
+
+### Composición de puntuación — 2026-10-16
+
+- Valor numérico al lado del título «Tu puntuación»; una fila debajo con menos, cinco hojas centradas y más. Botones de 44 puntos y pasos de 0,5 dentro de 1–5. La escala central se expone como adjustable con acciones de incremento/decremento para lector de pantalla; la edición visual usa los botones laterales.
+- Confirmado visualmente en iPhone 17 Pro / iOS 26.4: `/var/folders/8p/dkj73qk9569f7x7931_v6bkr0000gn/T/simserver-8s2YLA/media/542804000-1792155587560.png`. Sin publicación de opinión ni revisión visual Android.
+- TypeScript, 15 pruebas y exportaciones iOS/Android correctos; lint sin errores tras quitar el import styles sin uso. Persiste warning previo moveCarousel en Inicio.
+
+### Presentaciones en español — 2026-10-16
+
+- La ficha móvil usa packageTypeLabel: bag/bolsa/paquete/package/packet → Paquete, box/caja → Caja, paper bag → Paquete de papel, tin/can/lata → Lata y jar/frasco → Frasco. Ignora mayúsculas y espacios externos. Descripciones específicas desconocidas se conservan; valor vacío muestra Sin información. No modifica registros, pesos ni códigos de barras. La web y la API no fueron modificadas.
+- AX de iPhone 17 Pro confirmó 500 g / Paquete en Andresito Despalada. Sin dispositivo Android disponible.
+- TypeScript y 24 pruebas correctos (9 casos de formato incluidos). Lint sin errores con warning previo moveCarousel; exportaciones iOS/Android correctas antes de añadir la comprobación de propiedad propia al diccionario.
 ### 2026-10-14 — Restauración de verificación y recuperación
 
 - Restaurados desde el cambio original `f3a152f` los ocho archivos de implementación que había eliminado/modificado el revert `793c74b`: rutas, pantallas de email, tipo de cuenta, ingreso/registro, perfil y AuthSheet. Se conservan los ajustes posteriores del ícono Android.

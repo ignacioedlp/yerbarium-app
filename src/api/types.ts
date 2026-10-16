@@ -71,6 +71,20 @@ export interface YerbaStats {
   weighted_rating: string | null;
 }
 
+export interface RankedYerba {
+  rank: number;
+  slug: string;
+  name: string;
+  brand: BrandSummary;
+  image: CatalogImage | null;
+  average_rating: string;
+  review_count: number;
+}
+
+export interface CommunityRanking {
+  results: RankedYerba[];
+}
+
 export type SensoryAttribute =
   | "intensity"
   | "bitterness"

@@ -10,6 +10,8 @@ const names = {
   filter: "slider.horizontal.3",
   close: "xmark",
   check: "checkmark",
+  plus: "plus",
+  minus: "minus",
   verified: "checkmark.seal.fill",
   book: "book",
   heart: "heart",
