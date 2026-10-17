@@ -245,7 +245,7 @@ function ExploreContent({
           accessibilityRole="header"
           style={[
             styles.title,
-            { fontSize: 34, lineHeight: 38, textTransform: "none" },
+            { fontSize: 34, lineHeight: 38, textTransform: "uppercase" },
           ]}
         >
           {tr("Explorar")}

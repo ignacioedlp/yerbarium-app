@@ -32,7 +32,7 @@ import {
   countryLabel,
 } from "@/components/ui";
 import { useResource, usePages } from "@/hooks/queries";
-import { YerbaMateDetail } from "@/api/types";
+import { CommunityRanking, YerbaMateDetail } from "@/api/types";
 import {
   LibraryState,
   libraryChanges,
@@ -64,7 +64,10 @@ export function Detail() {
   const path = `yerbas/${encodeURIComponent(slug)}/`;
   const { user, error: sessionError, restore } = useSession();
   const query = useResource<YerbaMateDetail>(path),
-    reviews = usePages<Review>(`${path}reviews/`, {}, !!user);
+    reviews = usePages<Review>(`${path}reviews/`, {}, !!user),
+    ranking = useResource<CommunityRanking>(
+      "community/rankings/yerbas/?limit=3",
+    );
   const [tab, setTab] = React.useState<
     "info" | "profile" | "reviews" | "sources"
   >("info");
@@ -124,6 +127,9 @@ export function Detail() {
     },
   });
   const yerba = query.data;
+  const podiumRank = ranking.data?.results.find(
+    (item) => item.slug === yerba?.slug && item.rank <= 3,
+  )?.rank;
   const publicReviews = (
     reviews.data?.pages.flatMap((page) => page.results) ?? []
   ).filter((review) => review.id !== own.data?.id);
@@ -146,19 +152,59 @@ export function Detail() {
                     gap: theme.spacing.sm,
                   }}
                 >
-                  <Text
-                    accessibilityRole="header"
-                    selectable
+                  <View
                     style={{
                       flex: 1,
-                      fontFamily: theme.fonts.display,
-                      fontSize: 34,
-                      lineHeight: 37,
-                      color: theme.colors.ink,
+                      flexDirection: "row",
+                      alignItems: "center",
+                      flexWrap: "wrap",
+                      gap: theme.spacing.sm,
                     }}
                   >
-                    {yerba.name.toUpperCase()}
-                  </Text>
+                    <Text
+                      accessibilityRole="header"
+                      selectable
+                      style={{
+                        fontFamily: theme.fonts.display,
+                        fontSize: 34,
+                        lineHeight: 37,
+                        color: theme.colors.ink,
+                      }}
+                    >
+                      {yerba.name.toUpperCase()}
+                    </Text>
+                    {podiumRank ? (
+                      <View
+                        accessibilityLabel={tr("Puesto {0}", {
+                          0: podiumRank,
+                        })}
+                        style={{
+                          minWidth: 30,
+                          height: 30,
+                          paddingHorizontal: theme.spacing.sm,
+                          borderRadius: theme.radius.pill,
+                          alignItems: "center",
+                          justifyContent: "center",
+                          backgroundColor:
+                            podiumRank === 1
+                              ? theme.colors.podiumGold
+                              : podiumRank === 2
+                                ? theme.colors.podiumSilver
+                                : theme.colors.podiumBronze,
+                        }}
+                      >
+                        <Text
+                          style={{
+                            color: theme.colors.white,
+                            fontFamily: theme.fonts.display,
+                            fontSize: 16,
+                          }}
+                        >
+                          {podiumRank}º
+                        </Text>
+                      </View>
+                    ) : null}
+                  </View>
                   <Pressable
                     accessibilityRole="button"
                     accessibilityLabel={tr(

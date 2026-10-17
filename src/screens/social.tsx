@@ -268,7 +268,7 @@ const styles = StyleSheet.create({
     borderBottomColor: theme.colors.subtleBorder,
   },
   byline: { flexDirection: "row", alignItems: "center", gap: theme.spacing.md },
-  authorLink: { minHeight: 48, justifyContent: "center", flex: 1 },
+  authorLink: { minHeight: 20, justifyContent: "center", flex: 1 },
   author: {
     fontFamily: theme.fonts.bold,
     fontSize: 17,
@@ -316,9 +316,7 @@ const styles = StyleSheet.create({
     width: 68,
     height: 88,
     borderRadius: 8,
-    backgroundColor: theme.colors.surface,
-    borderWidth: StyleSheet.hairlineWidth,
-    borderColor: theme.colors.subtleBorder,
+    backgroundColor: "transparent",
     overflow: "hidden",
     alignItems: "center",
     justifyContent: "center",
@@ -438,7 +436,7 @@ function SocialContent() {
         renderItem={({ item }) => <EventCard event={item} />}
         contentContainerStyle={{
           padding: theme.spacing.lg,
-          paddingTop: theme.spacing.md,
+          paddingTop: theme.spacing.lg,
           paddingBottom: TAB_BAR_CONTENT_CLEARANCE,
           maxWidth: 680,
           width: "100%",
