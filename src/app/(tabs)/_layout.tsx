@@ -9,10 +9,23 @@ export default function TabLayout() {
       <Stack.Screen options={{ headerShown: false }} />
       <NativeTabs
         tintColor={theme.colors.green}
+        iconColor={{
+          default: theme.colors.muted,
+          selected: theme.colors.green,
+        }}
         indicatorColor={theme.colors.selected}
         rippleColor={theme.colors.selected}
         backgroundColor={theme.colors.surface}
-        labelStyle={{ fontFamily: theme.fonts.body }}
+        labelStyle={{
+          default: {
+            color: theme.colors.muted,
+            fontFamily: theme.fonts.body,
+          },
+          selected: {
+            color: theme.colors.green,
+            fontFamily: theme.fonts.body,
+          },
+        }}
       >
         <NativeTabs.Trigger name="(home)">
           <NativeTabs.Trigger.Label>{tr("Inicio")}</NativeTabs.Trigger.Label>
