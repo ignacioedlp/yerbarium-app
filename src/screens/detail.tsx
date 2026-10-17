@@ -118,6 +118,7 @@ export function Detail() {
   const deletion = useMutation({
     mutationFn: () => write(`reviews/${own.data!.id}/`, "DELETE"),
     onSuccess: () => {
+      void client.invalidateQueries({ queryKey: ["private", "social"] });
       void client.invalidateQueries({ queryKey: ["public"] });
       void own.refetch();
     },

@@ -27,7 +27,8 @@ export function BrandFeed() {
         .map((event) => [event.id, event]),
     ).values(),
   ];
-  if (!user) return null;
+  if (!user || (!feed.isPending && !feed.isError && events.length === 0))
+    return null;
   return (
     <View style={{ gap: theme.spacing.md }}>
       <SectionHeading title={tr("Novedades de tus marcas")} />
@@ -39,32 +40,42 @@ export function BrandFeed() {
         ) : (
           events.map((event) => (
             <View key={event.id} style={{ gap: theme.spacing.sm }}>
-              <Pressable
-                accessibilityRole="link"
-                style={{ minHeight: 44, justifyContent: "center" }}
-                onPress={() =>
-                  router.push({
-                    pathname: "/marcas/[slug]",
-                    params: { slug: event.brand.slug },
-                  })
-                }
-              >
-                <Body>{event.brand.name}</Body>
-              </Pressable>
-              <Body muted>
-                {tr(
-                  event.kind === "product"
-                    ? "Producto incorporado al catálogo"
-                    : "Novedad de marca",
-                )}
-              </Body>
+              {event.kind === "news" && (
+                <>
+                  <Pressable
+                    accessibilityRole="link"
+                    style={{ minHeight: 44, justifyContent: "center" }}
+                    onPress={() =>
+                      router.push({
+                        pathname: "/marcas/[slug]",
+                        params: { slug: event.brand.slug },
+                      })
+                    }
+                  >
+                    <Body>{event.brand.name}</Body>
+                  </Pressable>
+                  <Body muted>{tr("Novedad de marca")}</Body>
+                </>
+              )}
               {event.kind === "news" ? (
                 <Card>
                   <Title>{event.title}</Title>
                   <Body>{event.body}</Body>
                 </Card>
               ) : null}
-              {event.product ? <YerbaCard yerba={event.product} /> : null}
+              {event.product ? (
+                <YerbaCard
+                  yerba={event.product}
+                  badge={
+                    event.kind === "product"
+                      ? {
+                          text: tr("Nueva incorporación"),
+                          accessibilityLabel: tr("Nueva incorporación"),
+                        }
+                      : undefined
+                  }
+                />
+              ) : null}
             </View>
           ))
         )}

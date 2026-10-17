@@ -540,3 +540,49 @@ Se restauró el collage botánico original detrás de la foto del envase, a opac
 - Validado: tipos, 44 pruebas móviles y exportaciones iOS/Android; lint sin errores y con la advertencia existente de `moveCarousel` en `home.tsx`. API/administración: 87 pruebas relevantes correctas en SQLite, 2 anteriores de concurrencia pendientes en PostgreSQL. Web: 278 pruebas y build con Webpack correctos. OpenAPI sin advertencias y migraciones coherentes.
 - Argent en iPhone 17 Pro/iOS 26.4: `yerbarium://usuarios/2tofi/seguidos` presenta ambas pestañas y mantiene el listado de personas con el separador inferior. No se completó el recorrido real de seguir marca/feed: las migraciones nuevas no pudieron aplicarse por las restricciones de acceso a Docker/PostgreSQL. Android no tiene emulador configurado.
 - Contratos, decisiones del feed y pasos de publicación/migración: `../yerba-plataform/docs/brand-following.md`.
+
+## Pantalla Social — 2026-10-17
+
+- Quinta pestaña Social antes de Perfil, con Para vos/Siguiendo y sesión requerida. Feed cronológico de reseñas públicas, catálogo y novedades existentes. Inicio conserva su listado de marcas.
+- Privacidad y bloqueos filtrados por API antes de paginar. Queries privadas por cuenta/pestaña, sin persistencia y con cancelación. Guardar/eliminar reseñas, seguir/dejar de seguir, privacidad y bloqueos invalidan las consultas sociales.
+- Verificado: tipos, 46 pruebas Vitest (incluidas autenticación de consultas, aislamiento por cuenta/pestaña y cancelación al retirar consultas), exportaciones iOS/Android. Lint sin errores; permanece la advertencia anterior de `moveCarousel` en Inicio.
+- Argent/iPhone 17 Pro/iOS 26.4: deep link `yerbarium://social` carga reseñas locales reales, hojas de valoración y tarjetas enlazadas. Se inspeccionaron Para vos y Siguiendo (este último activando el callback de selección desde el depurador). Capturas y árboles nativos muestran el cambio de selección y de resultados.
+- Los taps de Argent no activaron controles nativos ni React Native, incluso tras reiniciar. No se da por verificado el recorrido táctil completo, enlaces, scroll o Cargar más en dispositivo. No hay emulador Android configurado; revisión visual pendiente. Contrato y QA backend/web: `../yerba-plataform/docs/social-feed.md` y `../yerba-plataform/QA.md`.
+
+### Rediseño visual del feed móvil — 2026-10-17
+
+- Se reemplazaron las tarjetas anidadas por una lista editorial con separadores. Autor y fecha comparten cabecera; la reseña conserva su valoración en hojas y su texto completo. La yerba aparece como referencia compacta con nombre, marca, imagen real o icono de hoja y enlace a su ficha. Se retiraron del feed la descripción de catálogo, estadísticas duplicadas, collage decorativo y controles de favorito/comparación de la tarjeta completa; esas funciones siguen en sus pantallas existentes.
+- Se conservan los datos y contratos de API, pestañas, privacidad, paginación, actualización y estados de error/vacío. No se modificó la web ni la API en esta revisión.
+- Captura iPhone 17 Pro/iOS 26.4: `.impeccable/review/phone-ios.png`. Se ven dos reseñas completas y el comienzo de una tercera. Revisión visual independiente: aprobada para el alcance de teléfono iOS, sin correcciones materiales. No equivale a verificación de VoiceOver, tipografía ampliada, iPad o Android.
+- Tipos y 46 pruebas correctas; lint sin errores y con la advertencia previa de `moveCarousel` en Inicio. Exportaciones iOS/Android verificadas. El tap de Argent sobre el nuevo enlace de producto no cambió la pantalla; se mantiene pendiente el recorrido táctil completo. Los enlaces y etiquetas están presentes en el árbol de accesibilidad.
+
+### Imagen de yerba y diferenciación de marcas — 2026-10-17
+
+- Referencias de yerba en reseñas: espacio de foto de 68×88 pt con imagen real del catálogo en modo contain. Imagen ausente/fallida: símbolo nativo de foto y texto traducido «Sin foto». Una URL de imagen nueva puede recuperarse del estado de error anterior.
+- Eventos de marcas: panel de superficie con borde, logo real o símbolo de tienda, etiqueta explícita «Marca», símbolo de anuncio y descripción de actividad. Producto destacado con foto de 84×108 pt, nombre y «Ver yerba»; las reseñas mantienen su lista abierta y su puntuación en hojas.
+- Iconos definidos para SF Symbols en iOS y Material Community Icons en Android. Fecha visible compacta y etiqueta accesible completa.
+- Verificado: tipos, lint (solo advertencia previa de Inicio), 46 pruebas y exportaciones iOS/Android. Capturas reales iPhone 17 Pro: `.impeccable/review/phone-ios-review.png` y `phone-ios-brand.png`. Revisión visual independiente aprobada sin correcciones materiales.
+- Los productos locales de prueba no tienen imágenes, por lo que se verificó visualmente el estado Sin foto. Quedan pendientes la carga de una foto real, tipografía ampliada, VoiceOver, Android/iPad y navegación táctil. Para alcanzar las marcas se activaron callbacks existentes de Cargar más y scroll del listado mediante depurador, sin modificar los datos de API.
+
+### Referencia editorial de yerba en reseñas — 2026-10-17
+
+- Se retiraron de las reseñas el contenedor salvia y el recuadro de imagen ausente. La referencia queda sobre el papel con un separador fino, nombre en Lilita, marca y estado «Sin foto» como metadatos. Las imágenes reales conservan su miniatura cuando estén disponibles; las publicaciones de marcas mantienen su diseño diferenciado.
+- Captura iPhone: `.impeccable/review/phone-ios-reference.png`. Tipos, formato y lint correctos (advertencia previa de Inicio). Cambio visual local; no se modificaron API, datos ni navegación. Carga de imagen real, texto ampliado y recorrido táctil siguen sin comprobarse en esta revisión.
+
+### Composición editorial de marcas — 2026-10-17
+
+- Publicaciones de marcas con cabecera compacta, logo real o iniciales, fecha y procedencia «Marca». Nombre de la yerba en Lilita de 28 pt y enlace «Ver yerba» al pie con separador fino.
+- Se eliminó el bloque grande de foto ausente de los eventos de marcas. Las imágenes disponibles conservan un espacio amplio de 164 pt en modo contain. Los estados sin foto/fallo se resuelven con la composición textual; las reseñas conservan su diseño anterior.
+- Captura real de iPhone: `.impeccable/review/phone-ios-brand-editorial.png`. Tipos, lint y formato correctos; advertencia previa en Inicio. Imagen presente, texto ampliado y navegación táctil permanecen fuera de esta revisión visual.
+
+### Yerba protagonista e insignia de incorporación — 2026-10-17
+
+- Los eventos de tipo producto tienen una composición propia centrada en la yerba: región verde, nombre en Lilita de 34 pt, insignia lima «Nueva en el catálogo», fecha y acceso a la ficha. La marca pasa a un enlace secundario al pie. La insignia describe la incorporación al catálogo y no afirma un lanzamiento comercial; no se aplica a reseñas ni noticias de marca.
+- La foto real usa un espacio de 192 pt cuando existe; no se dibuja una foto ni un hueco cuando falta/falla. Reseñas y noticias conservan sus representaciones anteriores.
+- Verificados tipos, lint (advertencia previa de Inicio), 46 pruebas y exportaciones iOS/Android. Captura real de teléfono iOS: `.impeccable/review/phone-ios-new-yerba.png`. Revisión visual independiente sin correcciones materiales en ese alcance. Persisten las limitaciones de imagen real, tipografía ampliada, VoiceOver y navegación táctil.
+
+### Reutilización directa de la tarjeta de Explorar — 2026-10-17
+
+- Por indicación explícita del usuario, los eventos de incorporación de yerba usan ahora el mismo componente `YerbaCard` que Explorar. Se retiró el anuncio verde alternativo. Se conservan collage, imagen/fallback, tipografía, puntuación, estilo, país y funciones de favorito/comparación del catálogo.
+- Se agregó a `YerbaCard` una propiedad opcional `badge` con texto visible y etiqueta accesible. Social muestra «Nueva» y anuncia «Nueva en el catálogo»; Explorar no pasa esta propiedad y conserva su representación. Fecha y enlace a marca permanecen debajo de la tarjeta en Social.
+- Verificados tipos, formato, lint (advertencia previa de Inicio), 46 pruebas y exportaciones iOS/Android. Captura real de teléfono: `.impeccable/review/phone-ios-explore-cards.png`. No se verificaron gestos/favoritos/comparación manualmente, ni rama de foto real o tipografía ampliada.

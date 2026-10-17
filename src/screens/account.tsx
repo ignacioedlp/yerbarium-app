@@ -6,7 +6,7 @@ import React from "react";
 import { Pressable, Text, TextInput, View } from "react-native";
 import { HandNote } from "@/components/editorial";
 import { Icon } from "@/components/icon";
-import { router, type Href } from "expo-router";
+import { router } from "expo-router";
 import { Controller, useForm } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -397,12 +397,6 @@ export function Profile() {
             label={tr("Cerrar sesión")}
             secondary
             onPress={() => void session.logout()}
-          />
-          <Button
-            label={tr("Eliminar cuenta")}
-            secondary
-            destructive
-            onPress={() => router.push("/eliminar-cuenta" as Href)}
           />
         </View>
       ) : null}

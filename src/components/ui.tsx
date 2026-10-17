@@ -456,11 +456,13 @@ export function ExternalLink({ label, url }: { label: string; url: string }) {
 }
 export function YerbaCard({
   yerba,
+  badge,
   index = 0,
   loading = false,
 }: {
   index?: number;
   loading?: boolean;
+  badge?: { text: string; accessibilityLabel: string };
   yerba: Pick<
     YerbaMateListItem,
     "slug" | "name" | "brand" | "images" | "short_description"
@@ -524,10 +526,13 @@ export function YerbaCard({
         <Paper />
         <Pressable
           accessibilityRole="button"
-          accessibilityLabel={tr("Ver {0} {1}", {
-            0: yerba.brand.name,
-            1: yerba.name,
-          })}
+          accessibilityLabel={`${badge ? `${badge.accessibilityLabel}. ` : ""}${tr(
+            "Ver {0} {1}",
+            {
+              0: yerba.brand.name,
+              1: yerba.name,
+            },
+          )}`}
           accessibilityHint={tr(
             "Mantené presionado para agregar o quitar de la comparación",
           )}
@@ -620,6 +625,28 @@ export function YerbaCard({
             )}
           </View>
           <View style={{ width: "54%", padding: 16, paddingRight: 0, gap: 7 }}>
+            {badge ? (
+              <View
+                style={{
+                  alignSelf: "flex-start",
+                  backgroundColor: t.colors.green,
+                  borderRadius: t.radius.pill,
+                  paddingHorizontal: 10,
+                  paddingVertical: 4,
+                }}
+              >
+                <Text
+                  style={{
+                    fontFamily: t.fonts.bold,
+                    fontSize: 12,
+                    lineHeight: 17,
+                    color: t.colors.cream,
+                  }}
+                >
+                  {badge.text}
+                </Text>
+              </View>
+            ) : null}
             <Text style={[styles.muted, { color: t.colors.ink }]}>
               {yerba.brand.name}
             </Text>

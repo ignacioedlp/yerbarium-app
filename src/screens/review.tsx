@@ -83,6 +83,7 @@ function ReviewForm({ slug, review }: { slug: string; review: Review | null }) {
       ),
     onSuccess: async () => {
       await Promise.all([
+        client.invalidateQueries({ queryKey: ["private", "social"] }),
         client.invalidateQueries({ queryKey: ["public", `yerbas/${slug}/`] }),
         client.invalidateQueries({
           queryKey: ["public", `yerbas/${slug}/reviews/`],
@@ -391,7 +392,7 @@ export function ReviewScreen() {
           compact
         />
       </View>
-      <RequireSession>
+      <RequireSession bare>
         <QueryState query={own}>
           {own.data !== undefined && (
             <ReviewForm slug={slug} review={own.data} />

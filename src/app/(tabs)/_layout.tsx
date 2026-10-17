@@ -28,6 +28,10 @@ export default function TabLayout() {
           </NativeTabs.Trigger.Label>
           <NativeTabs.Trigger.Icon sf="book.fill" md="book" />
         </NativeTabs.Trigger>
+        <NativeTabs.Trigger name="social">
+          <NativeTabs.Trigger.Label>{tr("Social")}</NativeTabs.Trigger.Label>
+          <NativeTabs.Trigger.Icon sf="person.2.fill" md="groups" />
+        </NativeTabs.Trigger>
         <NativeTabs.Trigger name="perfil">
           <NativeTabs.Trigger.Label>{tr("Perfil")}</NativeTabs.Trigger.Label>
           <NativeTabs.Trigger.Icon sf="person.crop.circle" md="person" />
