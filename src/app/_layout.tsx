@@ -1,6 +1,6 @@
 import { tr, useLocale } from "@/i18n";
-import React, { useEffect, useRef } from "react";
-import { ActivityIndicator, Platform, View } from "react-native";
+import React, { useCallback, useEffect, useRef, useState } from "react";
+import { Platform, View } from "react-native";
 import { Stack, router, useSegments } from "expo-router";
 import { ObserveRoot, useObserve } from "expo-observe";
 import { useFonts } from "expo-font";
@@ -13,6 +13,7 @@ import { SessionProvider, useSession } from "@/providers/session";
 import { LocaleProvider, useLocaleReady } from "@/providers/locale";
 import { ComparisonProvider } from "@/providers/comparison";
 import { theme } from "@/theme";
+import { LaunchSplash } from "@/components/launch-splash";
 import { AppHeader } from "@/components/app-header";
 import { PostHogProvider, usePostHog } from "posthog-react-native";
 import { posthogClient } from "@/analytics";
@@ -58,120 +59,149 @@ function Navigation() {
     Caveat: require("../../assets/fonts/caveat-variable.ttf"),
   });
 
+  const appReady = ready && localeReady && Boolean(fonts || error);
+  const [contentLaidOut, setContentLaidOut] = useState(false);
+  const [splashReady, setSplashReady] = useState(false);
+  const [splashFinished, setSplashFinished] = useState(false);
+  // Let the first native navigation commit and compositor frames finish
+  // before competing with startup work for the UI thread.
   useEffect(() => {
-    if (ready && localeReady && (fonts || error)) markInteractive();
-  }, [error, fonts, markInteractive, ready, localeReady]);
+    if (!appReady || !contentLaidOut) return;
+    let secondFrame = 0;
+    const firstFrame = requestAnimationFrame(() => {
+      secondFrame = requestAnimationFrame(() => setSplashReady(true));
+    });
+    return () => {
+      cancelAnimationFrame(firstFrame);
+      cancelAnimationFrame(secondFrame);
+    };
+  }, [appReady, contentLaidOut]);
+  const finishSplash = useCallback(() => setSplashFinished(true), []);
 
-  if (!ready || !localeReady || (!fonts && !error))
-    return (
-      <View style={{ flex: 1, justifyContent: "center" }}>
-        <ActivityIndicator accessibilityLabel={tr("Preparando Yerbarium")} />
-      </View>
-    );
+  useEffect(() => {
+    if (appReady && splashFinished) markInteractive();
+  }, [appReady, markInteractive, splashFinished]);
+
   return (
-    <>
-      {posthogClient && <AnalyticsTracking />}
-      <StatusBar style="dark" />
-      <Stack
-        screenOptions={{
-          headerShown: false,
-          headerShadowVisible: false,
-          header: ({ navigation, options, back }) => (
-            <AppHeader
-              title={options.title ?? ""}
-              paper={true}
-              onBack={() => {
-                if (back && navigation.canGoBack()) navigation.goBack();
-                else router.replace("/(tabs)/explorar");
-              }}
-              rightAction={options.headerRight?.({
-                tintColor: theme.colors.green,
-                canGoBack: Boolean(back),
-              })}
-            />
-          ),
-          contentStyle: { backgroundColor: theme.colors.background },
-        }}
+    <View style={{ flex: 1, backgroundColor: theme.colors.background }}>
+      <View
+        style={{ flex: 1 }}
+        pointerEvents={splashFinished ? "auto" : "none"}
+        accessibilityElementsHidden={!splashFinished}
+        importantForAccessibility={
+          splashFinished ? "auto" : "no-hide-descendants"
+        }
       >
-        <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
-        <Stack.Screen
-          name="yerbas/[slug]"
-          options={{ title: tr("Yerba"), headerShown: true }}
-        />
-        <Stack.Screen
-          name="marcas/[slug]"
-          options={{ title: tr("Marca"), headerShown: true }}
-        />
-        <Stack.Screen
-          name="usuarios/[username]"
-          options={{ title: tr("Perfil"), headerShown: true }}
-        />
-        <Stack.Screen
-          name="comparar"
-          options={{ title: tr("Comparar"), headerShown: true }}
-        />
-        <Stack.Screen
-          name="ingresar"
-          options={{
-            title: tr("Ingresar"),
-            presentation: "formSheet",
-            headerShown: false,
-            sheetAllowedDetents:
-              Platform.OS === "android" ? [0.92, 1] : [0.68, 1],
-            sheetGrabberVisible: true,
-            sheetCornerRadius: 32,
-          }}
-        />
-        <Stack.Screen
-          name="registro"
-          options={{
-            title: tr("Crear cuenta"),
-            presentation: "formSheet",
-            headerShown: false,
-            sheetAllowedDetents:
-              Platform.OS === "android" ? [0.92, 1] : [0.8, 1],
-            sheetGrabberVisible: true,
-            sheetCornerRadius: 32,
-          }}
-        />
-        <Stack.Screen
-          name="recuperar-contrasena"
-          options={{ title: tr("Recuperar cuenta"), headerShown: true }}
-        />
-        <Stack.Screen
-          name="restablecer-contrasena"
-          options={{ title: tr("Nueva contraseña"), headerShown: true }}
-        />
-        <Stack.Screen
-          name="verificar-email"
-          options={{ title: tr("Verificar email"), headerShown: true }}
-        />
-        <Stack.Screen
-          name="ajustes/index"
-          options={{ title: tr("Ajustes"), headerShown: true }}
-        />
-        <Stack.Screen
-          name="ajustes/idioma"
-          options={{ title: tr("Idioma"), headerShown: true }}
-        />
-        <Stack.Screen
-          name="editar-perfil"
-          options={{ title: tr("Editar perfil"), headerShown: true }}
-        />
-        <Stack.Screen
-          name="eliminar-cuenta"
-          options={{ title: tr("Eliminar cuenta"), headerShown: true }}
-        />
-        <Stack.Screen
-          name="opinion/[slug]"
-          options={{ title: tr("Tu opinión"), headerShown: true }}
-        />
-        <Stack.Screen
-          name="editorial/[article]"
-          options={{ title: "", headerShown: true }}
-        />
-      </Stack>
-    </>
+        {appReady && (
+          <View style={{ flex: 1 }} onLayout={() => setContentLaidOut(true)}>
+            {posthogClient && <AnalyticsTracking />}
+            <StatusBar style="dark" />
+            <Stack
+              screenOptions={{
+                headerShown: false,
+                headerShadowVisible: false,
+                header: ({ navigation, options, back }) => (
+                  <AppHeader
+                    title={options.title ?? ""}
+                    paper={true}
+                    onBack={() => {
+                      if (back && navigation.canGoBack()) navigation.goBack();
+                      else router.replace("/(tabs)/explorar");
+                    }}
+                    rightAction={options.headerRight?.({
+                      tintColor: theme.colors.green,
+                      canGoBack: Boolean(back),
+                    })}
+                  />
+                ),
+                contentStyle: { backgroundColor: theme.colors.background },
+              }}
+            >
+              <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
+              <Stack.Screen
+                name="yerbas/[slug]"
+                options={{ title: tr("Yerba"), headerShown: true }}
+              />
+              <Stack.Screen
+                name="marcas/[slug]"
+                options={{ title: tr("Marca"), headerShown: true }}
+              />
+              <Stack.Screen
+                name="usuarios/[username]"
+                options={{ title: tr("Perfil"), headerShown: true }}
+              />
+              <Stack.Screen
+                name="comparar"
+                options={{ title: tr("Comparar"), headerShown: true }}
+              />
+              <Stack.Screen
+                name="ingresar"
+                options={{
+                  title: tr("Ingresar"),
+                  presentation: "formSheet",
+                  headerShown: false,
+                  sheetAllowedDetents:
+                    Platform.OS === "android" ? [0.92, 1] : [0.68, 1],
+                  sheetGrabberVisible: true,
+                  sheetCornerRadius: 32,
+                }}
+              />
+              <Stack.Screen
+                name="registro"
+                options={{
+                  title: tr("Crear cuenta"),
+                  presentation: "formSheet",
+                  headerShown: false,
+                  sheetAllowedDetents:
+                    Platform.OS === "android" ? [0.92, 1] : [0.8, 1],
+                  sheetGrabberVisible: true,
+                  sheetCornerRadius: 32,
+                }}
+              />
+              <Stack.Screen
+                name="recuperar-contrasena"
+                options={{ title: tr("Recuperar cuenta"), headerShown: true }}
+              />
+              <Stack.Screen
+                name="restablecer-contrasena"
+                options={{ title: tr("Nueva contraseña"), headerShown: true }}
+              />
+              <Stack.Screen
+                name="verificar-email"
+                options={{ title: tr("Verificar email"), headerShown: true }}
+              />
+              <Stack.Screen
+                name="ajustes/index"
+                options={{ title: tr("Ajustes"), headerShown: true }}
+              />
+              <Stack.Screen
+                name="ajustes/idioma"
+                options={{ title: tr("Idioma"), headerShown: true }}
+              />
+              <Stack.Screen
+                name="editar-perfil"
+                options={{ title: tr("Editar perfil"), headerShown: true }}
+              />
+              <Stack.Screen
+                name="eliminar-cuenta"
+                options={{ title: tr("Eliminar cuenta"), headerShown: true }}
+              />
+              <Stack.Screen
+                name="opinion/[slug]"
+                options={{ title: tr("Tu opinión"), headerShown: true }}
+              />
+              <Stack.Screen
+                name="editorial/[article]"
+                options={{ title: "", headerShown: true }}
+              />
+            </Stack>
+          </View>
+        )}
+      </View>
+      {!splashFinished && (
+        <LaunchSplash ready={splashReady} onFinish={finishSplash} />
+      )}
+    </View>
   );
 }
 function RootLayout() {

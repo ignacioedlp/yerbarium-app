@@ -56,10 +56,6 @@ export function Brand() {
                   </View>
                 )}
                 <View style={{ flex: 1, alignItems: "flex-start", gap: 10 }}>
-                  <CountryFlag
-                    code={brand.data.country_code}
-                    country={countryLabel(brand.data.country_code)}
-                  />
                   <View
                     accessible
                     accessibilityLabel={
@@ -92,6 +88,10 @@ export function Brand() {
                         color={theme.colors.green}
                       />
                     )}
+                    <CountryFlag
+                      code={brand.data.country_code}
+                      country={countryLabel(brand.data.country_code)}
+                    />
                   </View>
                   {brand.data.website && (
                     <ExternalLink

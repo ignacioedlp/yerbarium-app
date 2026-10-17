@@ -486,3 +486,26 @@ Se restauró el collage botánico original detrás de la foto del envase, a opac
 
 - El bloque de bienvenida, descripción e ingreso/registro se muestra directamente sobre el fondo de Perfil y Mi biblioteca, sin borde ni fondo de tarjeta. Las otras pantallas que usan RequireSession conservan su tarjeta.
 - Perfil verificado visualmente en iPhone 17 Pro / iOS 26.4; Mi biblioteca se actualizó con el mismo componente y estilo. TypeScript correcto; no se ejecutaron pruebas automatizadas para este ajuste visual.
+
+## Splash animado en tres aumentos — 2026-10-16
+
+- Se conserva el mate nativo sobre #f4f0e4 hasta pintar la misma imagen en React. Fuentes, idioma, sesión y primer layout de navegación deben estar listos antes de iniciar la salida. Dos frames permiten completar el montaje nativo.
+- Tres aumentos sin pausas intermedias: 180 + 220 + 360 ms, mate sobredimensionado según la pantalla y desvanecido final de 160 ms. Total 960 ms. Transformación en UI runtime y capa del logo rasterizada; sin renders de React por cuadro. Reducir movimiento sustituye el zoom por un desvanecido de 120 ms. El inicio no admite interacción ni lectura de accesibilidad durante el splash.
+- Medición temporal con useFrameCallback en iPhone 17 Pro / iOS 26.4, build de desarrollo: antes, 58 cuadros, 5 intervalos >25 ms, máximo 184,6 ms y promedio 21,26 ms. Después, dos recargas: 56 cuadros, 1–2 intervalos >25 ms, máximo 33,75/33,33 ms y promedio 16,96/17,18 ms. Se retiró la instrumentación al terminar. Estos valores no equivalen a una medición de GPU ni de rendimiento release.
+- Inicio visible tras la transición y sin errores de JS. TypeScript correcto, 41 tests pasan, lint sin errores (advertencia previa de moveCarousel), exportaciones Hermes iOS/Android correctas.
+- Límites: sin dispositivo Android ni teléfono físico; pendiente comprobar build release, arranque nativo en frío y reducir movimiento activado. No pudo grabarse video porque Argent no encuentra ffmpeg.
+
+## Splash: crecimiento continuo — 2026-10-16
+
+- Sustituida la secuencia de tres ease-out (cada tramo frenaba casi a cero) por un único progreso de 1100 ms. Escala exponencial con tres modulaciones suaves y velocidad continua positiva entre ellas; opacidad derivada del mismo progreso. Se elimina la espera final y la rasterización forzada de un contenedor; se transforma directamente Animated.Image.
+- Medición temporal useFrameCallback en el mismo iPhone 17 Pro, build de desarrollo: 66 cuadros, intervalo máximo 23,54 ms, promedio 16,77 ms, cero intervalos >25 ms. La instrumentación se retiró. Inicio visible y sin errores de JS. El resultado mide callbacks del UI runtime, no GPU ni rendimiento release; pendiente teléfono físico/Android y apreciación del usuario.
+- Validación final: TypeScript, 41 tests y exportaciones iOS/Android correctos; lint sin errores, con advertencia previa de moveCarousel. git diff --check correcto.
+
+## Sobre la yerba: encabezado editorial — 2026-10-16
+
+- Cambiado únicamente el encabezado introductorio de las referencias de «Fuentes» a «Sobre esta guía». La lista conserva «Fuentes»; se reutilizan las traducciones existentes. TypeScript y diff correctos. Sin revisión visual nativa para este cambio de texto.
+
+## Marca: bandera junto al verificado — 2026-10-16
+
+- Bandera movida inmediatamente después del ícono de verificado, en la fila del nombre. Revisado visualmente con Mañanita en iPhone 17 Pro / iOS 26.4 mediante Argent.
+- TypeScript, 41 tests y exportaciones iOS/Android correctos. Lint sin errores; advertencia previa de moveCarousel en Inicio. Sin dispositivo Android disponible para revisión visual.
