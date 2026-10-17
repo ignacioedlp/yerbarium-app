@@ -1,3 +1,4 @@
+import { BrandFeed } from "@/components/brand-feed";
 import { tr, useLocale } from "@/i18n";
 import React from "react";
 import { router } from "expo-router";
@@ -146,6 +147,7 @@ export function Home() {
         </QueryState>
       </View>
       <CommunityPodium />
+      <BrandFeed />
       <View style={{ gap: 16 }}>
         <SectionHeading
           title={tr("Yerbas destacadas")}

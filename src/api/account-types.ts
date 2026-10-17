@@ -7,10 +7,14 @@ export interface Account {
   bio: string;
   country_code: string;
   language_code: string;
+  followers_count?: number;
+  following_count?: number;
   is_private: boolean;
 }
 
 export interface PublicProfile {
+  followers_count?: number;
+  following_count?: number;
   username: string;
   display_name: string;
   bio?: string;
@@ -18,6 +22,8 @@ export interface PublicProfile {
   language_code?: string;
   is_private: boolean;
   is_blocked?: boolean;
+  is_following?: boolean;
+  can_follow?: boolean;
 }
 
 export type FieldErrors = Record<string, string[]>;

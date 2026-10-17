@@ -115,7 +115,7 @@ export async function get<T>(
 }
 export async function write<T>(
   path: string,
-  method: "POST" | "PATCH" | "DELETE",
+  method: "POST" | "PUT" | "PATCH" | "DELETE",
   data?: unknown,
 ): Promise<T> {
   return (await privateApi.request<T>({ url: path, method, data })).data;

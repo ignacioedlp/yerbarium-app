@@ -1,3 +1,4 @@
+import { BrandFollow } from "@/components/brand-follow";
 import { tr, useLocale } from "@/i18n";
 import { Text, View } from "react-native";
 import { Icon } from "@/components/icon";
@@ -110,6 +111,7 @@ export function Brand() {
           </>
         )}
       </QueryState>
+      {brand.data && <BrandFollow slug={slug} />}
       <Title>{tr("Sus yerbas")}</Title>
       <QueryState
         query={yerbas}

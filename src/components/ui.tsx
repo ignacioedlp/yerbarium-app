@@ -175,6 +175,7 @@ export function Button({
   compact = false,
   selectedBackgroundColor = t.colors.selected,
   expanded,
+  accessibilityLabel,
 }: {
   label: string;
   onPress: () => void;
@@ -186,13 +187,14 @@ export function Button({
   compact?: boolean;
   selectedBackgroundColor?: string;
   expanded?: boolean;
+  accessibilityLabel?: string;
 }) {
   useLocale();
   const filled = (!secondary || selected) && !destructive;
   return (
     <Pressable
       accessibilityRole="button"
-      accessibilityLabel={label}
+      accessibilityLabel={accessibilityLabel ?? label}
       accessibilityState={{ disabled, selected, expanded }}
       onPress={onPress}
       disabled={disabled}

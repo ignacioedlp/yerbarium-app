@@ -1,3 +1,4 @@
+import { OwnProfileSocial } from "@/components/profile-social";
 import { tr, useLocale } from "@/i18n";
 import { learningLinks } from "@/content/learning";
 import { AuthField, AuthSheet, AuthSwitch } from "@/components/auth-sheet";
@@ -325,6 +326,7 @@ export function Profile() {
               </View>
             )}
           </View>
+          <OwnProfileSocial />
           <EmailVerificationStatus />
           <HandNote rotate={false}>
             {session.user?.bio || tr("Contá un poco sobre vos y tu ronda.")}
@@ -440,6 +442,7 @@ function ProfileForm({ user }: { user: Account }) {
       write<Account>("auth/me/", "PATCH", values),
     onSuccess: async () => {
       await session.reload();
+      await client.invalidateQueries({ queryKey: ["private", "social"] });
       client.removeQueries({
         predicate: (q) =>
           q.queryKey[0] === "public" &&

@@ -509,3 +509,34 @@ Se restauró el collage botánico original detrás de la foto del envase, a opac
 
 - Bandera movida inmediatamente después del ícono de verificado, en la fila del nombre. Revisado visualmente con Mañanita en iPhone 17 Pro / iOS 26.4 mediante Argent.
 - TypeScript, 41 tests y exportaciones iOS/Android correctos. Lint sin errores; advertencia previa de moveCarousel en Inicio. Sin dispositivo Android disponible para revisión visual.
+
+## Seguimiento de perfiles públicos — 2026-10-16
+
+- Se agregaron Seguir/Siguiendo, contadores navegables, listas paginadas de seguidores/seguidos y navegación a los perfiles. Los perfiles privados no ofrecen seguimiento; el propietario conserva acceso a sus contadores/listas.
+- Las cuentas privadas pueden seguir perfiles públicos. Cambiar a privado elimina solo seguidores, conserva seguidos y no restaura relaciones. Bloquear elimina relaciones en ambos sentidos.
+- Consultas sociales con TanStack Query y claves por visitante; sin persistencia. Mutaciones por Axios autenticado; se actualizan estado, contadores y listas. Las rutas de listas manejan carga, vacío, error y reintento.
+- Verificado: typecheck, 43 pruebas Vitest, exportaciones iOS y Android. Lint: sin errores, una advertencia existente sobre `moveCarousel` en `src/screens/home.tsx`.
+- Argent en iPhone 17 Pro/iOS 26.4: se verificó que los deep links de perfil y seguidores resuelven y presentan error recuperable con Reintentar cuando falla la API. El inspector React Native ya estaba activo. No se verificaron visualmente los botones ni el recorrido autenticado: se requiere aplicar `accounts.0005_userfollow` a la base local, y el entorno no permite acceder al socket Docker ni a PostgreSQL. No hay emulador Android configurado.
+- API: 37 pruebas relevantes correctas en SQLite; 2 de concurrencia pendientes en PostgreSQL. OpenAPI y coherencia de migraciones correctos. Detalles y comando de migración en `../yerba-plataform/docs/following.md`.
+
+### Filas de seguidores y seguidos — 2026-10-16
+
+- Se reemplazó la tarjeta de cada persona por una fila transparente con un único borde inferior y la misma respuesta al pulsar de Aprende. Se aplica a seguidores y seguidos mediante la pantalla compartida.
+- Verificado visualmente con Argent en iPhone 17 Pro: `dev-reviewer-diego/seguidores` muestra nombre, usuario y separador inferior, sin borde alrededor ni esquinas redondeadas.
+- Typecheck correcto; lint sin errores y con la advertencia existente de `moveCarousel` en `home.tsx`.
+
+### Listados exclusivos del propietario — 2026-10-16
+
+- Los contadores continúan visibles en perfiles públicos ajenos, como texto sin enlaces. Los propios contadores conservan la navegación a seguidores/seguidos.
+- Las listas, públicas o privadas, requieren autenticación y pertenecer al usuario de sesión. La app y la web impiden abrir listas ajenas incluso por URL directa; la API devuelve 401 sin sesión y 404 si se intenta consultar otra cuenta.
+- Verificación con Argent en iPhone 17 Pro: el perfil público de Diego conserva las cantidades y Seguir; abrir directamente su lista de seguidores muestra el aviso de acceso exclusivo.
+- Validaciones: tipos y lint de ambos clientes; 271 pruebas web, 43 móviles y 41 de API relevantes correctas. Dos escenarios de concurrencia PostgreSQL siguen pendientes en el entorno SQLite. OpenAPI valida sin advertencias.
+
+## Seguimiento de marcas — 2026-10-16
+
+- Ficha de marca: Seguir marca/Siguiendo y cantidad pública de seguidores. El botón de visitantes lleva a Ingresar. Los errores conservan el estado anterior y permiten reintentar.
+- Seguidos: pestañas Personas y Marcas; filas con borde inferior, navegación a marca y paginación propia. Los listados permanecen exclusivos del dueño; los contadores públicos de personas conservan su comportamiento.
+- Inicio: Novedades de tus marcas, con productos reales del catálogo y novedades publicadas desde administración. Se filtran por las marcas seguidas, se ordenan por fecha y se excluyen borradores, publicaciones futuras e inactivos. Consultas privadas sin persistencia, separadas por cuenta, con invalidación al seguir/dejar de seguir.
+- Validado: tipos, 44 pruebas móviles y exportaciones iOS/Android; lint sin errores y con la advertencia existente de `moveCarousel` en `home.tsx`. API/administración: 87 pruebas relevantes correctas en SQLite, 2 anteriores de concurrencia pendientes en PostgreSQL. Web: 278 pruebas y build con Webpack correctos. OpenAPI sin advertencias y migraciones coherentes.
+- Argent en iPhone 17 Pro/iOS 26.4: `yerbarium://usuarios/2tofi/seguidos` presenta ambas pestañas y mantiene el listado de personas con el separador inferior. No se completó el recorrido real de seguir marca/feed: las migraciones nuevas no pudieron aplicarse por las restricciones de acceso a Docker/PostgreSQL. Android no tiene emulador configurado.
+- Contratos, decisiones del feed y pasos de publicación/migración: `../yerba-plataform/docs/brand-following.md`.

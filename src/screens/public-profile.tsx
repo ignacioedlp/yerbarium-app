@@ -1,3 +1,5 @@
+import { ProfileSocial } from "@/components/profile-social";
+import { useSocialResource } from "@/hooks/follows";
 import { tr, useLocale } from "@/i18n";
 import { View } from "react-native";
 import { LibraryYerbaCard } from "@/components/library-yerba-card";
@@ -33,7 +35,7 @@ export function PublicProfile() {
   const { username } = useLocalSearchParams<{ username: string }>();
   const { user } = useSession();
   const path = `profiles/${encodeURIComponent(username)}/`;
-  const profile = useResource<ProfileType>(path, !!user);
+  const profile = useSocialResource<ProfileType>(path);
   const [blockedOverride, setBlockedOverride] = useState<boolean | null>(null);
   const [state, setState] = useState<LibraryCollection>("favorite");
   const isBlocked = blockedOverride ?? profile.data?.is_blocked ?? false;
@@ -98,6 +100,7 @@ export function PublicProfile() {
                 {profile.data?.bio && (
                   <HandNote rotate={false}>{profile.data.bio}</HandNote>
                 )}
+                {profile.data && <ProfileSocial profile={profile.data} />}
                 <AnimatedTabs
                   options={COLLECTION_TABS.map((option) => ({
                     ...option,
