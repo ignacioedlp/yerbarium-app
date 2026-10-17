@@ -52,7 +52,7 @@ export function Home() {
     carouselRef.current?.scrollTo({ x: next * carouselStep, animated: true });
   };
   return (
-    <Page safeTop>
+    <Page safeTop tabBarClearance>
       <View style={{ position: "relative", marginTop: t.spacing.md }}>
         <View
           style={{

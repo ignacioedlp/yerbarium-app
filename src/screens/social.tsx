@@ -15,6 +15,7 @@ import {
   Button,
   Page,
   RequireSession,
+  TAB_BAR_CONTENT_CLEARANCE,
   Title,
   YerbaCard,
 } from "@/components/ui";
@@ -438,7 +439,7 @@ function SocialContent() {
         contentContainerStyle={{
           padding: theme.spacing.lg,
           paddingTop: theme.spacing.md,
-          paddingBottom: theme.spacing.section,
+          paddingBottom: TAB_BAR_CONTENT_CLEARANCE,
           maxWidth: 680,
           width: "100%",
           alignSelf: "center",
@@ -518,13 +519,13 @@ export function SocialScreen() {
   const { user, ready } = useSession();
   if (!ready)
     return (
-      <Page>
+      <Page tabBarClearance>
         <ActivityIndicator color={theme.colors.green} />
       </Page>
     );
   if (!user)
     return (
-      <Page>
+      <Page tabBarClearance>
         <Title>{tr("Social")}</Title>
         <RequireSession bare/>
       </Page>

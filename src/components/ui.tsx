@@ -35,6 +35,7 @@ import { normalizeError, write } from "@/api/client";
 import { useSession } from "@/providers/session";
 import type { YerbaMateListItem } from "@/api/types";
 import { useComparison } from "@/providers/comparison";
+export const TAB_BAR_CONTENT_CLEARANCE = 112;
 export const styles = StyleSheet.create({
   page: {
     padding: t.spacing.lg,
@@ -131,7 +132,12 @@ export function Page({
   children,
   fullBleed = false,
   safeTop = false,
-}: React.PropsWithChildren<{ fullBleed?: boolean; safeTop?: boolean }>) {
+  tabBarClearance = false,
+}: React.PropsWithChildren<{
+  fullBleed?: boolean;
+  safeTop?: boolean;
+  tabBarClearance?: boolean;
+}>) {
   useLocale();
   return (
     <KeyboardAvoidingView
@@ -146,6 +152,9 @@ export function Page({
           contentContainerStyle={[
             styles.page,
             fullBleed && { padding: 0, gap: 0 },
+            tabBarClearance && {
+              paddingBottom: TAB_BAR_CONTENT_CLEARANCE,
+            },
           ]}
         >
           <OfflineBanner />

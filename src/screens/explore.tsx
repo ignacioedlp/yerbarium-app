@@ -22,6 +22,7 @@ import {
   YerbaCard,
   OfflineBanner,
   countryLabel,
+  TAB_BAR_CONTENT_CLEARANCE,
   styles,
 } from "@/components/ui";
 import { SafeAreaView } from "react-native-safe-area-context";
@@ -289,7 +290,7 @@ function ExploreContent({
           }}
           contentContainerStyle={{
             paddingTop: t.spacing.sm,
-            paddingBottom: t.spacing.xl,
+            paddingBottom: TAB_BAR_CONTENT_CLEARANCE,
           }}
           renderItem={({ item }) => (
             <View style={{ flex: 1, minWidth: 0 }}>
@@ -348,7 +349,7 @@ function ExploreContent({
           )}
           contentInsetAdjustmentBehavior="automatic"
           keyboardShouldPersistTaps="handled"
-          contentContainerStyle={{ paddingBottom: t.spacing.xl }}
+          contentContainerStyle={{ paddingBottom: TAB_BAR_CONTENT_CLEARANCE }}
           ListHeaderComponent={header}
           ItemSeparatorComponent={() => (
             <View style={{ height: t.spacing.md }} />

@@ -276,7 +276,7 @@ export function Profile() {
   useLocale();
   const session = useSession();
   return (
-    <Page safeTop>
+    <Page safeTop tabBarClearance>
       <View
         style={{
           flexDirection: "row",

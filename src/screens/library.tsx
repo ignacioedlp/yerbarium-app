@@ -53,7 +53,7 @@ export function Library() {
     want_to_try: summary.data?.want_to_try ?? 0,
   };
   return (
-    <Page safeTop>
+    <Page safeTop tabBarClearance>
       <Title>{tr("Mi biblioteca")}</Title>
       <RequireSession bare>
         <AnimatedTabs
