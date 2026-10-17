@@ -303,6 +303,7 @@ Se restauró el collage botánico original detrás de la foto del envase, a opac
 - Button ocupa todo el ancho disponible por defecto tanto para acciones principales como outline. Las acciones marcadas compact mantienen su tamaño para filas de controles; fullWidth sigue siendo una opción explícita.
 - Perfil sin sesión verificado visualmente en iPhone 17 Pro / iOS 26.4: Crear cuenta ocupa el mismo ancho que Ingresar dentro de Tu ronda empieza acá.
 - Pasaron typecheck, lint, 15 pruebas y exportaciones iOS/Android. Sin revisión visual Android/tablet.
+
 # 2026-10-13 — Skeletons de carga de contenido
 
 - QueryState reemplaza la tarjeta con spinner por placeholders de texto; detalle agrega imagen y acciones, marca/perfil un encabezado, y estilos chips. Las listas de yerbas conservan sus skeletons existentes. Errores, reintentos y mensajes offline conservan su comportamiento.
@@ -417,13 +418,13 @@ Se restauró el collage botánico original detrás de la foto del envase, a opac
 - La ficha móvil usa packageTypeLabel: bag/bolsa/paquete/package/packet → Paquete, box/caja → Caja, paper bag → Paquete de papel, tin/can/lata → Lata y jar/frasco → Frasco. Ignora mayúsculas y espacios externos. Descripciones específicas desconocidas se conservan; valor vacío muestra Sin información. No modifica registros, pesos ni códigos de barras. La web y la API no fueron modificadas.
 - AX de iPhone 17 Pro confirmó 500 g / Paquete en Andresito Despalada. Sin dispositivo Android disponible.
 - TypeScript y 24 pruebas correctos (9 casos de formato incluidos). Lint sin errores con warning previo moveCarousel; exportaciones iOS/Android correctas antes de añadir la comprobación de propiedad propia al diccionario.
+
 ### 2026-10-14 — Restauración de verificación y recuperación
 
 - Restaurados desde el cambio original `f3a152f` los ocho archivos de implementación que había eliminado/modificado el revert `793c74b`: rutas, pantallas de email, tipo de cuenta, ingreso/registro, perfil y AuthSheet. Se conservan los ajustes posteriores del ícono Android.
 - Recuperación desde Ingresar, nueva contraseña con confirmación, verificación después de registrarse, reenvío a la dirección de la cuenta y actualización/insignia en Perfil. Los cuatro endpoints coinciden con `apps/api/accounts/urls.py` del proyecto hermano.
 - Pasaron TypeScript, 15 pruebas existentes y exportaciones Hermes iOS/Android. Lint sin errores, con la advertencia previa de `moveCarousel` en `home.tsx`. `git diff --check` correcto.
 - No se pudo completar la revisión visual: el development client iOS instalado mostró error de conexión a Metro; al intentar conectarlo por IPv6 volvió al inicio del simulador. Metro iniciado para esta comprobación se detuvo al terminar. Sin Android disponible. Pendientes el recorrido visual y la prueba completa mediante correo real; no se enviaron correos ni se cambiaron contraseñas.
-
 
 ### Canales de EAS Update — 2026-10-16
 
@@ -586,3 +587,58 @@ Se restauró el collage botánico original detrás de la foto del envase, a opac
 - Por indicación explícita del usuario, los eventos de incorporación de yerba usan ahora el mismo componente `YerbaCard` que Explorar. Se retiró el anuncio verde alternativo. Se conservan collage, imagen/fallback, tipografía, puntuación, estilo, país y funciones de favorito/comparación del catálogo.
 - Se agregó a `YerbaCard` una propiedad opcional `badge` con texto visible y etiqueta accesible. Social muestra «Nueva» y anuncia «Nueva en el catálogo»; Explorar no pasa esta propiedad y conserva su representación. Fecha y enlace a marca permanecen debajo de la tarjeta en Social.
 - Verificados tipos, formato, lint (advertencia previa de Inicio), 46 pruebas y exportaciones iOS/Android. Captura real de teléfono: `.impeccable/review/phone-ios-explore-cards.png`. No se verificaron gestos/favoritos/comparación manualmente, ni rama de foto real o tipografía ampliada.
+
+## Push, preferencias y Me gusta — 2026-10-17
+
+- Implementación sin worker: envío directo post-commit, preferencias por cuenta y permisos por dispositivo.
+- `bun run typecheck` pasó; tests móviles: 51 pruebas, incluyendo destinos tipados, permiso explícito, baja/alta serializada y cambio de vinculación.
+- Exportaciones iOS y Android completadas. Ejecutar también la reconstrucción nativa: exportar JS no incorpora módulos al binario instalado.
+- `bun run lint`: sin errores; queda el warning existente moveCarousel en src/screens/home.tsx.
+- Web: typecheck, lint, build y 314 pruebas pasaron, incluyendo guardado fallido de preferencias y reacciones.
+- API: 166 pruebas nuevas y de cuentas/seguimientos/reseñas pasan en SQLite aislado (2 pruebas de concurrencia omitidas por requerir PostgreSQL). La suite completa inicial obtuvo 720 aprobadas, 2 omitidas y 24 fallidas: 23 requieren capacidades PostgreSQL/infraestructura no disponibles en SQLite; una detectó una consulta extra de reacciones y fue corregida mediante subconsultas anotadas. Verificar nuevamente la suite oficial contra PostgreSQL antes del despliegue.
+- Docker no fue accesible desde el entorno de ejecución. Las dependencias Python se instalaron desde wheels locales en un entorno temporal, sin modificar dependencias del proyecto.
+- No se confirmó entrega push real ni QA visual de la versión nueva: CocoaPods falló al preparar Hermes por falta de acceso a GitHub y del ejecutable cmake. No hay Android disponible para validación de dispositivo.
+- Pendiente en un entorno con toolchain y credenciales: reconstruir iOS/Android, validar APNs/FCM, aceptar/rechazar permisos, sincronización tras volver de ajustes del sistema, múltiples dispositivos y logout, taps en los tres estados de la app y contenido eliminado/bloqueado.
+- Preparación y variables de producción: ../yerba-plataform/docs/notifications.md. Los envíos quedan deshabilitados por defecto (PUSH_ENABLED=false). Newsletter no dispara campañas; solo registra consentimiento.
+
+
+## Últimas reseñas en perfil público — 2026-10-17
+
+- Carrusel entre Seguir y las pestañas de biblioteca, con hasta cinco reseñas públicas ordenadas por creación descendente y desempate por ID. Tarjetas enlazadas al detalle, con marca, yerba, hojas de valoración, comentario y fecha. Sin reseñas se oculta; carga y error tienen estados propios.
+- Avance cada cinco segundos, sin botón Pausar/Reanudar. Se detiene durante el contacto y retoma al soltar; también se detiene fuera de foco, en segundo plano y con movimiento reducido o lector de pantalla.
+- GET profiles/<username>/reviews/recent/ respeta cuentas activas, privacidad, bloqueos en ambas direcciones y moderación de reseñas/productos/marcas. Datos por visitante mediante TanStack Query, sin persistencia.
+- Validación: typecheck, 51 tests móviles y 43 pruebas de API aprobadas; 2 pruebas de concurrencia PostgreSQL omitidas en SQLite. Lint sin errores, con warning previo moveCarousel en home.tsx.
+- Argent/iPhone 17 Pro: se comprobó ubicación, cinco tarjetas reales del perfil de desarrollo y avance de primera a segunda reseña. Se verificó visualmente la eliminación del botón Pausar. Android no disponible; comportamiento táctil con movimiento reducido/lector de pantalla pendiente de validación manual.
+
+
+## Corazón y contador en todas las reseñas — 2026-10-17
+
+- Componente compartido sin borde en detalle de reseña, opiniones de yerba, feed social y carrusel del perfil. Corazón vacío/lleno según la cuenta actual, contador real y acción de Me gusta/Quitar Me gusta. En el carrusel, enlace al detalle y reacción son controles hermanos para evitar abrir la reseña al tocar el corazón.
+- Feed de API ahora devuelve likes_count y liked_by_me con subconsultas anotadas por visitante; una prueba comprueba contadores, estado diferente entre cuentas y retiro de la reacción. La web reutiliza el corazón en tarjetas y feed. Reseñas no publicadas muestran el contador deshabilitado.
+- Validación: typecheck en ambos clientes, 39 tests de API, 51 móviles y 314 web aprobados. Lint web sin advertencias; lint móvil mantiene solo el warning previo de home.tsx. Argent confirmó visualmente el corazón y contador en el carrusel iOS; apertura del feed por deep link no se confirmó.
+
+## Social refresh — 2026-10-17
+
+- Se separó el indicador de actualización manual de los refetch automáticos; el feed conserva su FlatList al cambiar de pestaña.
+- Los me gusta actualizan las dos cachés del feed con la respuesta del servidor sin invalidarlas. Las otras consultas privadas conservan su invalidación.
+- Al enfocar Social se reutiliza la caché fresca durante 60 segundos. Regresión cubierta en social-feed-query.test.ts para volver a ambas pestañas sin nuevas peticiones.
+- Validación: typecheck OK; 51 tests OK; lint sin errores (warning existente en home.tsx: moveCarousel); exportaciones iOS y Android OK.
+- Simulador iOS conectado y bundle recargado. La captura tras los taps no confirmó cambios de selección/contador; queda pendiente confirmar visualmente el ciclo completo de me gusta y alternancia de pestañas. Android sin dispositivo disponible.
+
+## Probada tras opinar — 2026-10-17
+
+- Guardar/editar una opinión invalida y actualiza el estado privado de la yerba, las listas y el resumen de biblioteca antes de volver a la ficha. También invalida las opiniones autenticadas que consume la ficha.
+- Typecheck OK; 51 tests OK; lint sin errores (warning preexistente de moveCarousel en home.tsx); exportaciones iOS y Android OK en /private/tmp/yerbarium-reviewed-{ios,android}.
+- Pendiente validación visual: publicar opinión de una yerba no probada y comprobar selección de Probada y contador de biblioteca al volver. No se publicó una opinión durante esta comprobación.
+
+## Perfil técnico a ancho completo — 2026-10-17
+
+- Las escalas del perfil de la comunidad usan LeafRating fullWidth: las cinco hojas se distribuyen en el espacio disponible y el valor queda alineado a la derecha.
+- Typecheck y 51 tests OK; lint sin errores, con warning preexistente en home.tsx.
+- Se intentó abrir Perfil desde Opiniones con Argent en iOS; el tap no cambió de pestaña, por lo que queda pendiente la confirmación visual del ancho. Android sin dispositivo disponible.
+
+## Tamaño de hojas y títulos del perfil — 2026-10-17
+
+- Hojas de atributos comunitarios de 30 puntos, igual que en la evaluación sensorial de la reseña; conservan distribución a ancho completo.
+- Títulos de atributos de 20 puntos, interlineado 26 y fuente bold, con rol de encabezado accesible.
+- Typecheck, 51 tests y diff --check OK; lint sin errores (warning preexistente de home.tsx). Confirmación visual pendiente; la navegación por taps en el simulador no respondió en la comprobación anterior.

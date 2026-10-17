@@ -23,6 +23,7 @@ export function LeafRating({
   showValue = true,
   onChange,
   disabled = false,
+  fullWidth = false,
 }: {
   value: number | string | null;
   label?: string;
@@ -30,6 +31,7 @@ export function LeafRating({
   showValue?: boolean;
   onChange?: (value: number) => void;
   disabled?: boolean;
+  fullWidth?: boolean;
 }) {
   useLocale();
   const parsed = value === null ? null : Number(value);
@@ -47,13 +49,21 @@ export function LeafRating({
       accessibilityRole={onChange ? undefined : "image"}
       accessibilityLabel={`${tr(label)}: ${rating === null ? tr("sin evaluación") : tr("{0} de 5", { 0: formatted })}`}
       style={{
+        width: fullWidth ? "100%" : undefined,
         flexDirection: "row",
         alignItems: "center",
         gap: theme.spacing.sm,
         flexWrap: onChange ? "wrap" : "nowrap",
       }}
     >
-      <View style={{ flexDirection: "row", gap: 2 }}>
+      <View
+        style={{
+          flexDirection: "row",
+          gap: 2,
+          flex: fullWidth ? 1 : undefined,
+          justifyContent: fullWidth ? "space-between" : undefined,
+        }}
+      >
         {Array.from({ length: 5 }, (_, index) => {
           const fill = Math.max(0, Math.min(1, (rating ?? 0) - index));
           const leaf =

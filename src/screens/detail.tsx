@@ -1,3 +1,4 @@
+import { ReviewLike } from "@/components/review-like";
 import { tr, countLabel, useLocale, getLocale } from "@/i18n";
 import { PurchaseOptions } from "@/components/purchase-options";
 import { EditorialSourceLink } from "@/components/editorial-source-link";
@@ -583,8 +584,20 @@ export function Detail() {
                           key={attribute.attribute}
                           style={{ gap: theme.spacing.xs }}
                         >
-                          <Body>{tr(sensoryLabels[attribute.attribute])}</Body>
+                          <Text
+                            accessibilityRole="header"
+                            style={{
+                              fontFamily: theme.fonts.bold,
+                              fontSize: 20,
+                              lineHeight: 26,
+                              color: theme.colors.ink,
+                            }}
+                          >
+                            {tr(sensoryLabels[attribute.attribute])}
+                          </Text>
                           <LeafRating
+                            fullWidth
+                            size={30}
                             value={attribute.average}
                             label={tr(sensoryLabels[attribute.attribute])}
                           />
@@ -941,6 +954,10 @@ function DetailReview({ review }: { review: Review }) {
           reviewId={review.id}
         />
       </View>
+      <ReviewLike
+        key={`${review.id}-${review.liked_by_me}-${review.likes_count}`}
+        review={review}
+      />
       {review.comment && <Body>{review.comment}</Body>}
       {review.flavor_notes.length > 0 && (
         <Body muted>

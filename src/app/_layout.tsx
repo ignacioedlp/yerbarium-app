@@ -9,6 +9,7 @@ import { NunitoSans_800ExtraBold } from "@expo-google-fonts/nunito-sans/800Extra
 import { SafeAreaProvider } from "react-native-safe-area-context";
 import { StatusBar } from "expo-status-bar";
 import { DataProvider } from "@/providers/data";
+import { NotificationObserver } from "@/providers/notifications";
 import { SessionProvider, useSession } from "@/providers/session";
 import { LocaleProvider, useLocaleReady } from "@/providers/locale";
 import { ComparisonProvider } from "@/providers/comparison";
@@ -94,6 +95,7 @@ function Navigation() {
       >
         {appReady && (
           <View style={{ flex: 1 }} onLayout={() => setContentLaidOut(true)}>
+            <NotificationObserver />
             {posthogClient && <AnalyticsTracking />}
             <StatusBar style="dark" />
             <Stack
@@ -117,6 +119,14 @@ function Navigation() {
                 contentStyle: { backgroundColor: theme.colors.background },
               }}
             >
+              <Stack.Screen
+                name="ajustes/notificaciones"
+                options={{ title: tr("Notificaciones"), headerShown: true }}
+              />
+              <Stack.Screen
+                name="resenas/[id]"
+                options={{ title: tr("Reseña"), headerShown: true }}
+              />
               <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
               <Stack.Screen
                 name="yerbas/[slug]"

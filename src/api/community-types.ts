@@ -56,6 +56,8 @@ export const flavorFamilies: Record<string, string> = {
 };
 export type FlavorNote = { name: string; slug: string; family: string };
 export type Review = {
+  likes_count?: number;
+  liked_by_me?: boolean;
   id: number;
   yerba_slug: string;
   username: string;

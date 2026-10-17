@@ -348,7 +348,15 @@
           "backgroundColor": "#f4f0e4"
         }
       ],
-      "expo-localization"
+      "expo-localization",
+      [
+        "expo-notifications",
+        {
+          "color": "#0c5947",
+          "defaultChannel": "social",
+          "icon": "./assets/branding/notification-icon.png"
+        }
+      ]
     ],
     "experiments": {
       "typedRoutes": true

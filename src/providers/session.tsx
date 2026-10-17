@@ -1,3 +1,4 @@
+import { unregisterPush } from "@/api/push";
 import { tr, useLocale } from "@/i18n";
 import React, {
   createContext,
@@ -24,7 +25,7 @@ const Context = createContext<null | {
   error: string | null;
   login: (
     mode: "login" | "register",
-    values: Record<string, string>,
+    values: Record<string, string | boolean>,
   ) => Promise<void>;
   logout: () => Promise<void>;
   restore: () => Promise<void>;
@@ -103,7 +104,7 @@ export function SessionProvider({ children }: React.PropsWithChildren) {
   }, []);
   async function login(
     mode: "login" | "register",
-    values: Record<string, string>,
+    values: Record<string, string | boolean>,
   ) {
     const { data } = await publicApi.post<TokenPair & { user: Account }>(
       `auth/token/${mode}/`,
@@ -119,6 +120,7 @@ export function SessionProvider({ children }: React.PropsWithChildren) {
     }
   }
   async function logout() {
+    await unregisterPush().catch(() => undefined);
     const token = manager.refreshToken;
     await manager.clear();
     if (token)

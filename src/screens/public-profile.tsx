@@ -1,3 +1,4 @@
+import { ProfileReviewCarousel } from "@/components/profile-review-carousel";
 import { ProfileSocial } from "@/components/profile-social";
 import { useSocialResource } from "@/hooks/follows";
 import { tr, useLocale } from "@/i18n";
@@ -101,6 +102,7 @@ export function PublicProfile() {
                   <HandNote rotate={false}>{profile.data.bio}</HandNote>
                 )}
                 {profile.data && <ProfileSocial profile={profile.data} />}
+                <ProfileReviewCarousel key={username} username={username} />
                 <AnimatedTabs
                   options={COLLECTION_TABS.map((option) => ({
                     ...option,

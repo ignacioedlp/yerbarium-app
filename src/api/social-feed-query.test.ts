@@ -39,6 +39,9 @@ it("authenticates both feeds, keeps account and tab caches separate and never pe
     ] as const) {
       await client.fetchInfiniteQuery(socialFeedOptions(user, tab));
     }
+    // Returning to either tab should reuse the fresh account-scoped feed.
+    await client.fetchInfiniteQuery(socialFeedOptions("one", "for_you"));
+    await client.fetchInfiniteQuery(socialFeedOptions("one", "following"));
     expect(requests).toEqual(["for_you", "following", "for_you"]);
     expect(client.getQueryCache().getAll()).toHaveLength(3);
     expect(

@@ -1,7 +1,13 @@
 import React from "react";
 import { Linking, Pressable, StyleSheet, Text, View } from "react-native";
 import { router, type Href } from "expo-router";
-import { Page, Body, Button, ErrorMessage, openExternal } from "@/components/ui";
+import {
+  Page,
+  Body,
+  Button,
+  ErrorMessage,
+  openExternal,
+} from "@/components/ui";
 import { Icon } from "@/components/icon";
 import { CountryFlag } from "@/components/country-flag";
 import { profileLanguages } from "@/components/profile-select";
@@ -54,10 +60,7 @@ function SettingsRow({
       accessibilityState={selected ? { selected: true } : undefined}
       testID={testID}
       onPress={onPress}
-      style={({ pressed }) => [
-        styles.row,
-        { opacity: pressed ? 0.6 : 1 },
-      ]}
+      style={({ pressed }) => [styles.row, { opacity: pressed ? 0.6 : 1 }]}
     >
       {leading}
       <View style={styles.rowCopy}>
@@ -101,6 +104,16 @@ export function Settings() {
   return (
     <Page>
       <View style={styles.list}>
+        {session.user && (
+          <SettingsRow
+            testID="settings-notifications"
+            leading={<Icon name="mail" size={24} />}
+            trailing={<Icon name="arrow" size={18} />}
+            onPress={() => router.push("/ajustes/notificaciones")}
+          >
+            {tr("Notificaciones")}
+          </SettingsRow>
+        )}
         <SettingsRow
           testID="settings-language"
           leading={<Icon name="language" size={24} />}
@@ -140,7 +153,11 @@ export function Settings() {
         <ErrorMessage message={tr("No pudimos abrir el enlace.")} />
       ) : null}
       {supportUnavailable ? (
-        <Body>{tr("No encontramos una app de correo. Mantené presionada la dirección para copiarla.")}</Body>
+        <Body>
+          {tr(
+            "No encontramos una app de correo. Mantené presionada la dirección para copiarla.",
+          )}
+        </Body>
       ) : null}
       {session.user ? (
         <View style={styles.accountSection}>
@@ -149,8 +166,12 @@ export function Settings() {
             <SettingsRow
               testID="settings-delete-account"
               destructive
-              leading={<Icon name="close" size={24} color={theme.colors.error} />}
-              trailing={<Icon name="arrow" size={18} color={theme.colors.error} />}
+              leading={
+                <Icon name="close" size={24} color={theme.colors.error} />
+              }
+              trailing={
+                <Icon name="arrow" size={18} color={theme.colors.error} />
+              }
               onPress={() => router.push("/eliminar-cuenta" as Href)}
             >
               {tr("Eliminar cuenta")}

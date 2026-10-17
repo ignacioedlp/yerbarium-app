@@ -16,6 +16,6 @@ export function socialFeedOptions(username: string, tab: SocialTab) {
         true,
       ),
     getNextPageParam: nextPage,
-    staleTime: 0,
+    staleTime: 60_000,
   });
 }

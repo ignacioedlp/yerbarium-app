@@ -101,3 +101,9 @@ Inicio consulta `community/rankings/yerbas/?limit=3` como recurso público. El o
 ```json
 {"is_react_native":true,"is_expo":true,"is_native_ios":false,"is_native_android":false,"platforms":["ios","android"],"expo":"~57.0.28","react_native":"0.86.3","package_manager":"bun","application_id":"app.yerbarium.mobile","scheme":"yerbarium","metro_port":8081,"commands":{"start":"bun run start","ios":"bun run ios","android":"bun run android","typecheck":"bun run typecheck","lint":"bun run lint","test":"bun run test","exports":["bun run export:ios","bun run export:android"]},"argent_available":true}
 ```
+
+## Environment inspection — Social refresh, 2026-10-17
+
+```json
+{"is_react_native":true,"is_expo":true,"is_native_ios":false,"is_native_android":false,"platforms":["ios","android"],"expo":"~57.0.28","react_native":"0.86.3","package_manager":"bun","bundle_id":"app.yerbarium.mobile","metro_port":8081,"commands":{"start":"bun run start","ios":"bun run ios","android":"bun run android","typecheck":"bun run typecheck","lint":"bun run lint","test":"bun run test","exports":["bun run export:ios","bun run export:android"]},"argent_available":true}
+```

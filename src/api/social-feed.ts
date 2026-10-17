@@ -13,7 +13,13 @@ export type SocialFeedEvent = EventBase &
         kind: "review";
         product: YerbaMateListItem;
         author: { username: string; display_name: string };
-        review: { id: number; rating: string; comment: string };
+        review: {
+          id: number;
+          rating: string;
+          comment: string;
+          likes_count?: number;
+          liked_by_me?: boolean;
+        };
       }
     | {
         kind: "product";

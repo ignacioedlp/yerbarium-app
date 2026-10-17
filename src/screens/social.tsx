@@ -1,3 +1,4 @@
+import { ReviewLike } from "@/components/review-like";
 import React from "react";
 import {
   ActivityIndicator,
@@ -248,7 +249,20 @@ function EventCard({ event }: { event: SocialFeedEvent }) {
         </Pressable>
         <EventDate date={event.published_at} />
       </View>
-      <LeafRating value={event.review.rating} size={18} />
+      <View
+        style={{
+          flexDirection: "row",
+          alignItems: "center",
+          justifyContent: "space-between",
+          gap: theme.spacing.sm,
+        }}
+      >
+        <LeafRating value={event.review.rating} size={18} />
+        <ReviewLike
+          key={`${event.review.id}-${event.review.likes_count}-${event.review.liked_by_me}`}
+          review={event.review}
+        />
+      </View>
       {event.review.comment ? (
         <Text selectable style={styles.comment}>
           {event.review.comment}
@@ -416,6 +430,7 @@ const styles = StyleSheet.create({
 function SocialContent() {
   const [tab, setTab] = React.useState<SocialTab>("for_you");
   const feed = useSocialFeed(tab);
+  const [refreshing, setRefreshing] = React.useState(false);
   const events = [
     ...new Map(
       feed.data?.pages.flatMap((p) => p.results).map((e) => [e.id, e]),
@@ -430,7 +445,6 @@ function SocialContent() {
       style={{ flex: 1, backgroundColor: theme.colors.background }}
     >
       <FlatList
-        key={tab}
         data={events}
         keyExtractor={(e) => e.id}
         renderItem={({ item }) => <EventCard event={item} />}
@@ -442,9 +456,14 @@ function SocialContent() {
           width: "100%",
           alignSelf: "center",
         }}
-        refreshing={feed.isRefetching && !feed.isFetchingNextPage}
-        onRefresh={() => {
-          void feed.refetch();
+        refreshing={refreshing}
+        onRefresh={async () => {
+          setRefreshing(true);
+          try {
+            await feed.refetch();
+          } finally {
+            setRefreshing(false);
+          }
         }}
         ListHeaderComponent={
           <View style={{ gap: theme.spacing.sm }}>
@@ -525,7 +544,7 @@ export function SocialScreen() {
     return (
       <Page tabBarClearance>
         <Title>{tr("Social")}</Title>
-        <RequireSession bare/>
+        <RequireSession bare />
       </Page>
     );
   return <SocialContent key={user.username} />;
