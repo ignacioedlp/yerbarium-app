@@ -667,5 +667,10 @@
   "Ya tenés una review activa para esta yerba.": "You already have an active review for this yerba.",
   "Esta opinión ya fue eliminada.": "This review has already been deleted.",
   "Usá un nivel entero entre 1 y 5.": "Use a whole-number level between 1 and 5.",
-  "Una nota ya no está disponible. Actualizá la selección.": "A tasting note is no longer available. Update your selection."
+  "Una nota ya no está disponible. Actualizá la selección.": "A tasting note is no longer available. Update your selection.",
+  "Ajustes": "Settings",
+  "Elegí el idioma que querés usar. No necesitás iniciar sesión.": "Choose the language you want to use. You don’t need to sign in.",
+  "Seleccionado": "Selected",
+  "No pudimos guardar el idioma en este dispositivo.": "We couldn’t save the language on this device.",
+  "El idioma se guardó en este dispositivo, pero no pudimos sincronizarlo con tu cuenta.": "The language was saved on this device, but we couldn’t sync it with your account."
 }

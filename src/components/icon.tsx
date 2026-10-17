@@ -23,7 +23,8 @@ export type IconName =
   | "more"
   | "globe"
   | "language"
-  | "chevronDown";
+  | "chevronDown"
+  | "settings";
 export type IconProps = { name: IconName; size?: number; color?: string };
 const names = {
   search: "magnify",
@@ -49,6 +50,7 @@ const names = {
   globe: "earth",
   language: "translate",
   chevronDown: "chevron-down",
+  settings: "cog-outline",
 } as const;
 export function Icon({
   name,

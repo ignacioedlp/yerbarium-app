@@ -25,6 +25,7 @@ const names = {
   globe: "globe",
   language: "character.bubble",
   chevronDown: "chevron.down",
+  settings: "gearshape",
 } as const;
 export function Icon({
   name,

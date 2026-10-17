@@ -391,12 +391,15 @@ function QueryContent({
     </>
   );
 }
-export function RequireSession({ children }: React.PropsWithChildren) {
+export function RequireSession({
+  children,
+  bare = false,
+}: React.PropsWithChildren<{ bare?: boolean }>) {
   useLocale();
   const session = useSession();
-  if (!session.user)
-    return (
-      <Card>
+  if (!session.user) {
+    const content = (
+      <View style={{ gap: t.spacing.sm }}>
         <Title>{tr("Tu ronda empieza acá")}</Title>
         <Body>
           {tr(
@@ -423,8 +426,10 @@ export function RequireSession({ children }: React.PropsWithChildren) {
           secondary
           onPress={() => router.push("/registro")}
         />
-      </Card>
+      </View>
     );
+    return bare ? content : <Card>{content}</Card>;
+  }
   return <>{children}</>;
 }
 export async function openExternal(url: string) {

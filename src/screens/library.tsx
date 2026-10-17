@@ -55,7 +55,7 @@ export function Library() {
   return (
     <Page safeTop>
       <Title>{tr("Mi biblioteca")}</Title>
-      <RequireSession>
+      <RequireSession bare>
         <AnimatedTabs
           options={COLLECTION_TABS.map((option) => ({
             ...option,

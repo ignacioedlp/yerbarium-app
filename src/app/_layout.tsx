@@ -147,6 +147,14 @@ function Navigation() {
           options={{ title: tr("Verificar email"), headerShown: true }}
         />
         <Stack.Screen
+          name="ajustes/index"
+          options={{ title: tr("Ajustes"), headerShown: true }}
+        />
+        <Stack.Screen
+          name="ajustes/idioma"
+          options={{ title: tr("Idioma"), headerShown: true }}
+        />
+        <Stack.Screen
           name="editar-perfil"
           options={{ title: tr("Editar perfil"), headerShown: true }}
         />

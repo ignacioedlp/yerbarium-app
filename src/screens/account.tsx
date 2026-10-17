@@ -27,11 +27,7 @@ import { EmailVerificationStatus } from "@/screens/email-actions";
 import { Account } from "@/api/account-types";
 import { Host, Switch } from "@expo/ui";
 import { theme } from "@/theme";
-import {
-  ProfileSelect,
-  profileCountries,
-  profileLanguages,
-} from "@/components/profile-select";
+import { ProfileSelect, profileCountries } from "@/components/profile-select";
 const loginSchema = z.object({
   identifier: z.string().trim().min(1, "Ingresá tu usuario o email."),
   password: z.string().min(1, "Ingresá tu contraseña."),
@@ -280,8 +276,35 @@ export function Profile() {
   const session = useSession();
   return (
     <Page safeTop>
-      <Title>{tr("Perfil")}</Title>
-      <RequireSession>
+      <View
+        style={{
+          flexDirection: "row",
+          alignItems: "center",
+          justifyContent: "space-between",
+          gap: theme.spacing.md,
+        }}
+      >
+        <Title>{tr("Perfil")}</Title>
+        <Pressable
+          accessibilityRole="button"
+          accessibilityLabel={tr("Ajustes")}
+          testID="profile-settings"
+          onPress={() => router.push("/ajustes")}
+          hitSlop={6}
+          style={({ pressed }) => ({
+            width: 44,
+            height: 44,
+            borderRadius: 22,
+            alignItems: "center",
+            justifyContent: "center",
+            backgroundColor: theme.colors.green,
+            opacity: pressed ? 0.65 : 1,
+          })}
+        >
+          <Icon name="settings" size={23} color={theme.colors.cream} />
+        </Pressable>
+      </View>
+      <RequireSession bare>
         <View style={{ gap: theme.spacing.sm }}>
           <Title>{session.user?.display_name}</Title>
           <View
@@ -392,7 +415,6 @@ const profileSchema = z.object({
     .trim()
     .regex(/^([a-zA-Z]{2})?$/, "Usá un código de país de dos letras.")
     .transform((value) => value.toUpperCase()),
-  language_code: z.string(),
   is_private: z.boolean(),
 });
 function ProfileForm({ user }: { user: Account }) {
@@ -410,7 +432,6 @@ function ProfileForm({ user }: { user: Account }) {
       display_name: user.display_name,
       bio: user.bio,
       country_code: user.country_code,
-      language_code: user.language_code || "",
       is_private: user.is_private,
     },
   });
@@ -472,25 +493,6 @@ function ProfileForm({ user }: { user: Account }) {
           />
         )}
       />
-      <Controller
-        control={form.control}
-        name="language_code"
-        render={({ field, fieldState }) => (
-          <ProfileSelect
-            label={tr("Idioma de la app")}
-            icon="language"
-            value={field.value}
-            options={profileLanguages}
-            onChange={field.onChange}
-            onBlur={field.onBlur}
-            disabled={mutation.isPending}
-            error={fieldState.error?.message}
-          />
-        )}
-      />
-      <Body muted>
-        {tr("Usamos el idioma de tu dispositivo si lo dejás sin especificar.")}
-      </Body>
       <Controller
         control={form.control}
         name="is_private"

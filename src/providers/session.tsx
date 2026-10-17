@@ -29,6 +29,7 @@ const Context = createContext<null | {
   logout: () => Promise<void>;
   restore: () => Promise<void>;
   reload: () => Promise<void>;
+  acceptAccount: (account: Account) => void;
 }>(null);
 export function SessionProvider({ children }: React.PropsWithChildren) {
   useLocale();
@@ -95,6 +96,11 @@ export function SessionProvider({ children }: React.PropsWithChildren) {
     void restore();
     return disconnect;
   }, [manager, restore]);
+  const acceptAccount = useCallback((account: Account) => {
+    setUser((current) =>
+      current?.username === account.username ? account : current,
+    );
+  }, []);
   async function login(
     mode: "login" | "register",
     values: Record<string, string>,
@@ -122,7 +128,16 @@ export function SessionProvider({ children }: React.PropsWithChildren) {
   }
   return (
     <Context.Provider
-      value={{ user, ready, error, login, logout, restore, reload }}
+      value={{
+        user,
+        ready,
+        error,
+        login,
+        logout,
+        restore,
+        reload,
+        acceptAccount,
+      }}
     >
       {children}
     </Context.Provider>

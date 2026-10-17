@@ -667,5 +667,10 @@
   "Ya tenés una review activa para esta yerba.": "Você já tem uma avaliação ativa para esta erva.",
   "Esta opinión ya fue eliminada.": "Esta avaliação já foi excluída.",
   "Usá un nivel entero entre 1 y 5.": "Use um nível inteiro entre 1 e 5.",
-  "Una nota ya no está disponible. Actualizá la selección.": "Uma nota não está mais disponível. Atualize a seleção."
+  "Una nota ya no está disponible. Actualizá la selección.": "Uma nota não está mais disponível. Atualize a seleção.",
+  "Ajustes": "Configurações",
+  "Elegí el idioma que querés usar. No necesitás iniciar sesión.": "Escolha o idioma que quer usar. Não precisa entrar na sua conta.",
+  "Seleccionado": "Selecionado",
+  "No pudimos guardar el idioma en este dispositivo.": "Não foi possível salvar o idioma neste dispositivo.",
+  "El idioma se guardó en este dispositivo, pero no pudimos sincronizarlo con tu cuenta.": "O idioma foi salvo neste dispositivo, mas não foi possível sincronizá-lo com sua conta."
 }

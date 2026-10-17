@@ -464,3 +464,25 @@ Se restauró el collage botánico original detrás de la foto del envase, a opac
 - El runtime instalado carece de Intl.PluralRules e Intl.DisplayNames: se añadieron respaldos para plurales y nombres de países compatibles. Sin errores de JS en la revisión final. RNScreens emite una advertencia de composición de la hoja de autenticación que requiere una revisión independiente del layout existente.
 - TypeScript correcto, 35 tests pasan, lint sin errores (advertencia previa por moveCarousel sin uso en home.tsx). Exportaciones iOS y Android correctas.
 - Limitaciones: no hay sesión autenticada ni emulador Android disponible al finalizar QA; no se verificó el guardado de idioma contra la API ni la interacción en Android. La precedencia de preferencias, el cambio reactivo, la cobertura y la interpolación se verifican con tests; los taps de Argent siguen teniendo la limitación descrita en esta página.
+
+## Idioma independiente del perfil — 2026-10-16
+
+- Idioma retirado de Editar perfil: guardar nombre, biografía, país o privacidad no envía `language_code`.
+- Perfil → Ajustes → Idioma está disponible con y sin sesión. Pantallas con listas nativas de Expo UI, cinco idiomas, banderas y selección actual. El cambio se aplica inmediatamente y se guarda como código en AsyncStorage.
+- Prioridad: elección local → idioma guardado de la cuenta → idioma del dispositivo. La lectura inicial no genera PATCH. Una selección diferente con sesión sincroniza únicamente `{language_code}` si difiere del valor de la cuenta. Sin sesión no hace una solicitud de actualización.
+- El guardado local funciona sin conexión (`networkMode: always`). Si falla el guardado o la sincronización, se mantiene el idioma en memoria y se muestra un reintento; si sólo falla la API, el código ya queda guardado localmente. Se evita sincronizar contra otra cuenta si la sesión cambia durante la persistencia local.
+- TypeScript correcto; 41 pruebas pasan. Lint sin errores, con la advertencia previa de `moveCarousel` en home.tsx. Exportaciones Hermes iOS y Android correctas; `git diff --check` correcto.
+- Revisión visual nativa pendiente: Argent detectó el iPhone arrancado, pero Metro no estaba disponible y los intentos de iniciarlo en este entorno no lograron abrir el servidor. No se probó el nuevo flujo en el simulador ni se modificó una cuenta real. Sin emulador Android disponible.
+- La web agrega el mismo cambio desde el navbar y conserva la preferencia en cookie para SSR. Menú y banderas revisados en escritorio y a 390 px; pruebas de visitantes, prioridad local, actualización parcial, ausencia de cambios al recargar y reintento verificadas con API simulada.
+
+## Ajustes e Idioma: filas abiertas — 2026-10-16
+
+- Ajustes e Idioma siguen el patrón de filas de “Aprende”: fondo crema y opciones separadas por divisores superior e inferior, sin tarjeta contenedora.
+- Ajustes conserva el icono de idioma, el idioma actual y la flecha. La lista de idiomas mantiene banderas, texto “Seleccionado” y tilde para la opción activa, sin fondo de selección.
+- iPhone 17 Pro / iOS 26.4: pantallas Ajustes e Idioma revisadas visualmente mediante Argent. Navegación con el router del runtime porque los taps de Argent no activaron los controles. No se cambió el idioma ni se escribió en la cuenta.
+- TypeScript correcto. No hay dispositivo Android disponible para revisión visual.
+
+## Acceso sin sesión en Perfil y Mi biblioteca — 2026-10-16
+
+- El bloque de bienvenida, descripción e ingreso/registro se muestra directamente sobre el fondo de Perfil y Mi biblioteca, sin borde ni fondo de tarjeta. Las otras pantallas que usan RequireSession conservan su tarjeta.
+- Perfil verificado visualmente en iPhone 17 Pro / iOS 26.4; Mi biblioteca se actualizó con el mismo componente y estilo. TypeScript correcto; no se ejecutaron pruebas automatizadas para este ajuste visual.
