@@ -179,6 +179,14 @@ function Navigation() {
                 options={{ title: tr("Idioma"), headerShown: true }}
               />
               <Stack.Screen
+                name="usuarios/[username]/seguidores"
+                options={{ title: tr("Seguidores"), headerShown: true }}
+              />
+              <Stack.Screen
+                name="usuarios/[username]/seguidos"
+                options={{ title: tr("Seguidos"), headerShown: true }}
+              />
+              <Stack.Screen
                 name="editar-perfil"
                 options={{ title: tr("Editar perfil"), headerShown: true }}
               />

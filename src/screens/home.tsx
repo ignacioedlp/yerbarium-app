@@ -1,3 +1,4 @@
+import { BrandFeed } from "@/components/brand-feed";
 import { tr, useLocale } from "@/i18n";
 import React from "react";
 import { router } from "expo-router";
@@ -51,7 +52,7 @@ export function Home() {
     carouselRef.current?.scrollTo({ x: next * carouselStep, animated: true });
   };
   return (
-    <Page safeTop>
+    <Page safeTop tabBarClearance>
       <View style={{ position: "relative", marginTop: t.spacing.md }}>
         <View
           style={{
@@ -146,6 +147,7 @@ export function Home() {
         </QueryState>
       </View>
       <CommunityPodium />
+      <BrandFeed />
       <View style={{ gap: 16 }}>
         <SectionHeading
           title={tr("Yerbas destacadas")}

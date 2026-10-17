@@ -1,6 +1,9 @@
 import MaterialCommunityIcons from "@expo/vector-icons/MaterialCommunityIcons";
 import { theme } from "@/theme";
 export type IconName =
+  | "image"
+  | "brand"
+  | "announcement"
   | "search"
   | "arrow"
   | "arrowLeft"
@@ -23,10 +26,14 @@ export type IconName =
   | "more"
   | "globe"
   | "language"
+  | "mail"
   | "chevronDown"
   | "settings";
 export type IconProps = { name: IconName; size?: number; color?: string };
 const names = {
+  image: "image-outline",
+  brand: "storefront-outline",
+  announcement: "bullhorn-outline",
   search: "magnify",
   arrow: "arrow-right",
   arrowLeft: "arrow-left",
@@ -49,6 +56,7 @@ const names = {
   more: "dots-vertical",
   globe: "earth",
   language: "translate",
+  mail: "email-outline",
   chevronDown: "chevron-down",
   settings: "cog-outline",
 } as const;

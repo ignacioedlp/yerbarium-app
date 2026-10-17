@@ -35,6 +35,7 @@ import { normalizeError, write } from "@/api/client";
 import { useSession } from "@/providers/session";
 import type { YerbaMateListItem } from "@/api/types";
 import { useComparison } from "@/providers/comparison";
+export const TAB_BAR_CONTENT_CLEARANCE = 112;
 export const styles = StyleSheet.create({
   page: {
     padding: t.spacing.lg,
@@ -131,7 +132,12 @@ export function Page({
   children,
   fullBleed = false,
   safeTop = false,
-}: React.PropsWithChildren<{ fullBleed?: boolean; safeTop?: boolean }>) {
+  tabBarClearance = false,
+}: React.PropsWithChildren<{
+  fullBleed?: boolean;
+  safeTop?: boolean;
+  tabBarClearance?: boolean;
+}>) {
   useLocale();
   return (
     <KeyboardAvoidingView
@@ -146,6 +152,9 @@ export function Page({
           contentContainerStyle={[
             styles.page,
             fullBleed && { padding: 0, gap: 0 },
+            tabBarClearance && {
+              paddingBottom: TAB_BAR_CONTENT_CLEARANCE,
+            },
           ]}
         >
           <OfflineBanner />
@@ -175,6 +184,7 @@ export function Button({
   compact = false,
   selectedBackgroundColor = t.colors.selected,
   expanded,
+  accessibilityLabel,
 }: {
   label: string;
   onPress: () => void;
@@ -186,13 +196,14 @@ export function Button({
   compact?: boolean;
   selectedBackgroundColor?: string;
   expanded?: boolean;
+  accessibilityLabel?: string;
 }) {
   useLocale();
   const filled = (!secondary || selected) && !destructive;
   return (
     <Pressable
       accessibilityRole="button"
-      accessibilityLabel={label}
+      accessibilityLabel={accessibilityLabel ?? label}
       accessibilityState={{ disabled, selected, expanded }}
       onPress={onPress}
       disabled={disabled}
@@ -454,11 +465,13 @@ export function ExternalLink({ label, url }: { label: string; url: string }) {
 }
 export function YerbaCard({
   yerba,
+  badge,
   index = 0,
   loading = false,
 }: {
   index?: number;
   loading?: boolean;
+  badge?: { text: string; accessibilityLabel: string };
   yerba: Pick<
     YerbaMateListItem,
     "slug" | "name" | "brand" | "images" | "short_description"
@@ -522,10 +535,13 @@ export function YerbaCard({
         <Paper />
         <Pressable
           accessibilityRole="button"
-          accessibilityLabel={tr("Ver {0} {1}", {
-            0: yerba.brand.name,
-            1: yerba.name,
-          })}
+          accessibilityLabel={`${badge ? `${badge.accessibilityLabel}. ` : ""}${tr(
+            "Ver {0} {1}",
+            {
+              0: yerba.brand.name,
+              1: yerba.name,
+            },
+          )}`}
           accessibilityHint={tr(
             "Mantené presionado para agregar o quitar de la comparación",
           )}
@@ -618,6 +634,28 @@ export function YerbaCard({
             )}
           </View>
           <View style={{ width: "54%", padding: 16, paddingRight: 0, gap: 7 }}>
+            {badge ? (
+              <View
+                style={{
+                  alignSelf: "flex-start",
+                  backgroundColor: t.colors.green,
+                  borderRadius: t.radius.pill,
+                  paddingHorizontal: 10,
+                  paddingVertical: 4,
+                }}
+              >
+                <Text
+                  style={{
+                    fontFamily: t.fonts.bold,
+                    fontSize: 12,
+                    lineHeight: 17,
+                    color: t.colors.cream,
+                  }}
+                >
+                  {badge.text}
+                </Text>
+              </View>
+            ) : null}
             <Text style={[styles.muted, { color: t.colors.ink }]}>
               {yerba.brand.name}
             </Text>

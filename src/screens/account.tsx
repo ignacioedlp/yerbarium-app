@@ -1,3 +1,4 @@
+import { OwnProfileSocial } from "@/components/profile-social";
 import { tr, useLocale } from "@/i18n";
 import { learningLinks } from "@/content/learning";
 import { AuthField, AuthSheet, AuthSwitch } from "@/components/auth-sheet";
@@ -5,7 +6,7 @@ import React from "react";
 import { Pressable, Text, TextInput, View } from "react-native";
 import { HandNote } from "@/components/editorial";
 import { Icon } from "@/components/icon";
-import { router, type Href } from "expo-router";
+import { router } from "expo-router";
 import { Controller, useForm } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -275,7 +276,7 @@ export function Profile() {
   useLocale();
   const session = useSession();
   return (
-    <Page safeTop>
+    <Page safeTop tabBarClearance>
       <View
         style={{
           flexDirection: "row",
@@ -325,6 +326,7 @@ export function Profile() {
               </View>
             )}
           </View>
+          <OwnProfileSocial />
           <EmailVerificationStatus />
           <HandNote rotate={false}>
             {session.user?.bio || tr("Contá un poco sobre vos y tu ronda.")}
@@ -396,12 +398,6 @@ export function Profile() {
             secondary
             onPress={() => void session.logout()}
           />
-          <Button
-            label={tr("Eliminar cuenta")}
-            secondary
-            destructive
-            onPress={() => router.push("/eliminar-cuenta" as Href)}
-          />
         </View>
       ) : null}
     </Page>
@@ -440,6 +436,7 @@ function ProfileForm({ user }: { user: Account }) {
       write<Account>("auth/me/", "PATCH", values),
     onSuccess: async () => {
       await session.reload();
+      await client.invalidateQueries({ queryKey: ["private", "social"] });
       client.removeQueries({
         predicate: (q) =>
           q.queryKey[0] === "public" &&

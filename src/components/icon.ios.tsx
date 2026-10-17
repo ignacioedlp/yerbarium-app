@@ -2,6 +2,9 @@ import { SymbolView } from "expo-symbols";
 import { theme } from "@/theme";
 import type { IconProps } from "./icon";
 const names = {
+  image: "photo",
+  brand: "storefront",
+  announcement: "megaphone",
   search: "magnifyingglass",
   arrow: "arrow.right",
   arrowLeft: "arrow.left",
@@ -24,6 +27,7 @@ const names = {
   more: "ellipsis",
   globe: "globe",
   language: "character.bubble",
+  mail: "envelope",
   chevronDown: "chevron.down",
   settings: "gearshape",
 } as const;
