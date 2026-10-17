@@ -17,3 +17,6 @@ expo-env.d.ts
 docs/
 .impeccable
 .agent/
+# Local Firebase configuration (or use an EAS file environment variable).
+google-services.json
+GoogleService-Info.plist

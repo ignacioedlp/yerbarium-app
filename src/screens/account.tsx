@@ -1,3 +1,4 @@
+import { PreferenceToggle } from "@/components/preference-toggle";
 import { OwnProfileSocial } from "@/components/profile-social";
 import { tr, useLocale } from "@/i18n";
 import { learningLinks } from "@/content/learning";
@@ -118,6 +119,7 @@ function LoginForm() {
   );
 }
 function RegistrationForm() {
+  const [newsletter, setNewsletter] = React.useState(false);
   useLocale();
   const [legalLinkError, setLegalLinkError] = React.useState(false);
   const emailInput = React.useRef<TextInput>(null);
@@ -130,8 +132,12 @@ function RegistrationForm() {
   });
   const mutation = useMutation({
     mutationFn: async (values: z.infer<typeof registrationSchema>) =>
-      session.login("register", values),
-    onSuccess: () => router.replace("/verificar-email"),
+      session.login("register", { ...values, newsletter }),
+    onSuccess: () =>
+      router.replace({
+        pathname: "/ajustes/notificaciones",
+        params: { onboarding: "1" },
+      }),
     onError: (error) => {
       for (const [key, messages] of Object.entries(
         normalizeError(error).fields,
@@ -192,6 +198,12 @@ function RegistrationForm() {
             </Text>
             .
           </Text>
+          <PreferenceToggle
+            label={tr("Quiero recibir novedades y newsletters por email")}
+            value={newsletter}
+            disabled={mutation.isPending}
+            onChange={setNewsletter}
+          />
           {legalLinkError && (
             <ErrorMessage message={tr("No pudimos abrir el enlace legal.")} />
           )}

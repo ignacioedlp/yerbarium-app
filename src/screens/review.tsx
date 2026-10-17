@@ -84,6 +84,16 @@ function ReviewForm({ slug, review }: { slug: string; review: Review | null }) {
     onSuccess: async () => {
       await Promise.all([
         client.invalidateQueries({ queryKey: ["private", "social"] }),
+        client.invalidateQueries({
+          queryKey: ["private", `auth/library/${encodeURIComponent(slug)}/`],
+        }),
+        client.invalidateQueries({ queryKey: ["private", "auth/library/"] }),
+        client.invalidateQueries({
+          queryKey: ["private", "auth/library/summary/"],
+        }),
+        client.invalidateQueries({
+          queryKey: ["private", `yerbas/${slug}/reviews/`],
+        }),
         client.invalidateQueries({ queryKey: ["public", `yerbas/${slug}/`] }),
         client.invalidateQueries({
           queryKey: ["public", `yerbas/${slug}/reviews/`],
