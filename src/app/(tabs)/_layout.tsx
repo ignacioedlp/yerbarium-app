@@ -35,11 +35,11 @@ export default function TabLayout() {
           <NativeTabs.Trigger.Label>{tr("Explorar")}</NativeTabs.Trigger.Label>
           <NativeTabs.Trigger.Icon sf="magnifyingglass" md="search" />
         </NativeTabs.Trigger>
-        <NativeTabs.Trigger name="biblioteca">
+        <NativeTabs.Trigger name="escanear">
           <NativeTabs.Trigger.Label>
-            {tr("Mi biblioteca")}
+            {tr("Escanear")}
           </NativeTabs.Trigger.Label>
-          <NativeTabs.Trigger.Icon sf="book.fill" md="book" />
+          <NativeTabs.Trigger.Icon sf="barcode.viewfinder" md="barcode_scanner" />
         </NativeTabs.Trigger>
         <NativeTabs.Trigger name="social">
           <NativeTabs.Trigger.Label>{tr("Social")}</NativeTabs.Trigger.Label>
