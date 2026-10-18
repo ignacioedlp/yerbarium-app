@@ -14,6 +14,7 @@ import { AnimatedTabs } from "@/components/animated-tabs";
 import {
   Body,
   Button,
+  EmptyState,
   Page,
   RequireSession,
   TAB_BAR_CONTENT_CLEARANCE,
@@ -451,7 +452,8 @@ function SocialContent() {
         contentContainerStyle={{
           padding: theme.spacing.lg,
           paddingTop: theme.spacing.lg,
-          paddingBottom: TAB_BAR_CONTENT_CLEARANCE,
+          flexGrow: 1,
+          paddingBottom: events.length ? TAB_BAR_CONTENT_CLEARANCE : 0,
           maxWidth: 680,
           width: "100%",
           alignSelf: "center",
@@ -486,20 +488,25 @@ function SocialContent() {
               <ActivityIndicator color={theme.colors.green} />
             )
           ) : !feed.isError ? (
-            <View style={{ gap: theme.spacing.md }}>
-              <Body>
-                {tr(
+            <View style={{ flex: 1, justifyContent: "center" }}>
+              <EmptyState
+                title={tr(
                   tab === "for_you"
-                    ? "Todavía no hay actividad pública."
-                    : "Todavía no hay actividad de las personas y marcas que seguís.",
+                    ? "La ronda está tranquila"
+                    : "Tu ronda está por empezar",
                 )}
-              </Body>
-              {tab === "following" ? (
-                <Button
-                  label={tr("Explorar yerbas")}
-                  onPress={() => router.push("/explorar")}
-                />
-              ) : null}
+                description={tr(
+                  tab === "for_you"
+                    ? "Cuando la comunidad comparta opiniones y descubrimientos, los vas a encontrar acá."
+                    : "Las novedades de las personas y marcas que seguís van a aparecer acá.",
+                )}
+                action={
+                  <Button
+                    label={tr("Explorar yerbas")}
+                    onPress={() => router.push("/explorar")}
+                  />
+                }
+              />
             </View>
           ) : null
         }

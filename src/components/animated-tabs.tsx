@@ -1,6 +1,7 @@
 import { tr, countLabel, useLocale } from "@/i18n";
 import React from "react";
 import { Pressable, Text, View } from "react-native";
+import { Gesture, GestureDetector } from "react-native-gesture-handler";
 import Animated, {
   Easing,
   FadeIn,
@@ -52,6 +53,29 @@ export function AnimatedTabs<Key extends string>({
   const indicatorX = useSharedValue(0);
   const selectedIndex = options.findIndex((option) => option.key === selected);
 
+  const swipeGesture = React.useMemo(
+    () =>
+      Gesture.Pan()
+        .activeOffsetX([-20, 20])
+        .failOffsetY([-15, 15])
+        .runOnJS(true)
+        .onEnd((event) => {
+          if (Math.abs(event.translationX) < 50) return;
+          if (selectedIndex < 0 || options.length < 2) return;
+          const nextIndex = Math.max(
+            0,
+            Math.min(
+              options.length - 1,
+              selectedIndex + (event.translationX < 0 ? 1 : -1),
+            ),
+          );
+          if (nextIndex !== selectedIndex) {
+            onSelect(options[nextIndex].key);
+          }
+        }),
+    [onSelect, options, selectedIndex],
+  );
+
   React.useEffect(() => {
     indicatorX.set(
       withTiming((Math.max(0, selectedIndex) * tabsWidth) / options.length, {
@@ -67,87 +91,89 @@ export function AnimatedTabs<Key extends string>({
   }));
 
   return (
-    <View
-      accessibilityRole="tablist"
-      onLayout={({ nativeEvent }) => setTabsWidth(nativeEvent.layout.width)}
-      style={{
-        flexDirection: "row",
-        borderBottomWidth: 1,
-        borderColor: theme.colors.border,
-      }}
-    >
-      {options.map(({ key, label, count }) => (
-        <Pressable
-          key={key}
-          accessibilityRole="tab"
-          accessibilityState={{ selected: selected === key }}
-          accessibilityLabel={
-            count === undefined
-              ? tr(label)
-              : `${tr(label)}, ${countLabel(count, "{count} elemento", "{count} elementos")}`
-          }
-          onPress={() => onSelect(key)}
-          style={({ pressed }) => ({
-            flex: 1,
-            minHeight: 48,
-            paddingHorizontal: theme.spacing.xs,
-            alignItems: "center",
-            justifyContent: "center",
-            opacity: pressed ? 0.6 : 1,
-          })}
-        >
-          <View
-            style={{
-              flexDirection: "row",
+    <GestureDetector gesture={swipeGesture}>
+      <View
+        accessibilityRole="tablist"
+        onLayout={({ nativeEvent }) => setTabsWidth(nativeEvent.layout.width)}
+        style={{
+          flexDirection: "row",
+          borderBottomWidth: 1,
+          borderColor: theme.colors.border,
+        }}
+      >
+        {options.map(({ key, label, count }) => (
+          <Pressable
+            key={key}
+            accessibilityRole="tab"
+            accessibilityState={{ selected: selected === key }}
+            accessibilityLabel={
+              count === undefined
+                ? tr(label)
+                : `${tr(label)}, ${countLabel(count, "{count} elemento", "{count} elementos")}`
+            }
+            onPress={() => onSelect(key)}
+            style={({ pressed }) => ({
+              flex: 1,
+              minHeight: 48,
+              paddingHorizontal: theme.spacing.xs,
               alignItems: "center",
               justifyContent: "center",
-              gap: theme.spacing.xs,
-            }}
+              opacity: pressed ? 0.6 : 1,
+            })}
           >
-            <Text
+            <View
               style={{
-                color:
-                  selected === key ? theme.colors.green : theme.colors.muted,
-                fontFamily:
-                  selected === key ? theme.fonts.bold : theme.fonts.body,
-                fontSize: 15,
-                textAlign: "center",
-                flexShrink: 1,
+                flexDirection: "row",
+                alignItems: "center",
+                justifyContent: "center",
+                gap: theme.spacing.xs,
               }}
             >
-              {tr(label)}
-            </Text>
-            {count !== undefined && (
               <Text
                 style={{
                   color:
                     selected === key ? theme.colors.green : theme.colors.muted,
-                  fontFamily: theme.fonts.bold,
-                  fontSize: 13,
-                  fontVariant: ["tabular-nums"],
+                  fontFamily:
+                    selected === key ? theme.fonts.bold : theme.fonts.body,
+                  fontSize: 15,
+                  textAlign: "center",
+                  flexShrink: 1,
                 }}
               >
-                {count}
+                {tr(label)}
               </Text>
-            )}
-          </View>
-        </Pressable>
-      ))}
-      <Animated.View
-        pointerEvents="none"
-        accessible={false}
-        style={[
-          {
-            position: "absolute",
-            left: 0,
-            bottom: 0,
-            height: 3,
-            width: options.length ? tabsWidth / options.length : 0,
-            backgroundColor: theme.colors.green,
-          },
-          indicatorStyle,
-        ]}
-      />
-    </View>
+              {count !== undefined && (
+                <Text
+                  style={{
+                    color:
+                      selected === key ? theme.colors.green : theme.colors.muted,
+                    fontFamily: theme.fonts.bold,
+                    fontSize: 13,
+                    fontVariant: ["tabular-nums"],
+                  }}
+                >
+                  {count}
+                </Text>
+              )}
+            </View>
+          </Pressable>
+        ))}
+        <Animated.View
+          pointerEvents="none"
+          accessible={false}
+          style={[
+            {
+              position: "absolute",
+              left: 0,
+              bottom: 0,
+              height: 3,
+              width: options.length ? tabsWidth / options.length : 0,
+              backgroundColor: theme.colors.green,
+            },
+            indicatorStyle,
+          ]}
+        />
+      </View>
+    </GestureDetector>
   );
 }

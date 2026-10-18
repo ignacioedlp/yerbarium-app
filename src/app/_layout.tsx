@@ -7,6 +7,7 @@ import { useFonts } from "expo-font";
 import { NunitoSans_400Regular } from "@expo-google-fonts/nunito-sans/400Regular";
 import { NunitoSans_800ExtraBold } from "@expo-google-fonts/nunito-sans/800ExtraBold";
 import { SafeAreaProvider } from "react-native-safe-area-context";
+import { GestureHandlerRootView } from "react-native-gesture-handler";
 import { StatusBar } from "expo-status-bar";
 import { DataProvider } from "@/providers/data";
 import { NotificationObserver } from "@/providers/notifications";
@@ -225,17 +226,19 @@ function Navigation() {
 function RootLayout() {
   useLocale();
   const app = (
-    <SafeAreaProvider>
-      <DataProvider>
-        <SessionProvider>
-          <LocaleProvider>
-            <ComparisonProvider>
-              <Navigation />
-            </ComparisonProvider>
-          </LocaleProvider>
-        </SessionProvider>
-      </DataProvider>
-    </SafeAreaProvider>
+    <GestureHandlerRootView style={{ flex: 1 }}>
+      <SafeAreaProvider>
+        <DataProvider>
+          <SessionProvider>
+            <LocaleProvider>
+              <ComparisonProvider>
+                <Navigation />
+              </ComparisonProvider>
+            </LocaleProvider>
+          </SessionProvider>
+        </DataProvider>
+      </SafeAreaProvider>
+    </GestureHandlerRootView>
   );
   if (!posthogClient) return app;
   return (

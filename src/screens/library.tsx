@@ -7,9 +7,8 @@ import { theme } from "@/theme";
 import {
   Page,
   Title,
-  Body,
   Button,
-  Card,
+  EmptyState,
   QueryState,
   RequireSession,
 } from "@/components/ui";
@@ -19,6 +18,7 @@ import {
   type AnimatedTabOption,
 } from "@/components/animated-tabs";
 import { useSession } from "@/providers/session";
+import { router } from "expo-router";
 import { usePages, useResource } from "@/hooks/queries";
 import {
   LibraryCollection,
@@ -67,12 +67,18 @@ export function Library() {
         <AnimatedTabContent activeKey={state}>
           <QueryState query={query} yerbaCards>
             {query.data?.pages[0]?.count === 0 ? (
-              <Card>
-                <Title>{tr("Tu biblioteca está esperando")}</Title>
-                <Body>
-                  {tr("Guardá yerbas desde sus fichas para encontrarlas acá.")}
-                </Body>
-              </Card>
+              <EmptyState
+                title={tr("Tu biblioteca está esperando")}
+                description={tr(
+                  "Guardá tus yerbas favoritas y encontralas acá cuando quieras.",
+                )}
+                action={
+                  <Button
+                    label={tr("Explorar yerbas")}
+                    onPress={() => router.push("/(tabs)/explorar")}
+                  />
+                }
+              />
             ) : (
               <View style={{ gap: theme.spacing.md }}>
                 {query.data?.pages

@@ -290,7 +290,10 @@ function ExploreContent({
           }}
           contentContainerStyle={{
             paddingTop: t.spacing.sm,
-            paddingBottom: TAB_BAR_CONTENT_CLEARANCE,
+            flexGrow: 1,
+            paddingBottom: brandItems.length
+              ? TAB_BAR_CONTENT_CLEARANCE
+              : 0,
           }}
           renderItem={({ item }) => (
             <View style={{ flex: 1, minWidth: 0 }}>
@@ -301,7 +304,13 @@ function ExploreContent({
             <View style={{ height: t.spacing.lg }} />
           )}
           ListEmptyComponent={
-            <View style={{ padding: t.spacing.lg }}>
+            <View
+              style={{
+                flex: 1,
+                justifyContent: "center",
+                paddingHorizontal: t.spacing.md,
+              }}
+            >
               <QueryState query={brands} empty />
             </View>
           }
@@ -349,13 +358,22 @@ function ExploreContent({
           )}
           contentInsetAdjustmentBehavior="automatic"
           keyboardShouldPersistTaps="handled"
-          contentContainerStyle={{ paddingBottom: TAB_BAR_CONTENT_CLEARANCE }}
+          contentContainerStyle={{
+            flexGrow: 1,
+            paddingBottom: items.length ? TAB_BAR_CONTENT_CLEARANCE : 0,
+          }}
           ListHeaderComponent={header}
           ItemSeparatorComponent={() => (
             <View style={{ height: t.spacing.md }} />
           )}
           ListEmptyComponent={
-            <View style={{ padding: t.spacing.lg }}>
+            <View
+              style={{
+                flex: 1,
+                justifyContent: "center",
+                paddingHorizontal: t.spacing.md,
+              }}
+            >
               {mode === "search" && !debounced ? (
                 <Card>
                   <Title>{tr("¿Qué yerba tenés en mente?")}</Title>

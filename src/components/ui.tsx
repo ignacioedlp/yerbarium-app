@@ -392,14 +392,68 @@ function QueryContent({
         </Card>
       )}
       {empty ? (
-        <Card>
-          <Title>{tr("No encontramos resultados")}</Title>
-          <Body>{tr("Probá otra búsqueda o quitá los filtros.")}</Body>
-        </Card>
+        <EmptyState
+          title={tr("No encontramos yerbas")}
+          description={tr(
+            "Probá con otras palabras o ajustá los filtros para seguir explorando.",
+          )}
+        />
       ) : (
         children
       )}
     </>
+  );
+}
+
+export function EmptyState({
+  title,
+  description,
+  action,
+}: {
+  title: string;
+  description: string;
+  action?: React.ReactNode;
+}) {
+  useLocale();
+  return (
+    <View
+      accessibilityRole="summary"
+      style={{
+        alignItems: "center",
+        paddingHorizontal: t.spacing.md,
+        paddingVertical: t.spacing.lg,
+        gap: t.spacing.sm,
+      }}
+    >
+      <Image
+        source={require("../../assets/images/mate-botanical.webp")}
+        style={{ width: 224, height: 142, marginBottom: t.spacing.xs }}
+        contentFit="contain"
+        accessible={false}
+      />
+      <View style={{ alignItems: "center", gap: t.spacing.sm, maxWidth: 320 }}>
+        <Text
+          accessibilityRole="header"
+          style={{
+            fontFamily: t.fonts.display,
+            fontSize: 25,
+            lineHeight: 29,
+            textTransform: "uppercase",
+            color: t.colors.ink,
+            textAlign: "center",
+          }}
+        >
+          {title}
+        </Text>
+        <Text
+          selectable
+          style={[styles.body, { textAlign: "center", color: t.colors.muted }]}
+        >
+          {description}
+        </Text>
+      </View>
+      {action}
+    </View>
   );
 }
 export function RequireSession({
