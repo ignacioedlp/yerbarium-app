@@ -742,5 +742,9 @@
   "Pausar": "Pause",
   "Reanudar": "Resume",
   "Ver reseña de {yerba}, {position} de {count}": "View review of {yerba}, {position} of {count}",
-  "Reseña {position} de {count}": "Review {position} of {count}"
+  "Reseña {position} de {count}": "Review {position} of {count}",
+  "Te avisamos cuando alguien te sigue o le da Me gusta a una de tus opiniones.": "Get notified when someone follows you or likes one of your reviews.",
+  "Guardamos tu interés en recibir novedades de marcas. Por ahora, esta opción no envía notificaciones.": "Save your interest in brand updates. This option does not send notifications yet.",
+  "Guardamos tu interés en descubrir yerbas. Por ahora, esta opción no envía notificaciones.": "Save your interest in discovering yerbas. This option does not send notifications yet.",
+  "Recibí novedades y newsletters por email. Es opcional e independiente de las notificaciones push y los emails de tu cuenta.": "Receive updates and newsletters by email. This is optional and separate from push notifications and account emails."
 }

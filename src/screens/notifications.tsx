@@ -9,6 +9,7 @@ import { get, write, normalizeError } from "@/api/client";
 import {
   NotificationPreferences,
   notificationLabels,
+  notificationDescriptions,
 } from "@/api/notification-types";
 import { pushPermission, registerPush } from "@/api/push";
 import { tr, useLocale } from "@/i18n";
@@ -105,21 +106,12 @@ export function NotificationSettings() {
             key={key}
             testID={`notification-${key}`}
             label={tr(notificationLabels[key])}
+            description={tr(notificationDescriptions[key])}
             value={query.data[key]}
             disabled={mutation.isPending || activating}
             onChange={(value) => mutation.mutate({ [key]: value })}
           />
         ))}
-      <Body muted>
-        {tr(
-          "Marcas y descubrimiento: guardamos tu elección para futuras novedades.",
-        )}
-      </Body>
-      <Body muted>
-        {tr(
-          "El newsletter es opcional e independiente de las notificaciones push y los emails de tu cuenta.",
-        )}
-      </Body>
       {mutation.error && (
         <ErrorMessage message={normalizeError(mutation.error).message} />
       )}

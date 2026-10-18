@@ -742,5 +742,9 @@
   "Pausar": "Pausar",
   "Reanudar": "Retomar",
   "Ver reseña de {yerba}, {position} de {count}": "Ver avaliação de {yerba}, {position} de {count}",
-  "Reseña {position} de {count}": "Avaliação {position} de {count}"
+  "Reseña {position} de {count}": "Avaliação {position} de {count}",
+  "Te avisamos cuando alguien te sigue o le da Me gusta a una de tus opiniones.": "Receba avisos quando alguém seguir você ou curtir uma das suas avaliações.",
+  "Guardamos tu interés en recibir novedades de marcas. Por ahora, esta opción no envía notificaciones.": "Guardamos seu interesse em novidades de marcas. Por enquanto, esta opção não envia notificações.",
+  "Guardamos tu interés en descubrir yerbas. Por ahora, esta opción no envía notificaciones.": "Guardamos seu interesse em descobrir ervas-mate. Por enquanto, esta opção não envia notificações.",
+  "Recibí novedades y newsletters por email. Es opcional e independiente de las notificaciones push y los emails de tu cuenta.": "Receba novidades e newsletters por email. É opcional e independente das notificações push e dos emails da sua conta."
 }

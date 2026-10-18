@@ -1,14 +1,16 @@
 import { Host, Switch } from "@expo/ui";
-import { Pressable, Text } from "react-native";
+import { Pressable, Text, View } from "react-native";
 import { theme } from "@/theme";
 export function PreferenceToggle({
   label,
+  description,
   value,
   disabled,
   onChange,
   testID,
 }: {
   label: string;
+  description?: string;
   value: boolean;
   disabled?: boolean;
   onChange: (value: boolean) => void;
@@ -18,6 +20,7 @@ export function PreferenceToggle({
     <Pressable
       accessibilityRole="switch"
       accessibilityLabel={label}
+      accessibilityHint={description}
       accessibilityState={{ checked: value, disabled: Boolean(disabled) }}
       disabled={disabled}
       onPress={() => onChange(!value)}
@@ -30,9 +33,29 @@ export function PreferenceToggle({
         opacity: disabled ? 0.5 : 1,
       }}
     >
-      <Text style={{ flex: 1, fontFamily: theme.fonts.bold, fontSize: 17 }}>
-        {label}
-      </Text>
+      <View style={{ flex: 1, gap: theme.spacing.xs }}>
+        <Text
+          style={{
+            fontFamily: theme.fonts.bold,
+            fontSize: 17,
+            color: theme.colors.ink,
+          }}
+        >
+          {label}
+        </Text>
+        {description && (
+          <Text
+            style={{
+              fontFamily: theme.fonts.body,
+              fontSize: theme.type.body,
+              lineHeight: 22,
+              color: theme.colors.muted,
+            }}
+          >
+            {description}
+          </Text>
+        )}
+      </View>
       <Host
         matchContents
         colorScheme="light"

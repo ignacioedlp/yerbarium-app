@@ -642,3 +642,10 @@ Se restauró el collage botánico original detrás de la foto del envase, a opac
 - Hojas de atributos comunitarios de 30 puntos, igual que en la evaluación sensorial de la reseña; conservan distribución a ancho completo.
 - Títulos de atributos de 20 puntos, interlineado 26 y fuente bold, con rol de encabezado accesible.
 - Typecheck, 51 tests y diff --check OK; lint sin errores (warning preexistente de home.tsx). Confirmación visual pendiente; la navegación por taps en el simulador no respondió en la comprobación anterior.
+
+## Descripciones de notificaciones — 2026-10-18
+
+- Cada interruptor incluye una explicación visible y accesible, traducida a los cinco idiomas. Sociales describe seguidores y Me gusta; Marcas y Descubrimiento aclaran que guardan preferencias futuras; Newsletter explica el canal email y su independencia.
+- Typecheck OK; lint sin errores (warning previo de moveCarousel); exportaciones iOS y Android OK; diff --check OK.
+- Tests: 50 OK y 1 fallo de cobertura de traducciones por siete textos de otras pantallas ausentes del catálogo inglés, también ausentes en HEAD antes del cambio.
+- Verificación visual pendiente: el simulador iOS muestra «Could not connect to development server» al intentar cargar Metro en localhost:8081. No hay emulador Android activo.
