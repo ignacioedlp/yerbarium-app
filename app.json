@@ -356,6 +356,15 @@
           "defaultChannel": "social",
           "icon": "./assets/branding/notification-icon.png"
         }
+      ],
+      [
+        "expo-camera",
+        {
+          "cameraPermission": "Yerbarium necesita la cámara para leer códigos de barras y buscar yerbas.",
+          "recordAudioAndroid": false,
+          "microphonePermission": false,
+          "barcodeScannerEnabled": true
+        }
       ]
     ],
     "experiments": {

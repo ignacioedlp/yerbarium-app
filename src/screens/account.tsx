@@ -1,3 +1,4 @@
+import { ProfileLibrary } from "@/components/profile-library";
 import { PreferenceToggle } from "@/components/preference-toggle";
 import { OwnProfileSocial } from "@/components/profile-social";
 import { tr, useLocale } from "@/i18n";
@@ -361,6 +362,7 @@ export function Profile() {
             }
           />
         </View>
+        <ProfileLibrary />
       </RequireSession>
       <View style={{ gap: theme.spacing.sm }}>
         <Title>{tr("Aprende")}</Title>
