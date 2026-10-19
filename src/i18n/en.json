@@ -774,5 +774,22 @@
   "La ronda está tranquila": "The circle is quiet",
   "Tu ronda está por empezar": "Your circle is about to begin",
   "Cuando la comunidad comparta opiniones y descubrimientos, los vas a encontrar acá.": "When the community shares reviews and discoveries, you will find them here.",
-  "Las novedades de las personas y marcas que seguís van a aparecer acá.": "Updates from the people and brands you follow will appear here."
+  "Las novedades de las personas y marcas que seguís van a aparecer acá.": "Updates from the people and brands you follow will appear here.",
+  "Este método de ingreso no está disponible en este momento.": "This sign-in method is currently unavailable.",
+  "Falta configurar el ingreso con Google para iOS.": "Google sign-in for iOS has not been configured.",
+  "El ingreso con Apple no está disponible en este dispositivo.": "Sign in with Apple is unavailable on this device.",
+  "No pudimos obtener tu identidad. Volvé a intentar.": "We could not retrieve your identity. Please try again.",
+  "Ingresá con la misma cuenta para confirmar tu identidad.": "Sign in with the same account to confirm your identity.",
+  "O continuá con": "Or continue with",
+  "Continuar con Google": "Continue with Google",
+  "Reintentar métodos de ingreso": "Retry sign-in methods",
+  "Confirmá tu identidad con Google o Apple y escribí tu usuario para eliminar la cuenta.": "Confirm your identity with Google or Apple and enter your username to delete your account.",
+  "Confirmar usuario": "Confirm username",
+  "Actualizá la aplicación para usar este método de ingreso.": "Update the app to use this sign-in method.",
+  "Para vincular este método de ingreso, confirmá la contraseña de tu cuenta existente.": "To link this sign-in method, confirm the password of your existing account.",
+  "Vincular e ingresar": "Link and sign in",
+  "O continuá con tu email": "Or continue with your email",
+  "Continuar con Apple": "Continue with Apple",
+  "No pudimos iniciar sesión con Apple. Volvé a intentar.": "We could not sign you in with Apple. Please try again.",
+  "No pudimos iniciar sesión con Google. Volvé a intentar.": "We could not sign you in with Google. Please try again."
 }

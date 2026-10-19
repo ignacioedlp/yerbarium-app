@@ -3,6 +3,7 @@ export interface Account {
   username: string;
   email: string;
   email_verified?: boolean;
+  has_password?: boolean;
   display_name: string;
   bio: string;
   country_code: string;

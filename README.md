@@ -115,3 +115,7 @@ Los mensajes y las cuatro guías editoriales están en `src/i18n`. `tr` recibe e
 Al agregar mensajes, actualizar los catálogos de inglés, español y ambas variantes de portugués. `es-AR` usa las claves originales, con un pequeño catálogo de excepciones para errores que la API entrega en inglés. Los nombres comerciales, las descripciones remotas, las opiniones, las biografías y los títulos originales de las fuentes conservan su idioma original. Las traducciones no modifican la web ni la API.
 
 `bun run test` comprueba la cobertura de los mensajes literales, las guías, las escalas sensoriales, los parámetros de interpolación, las preferencias, las variantes regionales y el respaldo para Hermes sin `Intl.PluralRules`.
+
+## Google y Apple
+
+Configuración de proveedores, builds nativos y pruebas: [SOCIAL_AUTH.md](./SOCIAL_AUTH.md).

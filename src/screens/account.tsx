@@ -1,3 +1,4 @@
+import { SocialAuthButtons, useSocialAuth } from "@/components/social-auth";
 import { ProfileLibrary } from "@/components/profile-library";
 import { PreferenceToggle } from "@/components/preference-toggle";
 import { OwnProfileSocial } from "@/components/profile-social";
@@ -57,28 +58,34 @@ function LoginForm() {
       session.login("login", values),
     onSuccess: () => router.back(),
   });
+  const social = useSocialAuth();
+  const pending =
+    mutation.isPending ||
+    social.mutation.isPending ||
+    Boolean(social.pendingLink);
   return (
     <AuthSheet
       title={tr("Bienvenido de nuevo")}
       description={tr("Ingresá con tu usuario o email.")}
-      pending={mutation.isPending}
+      pending={pending}
       actions={
         <>
           <Button
             label={mutation.isPending ? tr("Ingresando…") : tr("Ingresar")}
-            disabled={mutation.isPending || !online}
+            disabled={pending || !online}
             onPress={form.handleSubmit((values) => mutation.mutate(values))}
           />
           <Button
             label={tr("¿Olvidaste tu contraseña?")}
             secondary
-            disabled={mutation.isPending}
+            disabled={pending}
             onPress={() => router.replace("/recuperar-contrasena")}
           />
-          <AuthSwitch register={false} pending={mutation.isPending} />
+          <AuthSwitch register={false} pending={pending} />
         </>
       }
     >
+      <SocialAuthButtons auth={social} disabled={pending || !online} />
       {(["identifier", "password"] as const).map((name) => (
         <Controller
           key={name}
@@ -90,7 +97,7 @@ function LoginForm() {
                 name === "identifier" ? tr("Usuario o email") : tr("Contraseña")
               }
               defaultValue=""
-              editable={!mutation.isPending}
+              editable={!pending}
               inputRef={(input) => {
                 field.ref(input);
                 if (name === "password") passwordInput.current = input;
@@ -103,7 +110,7 @@ function LoginForm() {
               submitBehavior="submit"
               onSubmitEditing={() => {
                 if (name !== "password") passwordInput.current?.focus();
-                else if (online && !mutation.isPending)
+                else if (online && !pending)
                   void form.handleSubmit((values) => mutation.mutate(values))();
               }}
               secureTextEntry={name === "password"}
@@ -147,11 +154,16 @@ function RegistrationForm() {
           form.setError(key, { message: messages.join(" ") });
     },
   });
+  const social = useSocialAuth({ newsletter });
+  const pending =
+    mutation.isPending ||
+    social.mutation.isPending ||
+    Boolean(social.pendingLink);
   return (
     <AuthSheet
       title={tr("Sumate a Yerbarium")}
       description={tr("Guardá tus yerbas y compartí lo que descubrís.")}
-      pending={mutation.isPending}
+      pending={pending}
       actions={
         <>
           <Text
@@ -202,7 +214,7 @@ function RegistrationForm() {
           <PreferenceToggle
             label={tr("Quiero recibir novedades y newsletters por email")}
             value={newsletter}
-            disabled={mutation.isPending}
+            disabled={pending}
             onChange={setNewsletter}
           />
           {legalLinkError && (
@@ -212,13 +224,14 @@ function RegistrationForm() {
             label={
               mutation.isPending ? tr("Creando cuenta…") : tr("Crear cuenta")
             }
-            disabled={!online || mutation.isPending}
+            disabled={!online || pending}
             onPress={form.handleSubmit((values) => mutation.mutate(values))}
           />
-          <AuthSwitch register pending={mutation.isPending} />
+          <AuthSwitch register pending={pending} />
         </>
       }
     >
+      <SocialAuthButtons auth={social} disabled={pending || !online} />
       {(["username", "email", "password"] as const).map((name) => (
         <Controller
           key={name}
@@ -234,7 +247,7 @@ function RegistrationForm() {
                 }[name]
               }
               defaultValue=""
-              editable={!mutation.isPending}
+              editable={!pending}
               inputRef={(input) => {
                 field.ref(input);
                 if (name === "email") emailInput.current = input;
@@ -249,7 +262,7 @@ function RegistrationForm() {
               onSubmitEditing={() => {
                 if (name === "username") emailInput.current?.focus();
                 else if (name === "email") passwordInput.current?.focus();
-                else if (online && !mutation.isPending)
+                else if (online && !pending)
                   void form.handleSubmit((values) => mutation.mutate(values))();
               }}
               keyboardType={name === "email" ? "email-address" : "default"}

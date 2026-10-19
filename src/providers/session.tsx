@@ -18,6 +18,7 @@ import {
 } from "@/api/client";
 import { SessionManager, TokenPair } from "@/api/session-manager";
 import { Account } from "@/api/account-types";
+import type { SocialSession } from "@/api/social-auth";
 const key = `yerbarium.refresh.${apiBaseUrl.replace(/[^a-zA-Z0-9._-]/g, "_")}`;
 const Context = createContext<null | {
   user: Account | null;
@@ -27,6 +28,7 @@ const Context = createContext<null | {
     mode: "login" | "register",
     values: Record<string, string | boolean>,
   ) => Promise<void>;
+  acceptSocialSession: (data: SocialSession) => Promise<void>;
   logout: () => Promise<void>;
   restore: () => Promise<void>;
   reload: () => Promise<void>;
@@ -110,6 +112,9 @@ export function SessionProvider({ children }: React.PropsWithChildren) {
       `auth/token/${mode}/`,
       values,
     );
+    await acceptSocialSession(data);
+  }
+  async function acceptSocialSession(data: TokenPair & { user: Account }) {
     await client.cancelQueries({
       predicate: (q) => q.queryKey[0] === "private",
     });
@@ -135,6 +140,7 @@ export function SessionProvider({ children }: React.PropsWithChildren) {
         ready,
         error,
         login,
+        acceptSocialSession,
         logout,
         restore,
         reload,
