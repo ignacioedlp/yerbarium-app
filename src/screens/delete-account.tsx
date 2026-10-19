@@ -1,3 +1,4 @@
+import { SocialAuthButtons, useSocialAuth } from "@/components/social-auth";
 import { tr, useLocale } from "@/i18n";
 import React from "react";
 import { Alert } from "react-native";
@@ -19,10 +20,18 @@ import { useSession } from "@/providers/session";
 export function DeleteAccount() {
   useLocale();
   const session = useSession();
+  const social = useSocialAuth({ reauthenticate: true });
+  const passwordless = session.user?.has_password === false;
+  const [confirmation, setConfirmation] = React.useState("");
   const online = useCanWrite();
   const [password, setPassword] = React.useState("");
   const deletion = useMutation({
-    mutationFn: () => write<void>("auth/me/", "DELETE", { password }),
+    mutationFn: () =>
+      write<void>(
+        "auth/me/",
+        "DELETE",
+        passwordless ? { confirm_username: confirmation } : { password },
+      ),
     onSuccess: async () => {
       await session.logout();
       router.replace("/(tabs)/(home)");
@@ -30,7 +39,8 @@ export function DeleteAccount() {
   });
 
   function confirmDeletion() {
-    if (!password) return;
+    if (passwordless ? confirmation !== session.user?.username : !password)
+      return;
     Alert.alert(
       tr("Eliminar tu cuenta"),
       tr(
@@ -54,19 +64,31 @@ export function DeleteAccount() {
       />
       <Title>{tr("Eliminar cuenta")}</Title>
       <Body>
-        {tr(
-          "Esta acción elimina tu perfil, biblioteca y opiniones. Para confirmar, volvé a ingresar tu contraseña.",
-        )}
+        {passwordless
+          ? tr(
+              "Confirmá tu identidad con Google o Apple y escribí tu usuario para eliminar la cuenta.",
+            )
+          : tr(
+              "Esta acción elimina tu perfil, biblioteca y opiniones. Para confirmar, volvé a ingresar tu contraseña.",
+            )}
       </Body>
+      {passwordless && (
+        <SocialAuthButtons
+          auth={social}
+          showEmailSeparator={false}
+          disabled={!online || deletion.isPending || social.mutation.isPending}
+        />
+      )}
+      {passwordless && <Body>@{session.user?.username}</Body>}
       <Field
-        label={tr("Contraseña actual")}
-        value={password}
-        onChangeText={setPassword}
-        secureTextEntry
+        label={passwordless ? tr("Confirmar usuario") : tr("Contraseña actual")}
+        value={passwordless ? confirmation : password}
+        onChangeText={passwordless ? setConfirmation : setPassword}
+        secureTextEntry={!passwordless}
         autoCapitalize="none"
         autoCorrect={false}
-        textContentType="password"
-        editable={!deletion.isPending}
+        textContentType={passwordless ? "username" : "password"}
+        editable={!deletion.isPending && !social.mutation.isPending}
       />
       {deletion.error && (
         <ErrorMessage message={normalizeError(deletion.error).message} />
@@ -76,7 +98,14 @@ export function DeleteAccount() {
           deletion.isPending ? tr("Eliminando…") : tr("Eliminar mi cuenta")
         }
         destructive
-        disabled={!online || !password || deletion.isPending}
+        disabled={
+          !online ||
+          (passwordless
+            ? confirmation !== session.user?.username || !social.mutation.data
+            : !password) ||
+          deletion.isPending ||
+          social.mutation.isPending
+        }
         onPress={confirmDeletion}
       />
     </Page>

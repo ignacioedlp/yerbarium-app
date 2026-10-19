@@ -774,5 +774,22 @@
   "La ronda está tranquila": "La ronda está tranquila",
   "Tu ronda está por empezar": "Tu ronda está por empezar",
   "Cuando la comunidad comparta opiniones y descubrimientos, los vas a encontrar acá.": "Cuando la comunidad comparta opiniones y descubrimientos, los encontrarás aquí.",
-  "Las novedades de las personas y marcas que seguís van a aparecer acá.": "Las novedades de las personas y marcas que sigues aparecerán aquí."
+  "Las novedades de las personas y marcas que seguís van a aparecer acá.": "Las novedades de las personas y marcas que sigues aparecerán aquí.",
+  "Este método de ingreso no está disponible en este momento.": "Este método de ingreso no está disponible en este momento.",
+  "Falta configurar el ingreso con Google para iOS.": "Falta configurar el ingreso con Google para iOS.",
+  "El ingreso con Apple no está disponible en este dispositivo.": "El ingreso con Apple no está disponible en este dispositivo.",
+  "No pudimos obtener tu identidad. Volvé a intentar.": "No pudimos obtener tu identidad. Volvé a intentar.",
+  "Ingresá con la misma cuenta para confirmar tu identidad.": "Ingresá con la misma cuenta para confirmar tu identidad.",
+  "O continuá con": "O continuá con",
+  "Continuar con Google": "Continuar con Google",
+  "Reintentar métodos de ingreso": "Reintentar métodos de ingreso",
+  "Confirmá tu identidad con Google o Apple y escribí tu usuario para eliminar la cuenta.": "Confirmá tu identidad con Google o Apple y escribí tu usuario para eliminar la cuenta.",
+  "Confirmar usuario": "Confirmar usuario",
+  "Actualizá la aplicación para usar este método de ingreso.": "Actualizá la aplicación para usar este método de ingreso.",
+  "Para vincular este método de ingreso, confirmá la contraseña de tu cuenta existente.": "Para vincular este método de ingreso, confirmá la contraseña de tu cuenta existente.",
+  "Vincular e ingresar": "Vincular e ingresar",
+  "O continuá con tu email": "O continúa con tu email",
+  "Continuar con Apple": "Continuar con Apple",
+  "No pudimos iniciar sesión con Apple. Volvé a intentar.": "No pudimos iniciar sesión con Apple. Vuelve a intentar.",
+  "No pudimos iniciar sesión con Google. Volvé a intentar.": "No pudimos iniciar sesión con Google. Vuelve a intentar."
 }
