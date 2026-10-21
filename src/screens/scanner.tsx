@@ -157,10 +157,72 @@ export function Scanner() {
                   "Todavía no tenemos una ficha del catálogo para este código.",
                 )}
               </Body>
-              {lookup.data.status === "FOUND_EXTERNAL" &&
-                !!lookup.data.product.name && (
-                  <Body>{lookup.data.product.name}</Body>
-                )}
+              {lookup.data.status === "FOUND_EXTERNAL" && (
+                <>
+                  {lookup.data.suggested_yerba ? (
+                    <>
+                      <Title>{tr("Posible coincidencia en Yerbarium")}</Title>
+                      <Body>
+                        {lookup.data.suggested_yerba.brand.name} ·{" "}
+                        {lookup.data.suggested_yerba.name}
+                      </Body>
+                      <Body>
+                        {tr(
+                          "La marca y la variedad son similares. Comprobá que sea tu yerba.",
+                        )}
+                      </Body>
+                      <Button
+                        label={tr("Ver posible coincidencia")}
+                        onPress={() => {
+                          if (
+                            lookup.data?.status !== "FOUND_EXTERNAL" ||
+                            !lookup.data.suggested_yerba
+                          )
+                            return;
+                          router.push({
+                            pathname: "/yerbas/[slug]",
+                            params: { slug: lookup.data.suggested_yerba.slug },
+                          });
+                        }}
+                      />
+                    </>
+                  ) : (
+                    <>
+                      <Body>{tr("Según Open Food Facts:")}</Body>
+                      <Body>
+                        {lookup.data.product.name || tr("Producto sin nombre")}
+                      </Body>
+                      {!!lookup.data.product.brand && (
+                        <Body>{lookup.data.product.brand}</Body>
+                      )}
+                      <Body>
+                        {tr(
+                          "No encontramos una yerba similar en nuestro catálogo.",
+                        )}
+                      </Body>
+                    </>
+                  )}
+                </>
+              )}
+              {(lookup.data.status === "NOT_FOUND" ||
+                !lookup.data.suggested_yerba) && (
+                <Button
+                  label={tr("Sugerir una yerba")}
+                  onPress={() => {
+                    const product =
+                      lookup.data?.status === "FOUND_EXTERNAL"
+                        ? lookup.data.product
+                        : undefined;
+                    router.push({
+                      pathname: "/sugerir-yerba",
+                      params: {
+                        name: product?.name.slice(0, 150) || "",
+                        brand: product?.brand.slice(0, 150) || "",
+                      },
+                    });
+                  }}
+                />
+              )}
             </>
           ) : (
             <>

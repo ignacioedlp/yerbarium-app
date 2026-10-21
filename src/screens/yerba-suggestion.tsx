@@ -9,10 +9,10 @@ import { tr, useLocale } from "@/i18n";
 
 export function YerbaSuggestion() {
   useLocale();
-  const params = useLocalSearchParams<{ name?: string }>();
+  const params = useLocalSearchParams<{ name?: string; brand?: string }>();
   const { user, ready } = useSession();
   const [name, setName] = useState((params.name || "").slice(0, 150));
-  const [brand, setBrand] = useState("");
+  const [brand, setBrand] = useState((params.brand || "").slice(0, 150));
   const mutation = useMutation({
     mutationFn: () =>
       write("yerba-suggestions/", "POST", {

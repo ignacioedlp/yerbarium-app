@@ -807,5 +807,11 @@
   "Iniciar sesión": "Sign in",
   "Listo": "Done",
   "Enviando…": "Sending…",
-  "Sugerir": "Suggest"
+  "Sugerir": "Suggest",
+  "Según Open Food Facts:": "According to Open Food Facts:",
+  "Producto sin nombre": "Unnamed product",
+  "Posible coincidencia en Yerbarium": "Possible match in Yerbarium",
+  "La marca y la variedad son similares. Comprobá que sea tu yerba.": "The brand and variety are similar. Check that this is your yerba.",
+  "Ver posible coincidencia": "View possible match",
+  "No encontramos una yerba similar en nuestro catálogo.": "We found no similar yerba in our catalog."
 }

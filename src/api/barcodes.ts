@@ -16,6 +16,11 @@ export type BarcodeLookup =
       barcode: string;
       external_source: "OPEN_FOOD_FACTS";
       product: { name: string; brand: string };
+      suggested_yerba?: {
+        slug: string;
+        name: string;
+        brand: { slug: string; name: string };
+      } | null;
     }
   | { status: "NOT_FOUND"; barcode: string };
 
@@ -52,7 +57,12 @@ export async function lookupBarcode(
         signal,
       );
       if (result.status === "FOUND_LOCAL") return result;
-      firstResult ??= result;
+      if (
+        !firstResult ||
+        (firstResult.status === "NOT_FOUND" &&
+          result.status === "FOUND_EXTERNAL")
+      )
+        firstResult = result;
     } catch (error) {
       // External discovery may fail for one spelling even though its UPC alias is local.
       if (!signal?.aborted && alias && normalizeError(error).status === 503)

@@ -111,3 +111,20 @@ it("never attempts an alias after cancellation", async () => {
   );
   expect(get).toHaveBeenCalledTimes(1);
 });
+
+it("preserves the external product and suggestion when only the UPC alias is found", async () => {
+  const external = {
+    status: "FOUND_EXTERNAL",
+    barcode: "123456789012",
+    product: { name: "Barbacuá", brand: "La Merced" },
+    suggested_yerba: {
+      slug: "la-merced-barbacua",
+      name: "Barbacuá",
+      brand: { name: "La Merced", slug: "la-merced" },
+    },
+  };
+  vi.mocked(get)
+    .mockResolvedValueOnce({ status: "NOT_FOUND", barcode: "0123456789012" })
+    .mockResolvedValueOnce(external);
+  await expect(lookupBarcode("0123456789012")).resolves.toEqual(external);
+});
