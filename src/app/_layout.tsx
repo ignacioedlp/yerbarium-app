@@ -130,6 +130,17 @@ function Navigation() {
               />
               <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
               <Stack.Screen
+                name="sugerir-yerba"
+                options={{
+                  title: tr("Sugerir una yerba"),
+                  presentation: "formSheet",
+                  headerShown: false,
+                  sheetAllowedDetents: [0.8, 1],
+                  sheetGrabberVisible: true,
+                  sheetCornerRadius: 32,
+                }}
+              />
+              <Stack.Screen
                 name="yerbas/[slug]"
                 options={{ title: tr("Yerba"), headerShown: true }}
               />

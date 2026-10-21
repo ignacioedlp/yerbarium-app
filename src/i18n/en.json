@@ -791,5 +791,21 @@
   "O continuá con tu email": "Or continue with your email",
   "Continuar con Apple": "Continue with Apple",
   "No pudimos iniciar sesión con Apple. Volvé a intentar.": "We could not sign you in with Apple. Please try again.",
-  "No pudimos iniciar sesión con Google. Volvé a intentar.": "We could not sign you in with Google. Please try again."
+  "No pudimos iniciar sesión con Google. Volvé a intentar.": "We could not sign you in with Google. Please try again.",
+  "Sugerir una yerba": "Suggest a yerba",
+  "¿Qué yerba nos falta?": "Which yerba are we missing?",
+  "Contanos el nombre y la marca de la yerba que te gustaría encontrar.": "Tell us the name and brand of the yerba you would like to find.",
+  "Iniciá sesión para enviar tu sugerencia. Así sabremos a quién agradecerle.": "Sign in to send your suggestion so we know who to thank.",
+  "Nombre de la yerba": "Yerba name",
+  "Enviar sugerencia": "Send suggestion",
+  "¡Gracias por tu sugerencia!": "Thank you for your suggestion!",
+  "Revisaremos tu sugerencia. Gracias por ayudarnos a completar el catálogo.": "We will review your suggestion. Thank you for helping us complete the catalog.",
+  "No pudimos enviar la sugerencia. Intentá nuevamente.": "We could not send your suggestion. Please try again.",
+  "Tu sesión venció. Volvé a iniciar sesión.": "Your session expired. Please sign in again.",
+  "¿No encontraste tu yerba?": "Could not find your yerba?",
+  "Probá con otro nombre o ayudanos a completar el catálogo.": "Try another name or help us complete the catalog.",
+  "Iniciar sesión": "Sign in",
+  "Listo": "Done",
+  "Enviando…": "Sending…",
+  "Sugerir": "Suggest"
 }

@@ -100,6 +100,13 @@ function ExploreContent({
   const brands = usePages<BrandListItem>("brands/");
   const taxonomy = usePages<YerbaStyle>("styles/");
   const comparison = useComparison();
+  const suggestYerba = () => {
+    Keyboard.dismiss();
+    router.push({
+      pathname: "/sugerir-yerba",
+      params: { name: search.trim() },
+    });
+  };
   const activeFilters = [style, brand, country, tradition, discontinued].filter(
     Boolean,
   ).length;
@@ -222,6 +229,12 @@ function ExploreContent({
   const items = yerbas.data?.pages.flatMap((p) => p.results) || [];
   const loadingYerbas =
     yerbas.fetchStatus === "fetching" && !yerbas.isFetchingNextPage;
+  const noSearchResults =
+    mode === "search" &&
+    !loadingYerbas &&
+    !yerbas.error &&
+    yerbas.data?.pages[0]?.count === 0 &&
+    search.trim() === debounced;
   const brandItems: (BrandListItem | null)[] = [
     ...(brands.data?.pages.flatMap((p) => p.results) || []),
   ];
@@ -241,15 +254,52 @@ function ExploreContent({
           gap: t.spacing.md,
         }}
       >
-        <Text
-          accessibilityRole="header"
-          style={[
-            styles.title,
-            { fontSize: 34, lineHeight: 38, textTransform: "uppercase" },
-          ]}
+        <View
+          style={{
+            flexDirection: "row",
+            alignItems: "center",
+            justifyContent: "space-between",
+          }}
         >
-          {tr("Explorar")}
-        </Text>
+          <Text
+            accessibilityRole="header"
+            style={[
+              styles.title,
+              { fontSize: 34, lineHeight: 38, textTransform: "uppercase" },
+            ]}
+          >
+            {tr("Explorar")}
+          </Text>
+          <Pressable
+            accessibilityRole="button"
+            accessibilityLabel={tr("Sugerir una yerba")}
+            onPress={suggestYerba}
+            style={({ pressed }) => ({
+              minHeight: 44,
+              paddingHorizontal: t.spacing.md,
+              borderWidth: 1,
+              borderColor: t.colors.border,
+              borderRadius: t.radius.pill,
+              backgroundColor: t.colors.cream,
+              flexDirection: "row",
+              gap: t.spacing.xs,
+              alignItems: "center",
+              justifyContent: "center",
+              opacity: pressed ? 0.65 : 1,
+            })}
+          >
+            <Icon name="leaf" size={18} />
+            <Text
+              style={{
+                fontFamily: t.fonts.bold,
+                fontSize: 14,
+                color: t.colors.green,
+              }}
+            >
+              {tr("Sugerir")}
+            </Text>
+          </Pressable>
+        </View>
         <SearchBox
           autoFocus={initialMode === "search"}
           value={search}
@@ -291,9 +341,7 @@ function ExploreContent({
           contentContainerStyle={{
             paddingTop: t.spacing.sm,
             flexGrow: 1,
-            paddingBottom: brandItems.length
-              ? TAB_BAR_CONTENT_CLEARANCE
-              : 0,
+            paddingBottom: brandItems.length ? TAB_BAR_CONTENT_CLEARANCE : 0,
           }}
           renderItem={({ item }) => (
             <View style={{ flex: 1, minWidth: 0 }}>
@@ -370,14 +418,29 @@ function ExploreContent({
             <View
               style={{
                 flex: 1,
-                justifyContent: "center",
+                justifyContent: noSearchResults ? "flex-start" : "center",
                 paddingHorizontal: t.spacing.md,
+                paddingTop: noSearchResults ? t.spacing.lg : 0,
               }}
             >
               {mode === "search" && !debounced ? (
                 <Card>
                   <Title>{tr("¿Qué yerba tenés en mente?")}</Title>
                   <Body>{tr("Buscá por nombre de yerba o marca.")}</Body>
+                </Card>
+              ) : noSearchResults ? (
+                <Card>
+                  <Title>{tr("¿No encontraste tu yerba?")}</Title>
+                  <Body>
+                    {tr(
+                      "Probá con otro nombre o ayudanos a completar el catálogo.",
+                    )}
+                  </Body>
+                  <Button
+                    label={tr("Sugerir una yerba")}
+                    secondary
+                    onPress={suggestYerba}
+                  />
                 </Card>
               ) : (
                 <QueryState query={yerbas} yerbaCards empty />
