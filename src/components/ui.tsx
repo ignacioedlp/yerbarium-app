@@ -500,18 +500,61 @@ export function RequireSession({
 export async function openExternal(url: string) {
   if (/^https?:\/\//i.test(url)) await Linking.openURL(url);
 }
-export function ExternalLink({ label, url }: { label: string; url: string }) {
+export function ExternalLink({
+  label,
+  url,
+  textLink = false,
+}: {
+  label: string;
+  url: string;
+  textLink?: boolean;
+}) {
   useLocale();
   const [error, setError] = React.useState(false);
+  const open = () => {
+    setError(false);
+    void openExternal(url).catch(() => setError(true));
+  };
+
+  if (textLink) {
+    return (
+      <>
+        <Pressable
+          accessibilityRole="link"
+          accessibilityLabel={label}
+          accessibilityHint={tr("Abre el sitio de la fuente")}
+          onPress={open}
+          style={({ pressed }) => ({
+            alignSelf: "flex-start",
+            flexDirection: "row",
+            alignItems: "center",
+            gap: t.spacing.sm,
+            minHeight: 44,
+            opacity: pressed ? 0.65 : 1,
+          })}
+        >
+          <Text
+            style={{
+              fontFamily: t.fonts.bold,
+              fontSize: 15,
+              color: t.colors.green,
+            }}
+          >
+            {label}
+          </Text>
+          <Icon name="arrow" size={16} />
+        </Pressable>
+        {error && <ErrorMessage message={tr("No pudimos abrir el enlace.")} />}
+      </>
+    );
+  }
+
   return (
     <>
       <Button
         secondary
         label={label}
-        onPress={() => {
-          setError(false);
-          void openExternal(url).catch(() => setError(true));
-        }}
+        onPress={open}
       />
       {error && <ErrorMessage message={tr("No pudimos abrir el enlace.")} />}
     </>

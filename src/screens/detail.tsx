@@ -409,48 +409,57 @@ export function Detail() {
                 <Body muted>{tr("Producto discontinuado")}</Body>
               )}
               <View style={{ gap: theme.spacing.sm }}>
-                {user && (
-                  <QueryState query={library}>
-                    <View
-                      style={{
-                        flexDirection: "row",
-                        flexWrap: "wrap",
-                        alignItems: "center",
-                        gap: theme.spacing.sm,
-                      }}
-                    >
-                      {(["is_tried", "wants_to_try"] as const).map((key) => (
-                        <Button
-                          key={key}
-                          compact
-                          label={
-                            key === "is_tried"
-                              ? tr("Probada")
-                              : tr("Quiero probar")
-                          }
-                          secondary={!library.data?.[key]}
-                          selected={library.data?.[key]}
-                          disabled={mutation.isPending || !online}
-                          onPress={() =>
-                            mutation.mutate(
-                              libraryChanges(key, !library.data?.[key]),
-                            )
-                          }
-                        />
-                      ))}
-                    </View>
-                  </QueryState>
-                )}
-                {!!yerba.purchase_links?.length && (
-                  <View style={styles.row}>
-                    <Button
-                      compact
-                      label={tr("Comprar")}
-                      expanded={purchaseSlug === slug}
-                      onPress={() =>
-                        setPurchaseSlug(purchaseSlug === slug ? null : slug)
-                      }
-                    />
+                {(user || !!yerba.purchase_links?.length) && (
+                  <View
+                    style={{
+                      flexDirection: "row",
+                      flexWrap: "nowrap",
+                      alignItems: "center",
+                      gap: theme.spacing.xs,
+                    }}
+                  >
+                    {user && (
+                      <QueryState query={library}>
+                        <View
+                          style={{
+                            flexDirection: "row",
+                            flexWrap: "nowrap",
+                            alignItems: "center",
+                            gap: theme.spacing.xs,
+                          }}
+                        >
+                          {(["is_tried", "wants_to_try"] as const).map((key) => (
+                            <Button
+                              key={key}
+                              compact
+                              label={
+                                key === "is_tried"
+                                  ? tr("Probada")
+                                  : tr("Quiero probar")
+                              }
+                              secondary={!library.data?.[key]}
+                              selected={library.data?.[key]}
+                              disabled={mutation.isPending || !online}
+                              onPress={() =>
+                                mutation.mutate(
+                                  libraryChanges(key, !library.data?.[key]),
+                                )
+                              }
+                            />
+                          ))}
+                        </View>
+                      </QueryState>
+                    )}
+                    {!!yerba.purchase_links?.length && (
+                      <Button
+                        compact
+                        label={tr("Comprar")}
+                        expanded={purchaseSlug === slug}
+                        onPress={() =>
+                          setPurchaseSlug(purchaseSlug === slug ? null : slug)
+                        }
+                      />
+                    )}
                   </View>
                 )}
                 {user && mutation.error && (
@@ -539,6 +548,7 @@ export function Detail() {
                               <ExternalLink
                                 label={item.source.title}
                                 url={item.source.url}
+                                textLink
                               />
                             )}
                           </View>
