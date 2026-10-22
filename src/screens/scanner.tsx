@@ -9,6 +9,7 @@ import { isDevice } from "expo-device";
 import { router, useFocusEffect, useIsFocused } from "expo-router";
 import { useQuery } from "@tanstack/react-query";
 import { lookupBarcode, scannedBarcode } from "@/api/barcodes";
+import { suggestionFromScan } from "@/api/yerba-suggestions";
 import { normalizeError } from "@/api/client";
 import {
   Body,
@@ -127,7 +128,6 @@ export function Scanner() {
         </Card>
       ) : code ? (
         <Card>
-          <Body>{tr("Código: {code}", { code })}</Body>
           {lookup.isError ? (
             <>
               <Title>{tr("No pudimos buscar el código")}</Title>
@@ -161,6 +161,15 @@ export function Scanner() {
                 !!lookup.data.product.name && (
                   <Body>{lookup.data.product.name}</Body>
                 )}
+              <Button
+                label={tr("Sugerir esta yerba")}
+                onPress={() => {
+                  if (!lookup.data) return;
+                  const params = suggestionFromScan(code, lookup.data);
+                  if (params)
+                    router.push({ pathname: "/sugerir-yerba", params });
+                }}
+              />
             </>
           ) : (
             <>
