@@ -1,5 +1,6 @@
 import { SocialAuthButtons, useSocialAuth } from "@/components/social-auth";
 import { ProfileLibrary } from "@/components/profile-library";
+import { ProfileGamification } from "@/components/gamification";
 import { PreferenceToggle } from "@/components/preference-toggle";
 import { OwnProfileSocial } from "@/components/profile-social";
 import { tr, useLocale } from "@/i18n";
@@ -358,6 +359,7 @@ export function Profile() {
             {session.user?.bio || tr("Contá un poco sobre vos y tu ronda.")}
           </HandNote>
         </View>
+        <ProfileGamification />
         <View style={{ gap: theme.spacing.sm }}>
           <Button
             label={tr("Editar perfil")}

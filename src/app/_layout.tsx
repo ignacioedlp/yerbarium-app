@@ -213,6 +213,10 @@ function Navigation() {
                 options={{ title: tr("Editar perfil"), headerShown: true }}
               />
               <Stack.Screen
+                name="logros"
+                options={{ title: tr("Mis logros"), headerShown: true }}
+              />
+              <Stack.Screen
                 name="eliminar-cuenta"
                 options={{ title: tr("Eliminar cuenta"), headerShown: true }}
               />

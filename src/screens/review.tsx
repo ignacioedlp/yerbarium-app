@@ -83,6 +83,9 @@ function ReviewForm({ slug, review }: { slug: string; review: Review | null }) {
       ),
     onSuccess: async () => {
       await Promise.all([
+        client.invalidateQueries({
+          queryKey: ["private", "auth/me/gamification/"],
+        }),
         client.invalidateQueries({ queryKey: ["private", "social"] }),
         client.invalidateQueries({
           queryKey: ["private", `auth/library/${encodeURIComponent(slug)}/`],

@@ -108,6 +108,9 @@ export function Detail() {
     }),
     onSuccess: ({ account, state }) => {
       if (!account || activeUser.current !== account) return;
+      void client.invalidateQueries({
+        queryKey: ["private", "auth/me/gamification/"],
+      });
       client.setQueryData(
         ["private", `auth/library/${encodeURIComponent(slug)}/`],
         state,
@@ -122,6 +125,9 @@ export function Detail() {
   const deletion = useMutation({
     mutationFn: () => write(`reviews/${own.data!.id}/`, "DELETE"),
     onSuccess: () => {
+      void client.invalidateQueries({
+        queryKey: ["private", "auth/me/gamification/"],
+      });
       void client.invalidateQueries({ queryKey: ["private", "social"] });
       void client.invalidateQueries({ queryKey: ["public"] });
       void own.refetch();
