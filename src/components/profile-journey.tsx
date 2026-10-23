@@ -41,7 +41,7 @@ import { useSession } from "@/providers/session";
 import { EmailVerificationStatus } from "@/screens/email-actions";
 import { theme as t } from "@/theme";
 
-// Coordinates are fractions of recorrido.webp (1086 × 1448), never of the viewport.
+// Coordinates are fractions of recorrido.webp (1024 × 1536), never of the viewport.
 export const JOURNEY_STOPS = [
   { x: 0.5, y: 0.86 },
   { x: 0.44, y: 0.73 },
@@ -54,6 +54,125 @@ export const JOURNEY_STOPS = [
   { x: 0.68, y: 0.18 },
   { x: 0.74, y: 0.1 },
 ] as const;
+
+// Each leg follows the bends painted into the artwork, from one stop to the next.
+// Use the same canvas as the image and badges so stretching/scrolling stays aligned.
+const JOURNEY_LEGS = [
+  [
+    [0.44, 0.85, 0.33, 0.835, 0.37, 0.81],
+    [0.4, 0.79, 0.51, 0.77, 0.47, 0.75],
+    [0.46, 0.742, 0.445, 0.737, 0.44, 0.73],
+  ],
+  [
+    [0.39, 0.71, 0.35, 0.695, 0.38, 0.685],
+    [0.43, 0.669, 0.61, 0.668, 0.56, 0.65],
+  ],
+  [
+    [0.51, 0.63, 0.5, 0.612, 0.45, 0.605],
+    [0.36, 0.593, 0.3, 0.577, 0.4, 0.57],
+  ],
+  [
+    [0.46, 0.558, 0.53, 0.56, 0.52, 0.54],
+    [0.51, 0.53, 0.49, 0.525, 0.59, 0.52],
+  ],
+  [[0.56, 0.512, 0.42, 0.5, 0.45, 0.48]],
+  [
+    [0.49, 0.463, 0.66, 0.459, 0.6, 0.435],
+    [0.55, 0.42, 0.51, 0.425, 0.55, 0.408],
+    [0.61, 0.385, 0.43, 0.384, 0.46, 0.353],
+    [0.48, 0.335, 0.6, 0.336, 0.57, 0.32],
+  ],
+  [
+    [0.54, 0.305, 0.43, 0.3, 0.45, 0.27],
+    [0.45, 0.258, 0.47, 0.248, 0.48, 0.24],
+  ],
+  [
+    [0.54, 0.223, 0.68, 0.239, 0.64, 0.22],
+    [0.61, 0.204, 0.67, 0.202, 0.68, 0.18],
+  ],
+  [
+    [0.69, 0.162, 0.64, 0.167, 0.68, 0.15],
+    [0.7, 0.137, 0.75, 0.145, 0.74, 0.13],
+    [0.72, 0.117, 0.73, 0.11, 0.74, 0.1],
+  ],
+] as const;
+
+function CompletedJourney({
+  level,
+  width,
+  height,
+}: {
+  level: number;
+  width: number;
+  height: number;
+}) {
+  const completedLegs = Math.max(0, Math.min(JOURNEY_LEGS.length, level - 1));
+  if (!completedLegs) return null;
+  const dots: { x: number; y: number }[] = [];
+  let start: { x: number; y: number } = JOURNEY_STOPS[0];
+  let previous = { x: start.x * width, y: start.y * height };
+  let distanceToNext = 0;
+  for (const leg of JOURNEY_LEGS.slice(0, completedLegs)) {
+    for (const [x1, y1, x2, y2, x3, y3] of leg) {
+      // Subdivide the curves, then space dots by distance in screen points.
+      for (let step = 1; step <= 100; step++) {
+        const t = step / 100;
+        const u = 1 - t;
+        const point = {
+          x:
+            (u ** 3 * start.x +
+              3 * u ** 2 * t * x1 +
+              3 * u * t ** 2 * x2 +
+              t ** 3 * x3) *
+            width,
+          y:
+            (u ** 3 * start.y +
+              3 * u ** 2 * t * y1 +
+              3 * u * t ** 2 * y2 +
+              t ** 3 * y3) *
+            height,
+        };
+        const length = Math.hypot(point.x - previous.x, point.y - previous.y);
+        if (length > 0) {
+          for (; distanceToNext <= length; distanceToNext += 6.5) {
+            const fraction = distanceToNext / length;
+            dots.push({
+              x: previous.x + (point.x - previous.x) * fraction,
+              y: previous.y + (point.y - previous.y) * fraction,
+            });
+          }
+          distanceToNext -= length;
+        }
+        previous = point;
+      }
+      start = { x: x3, y: y3 };
+    }
+  }
+  return (
+    <View
+      testID="journey-completed-path"
+      accessible={false}
+      pointerEvents="none"
+      style={{ position: "absolute", width, height }}
+    >
+      {dots.map((dot, index) => (
+        <View
+          key={index}
+          style={{
+            position: "absolute",
+            left: dot.x - 2.25,
+            top: dot.y - 2.25,
+            width: 4.5,
+            height: 4.5,
+            borderRadius: 2.25,
+            backgroundColor: "white",
+            boxShadow: "0 1px 3px rgba(0, 65, 45, 0.5)",
+          }}
+        />
+      ))}
+    </View>
+  );
+}
 
 // Compatibility with an API deployment preceding the level catalogue response.
 const LEVEL_NAMES = [
@@ -120,6 +239,7 @@ function JourneyMap({
             "radial-gradient(ellipse 85% 65% at 0% 0%, #fff8e8 0%, rgba(255,248,232,0.96) 60%, rgba(255,248,232,0) 100%)",
         }}
       />
+      <CompletedJourney level={data.level} width={width} height={height} />
       {levels.map((level) => {
         const stop = JOURNEY_STOPS[level.level - 1];
         if (!stop) return null;
@@ -149,12 +269,12 @@ function JourneyMap({
                 pointerEvents="none"
                 style={{
                   position: "absolute",
-                  left: -18,
-                  top: -18,
-                  width: badgeSize + 36,
-                  height: badgeSize + 36,
+                  left: -26,
+                  top: -26,
+                  width: badgeSize + 52,
+                  height: badgeSize + 52,
                   experimental_backgroundImage:
-                    "radial-gradient(circle, rgba(255,211,72,0.72) 0%, rgba(255,211,72,0.38) 42%, rgba(255,211,72,0) 74%)",
+                    "radial-gradient(circle, rgba(255,250,219,0.82) 0%, rgba(255,235,143,0.65) 30%, rgba(255,211,72,0.4) 48%, rgba(255,211,72,0.12) 64%, rgba(255,211,72,0) 76%)",
                 }}
               />
             )}
@@ -165,13 +285,24 @@ function JourneyMap({
                 borderRadius: badgeSize / 2,
                 alignItems: "center",
                 justifyContent: "center",
-                backgroundColor: current ? t.colors.green : "#676b57",
-                borderColor: current ? "#f6d15b" : t.colors.cream,
-                borderWidth: selected ? 3 : 2,
-                boxShadow: current ? "none" : "0 2px 5px #00000040",
+                backgroundColor: locked
+                  ? "rgba(231,235,213,0.65)"
+                  : current
+                    ? t.colors.green
+                    : "#676b57",
+                borderColor: "#f6d15b",
+                borderWidth: current ? 3 : 0,
+                boxShadow: locked || current ? "none" : "0 2px 5px #00000040",
               }}
             >
-              {level.image_url ? (
+              {locked ? (
+                <SymbolView
+                  testID={`journey-level-${level.level}-locked`}
+                  name={{ ios: "lock.fill", android: "lock" }}
+                  tintColor={t.colors.green}
+                  size={badgeSize * 0.48}
+                />
+              ) : level.image_url ? (
                 <BadgeImage
                   badge={level}
                   size={badgeSize + 10}
@@ -328,6 +459,9 @@ export function ProfileJourney() {
   const { user } = useSession();
   const query = useGamification();
   const insets = useSafeAreaInsets();
+  // Android NativeTabs already applies the bottom safe area to its content.
+  // The measured viewport ends above the tab bar, including three-button navigation.
+  const bottomInset = process.env.EXPO_OS === "android" ? 0 : insets.bottom;
   const { width: windowWidth, height: windowHeight } = useWindowDimensions();
   const [width, setWidth] = useState(windowWidth);
   const [height, setHeight] = useState(windowHeight);
@@ -336,10 +470,7 @@ export function ProfileJourney() {
   const [summaryHeight, setSummaryHeight] = useState(160);
   const mapScrollRef = React.useRef<ScrollView>(null);
   const panelTop = insets.top * 2 + 16;
-  const panelHeight = Math.max(
-    summaryHeight,
-    height - panelTop - insets.bottom,
-  );
+  const panelHeight = Math.max(summaryHeight, height - panelTop - bottomInset);
   const collapsedOffset = Math.max(0, panelHeight - summaryHeight);
   const offset = useSharedValue(collapsedOffset);
   const dragStart = useSharedValue(0);
@@ -426,12 +557,15 @@ export function ProfileJourney() {
     transform: [{ translateY: offset.get() }],
   }));
   // The image and all its markers share one canvas, including the header's space.
-  // Keep the map behind the collapsed sheet when the measured viewport is
-  // taller than the artwork's natural aspect-ratio height.
-  const mapHeight = Math.max(
-    (width * 1448) / 1086 + insets.top + 48,
-    height - insets.bottom - summaryHeight,
-  );
+  // Android's opaque tabs reduce the viewport: fit the full journey above the
+  // collapsed sheet. iOS keeps the artwork extending behind its floating tabs.
+  const mapHeight =
+    process.env.EXPO_OS === "android"
+      ? Math.max(1, height - summaryHeight - JOURNEY_CONTENT_OFFSET)
+      : Math.max(
+          (width * 1448) / 1086 + insets.top + 48,
+          height - bottomInset - summaryHeight,
+        );
   const completed = groupAchievements(query.data?.achievements ?? []).completed
     .length;
   return (
@@ -453,7 +587,7 @@ export function ProfileJourney() {
         importantForAccessibility={expanded ? "no-hide-descendants" : "auto"}
         contentInsetAdjustmentBehavior="never"
         showsVerticalScrollIndicator={false}
-        contentContainerStyle={{ paddingBottom: summaryHeight + insets.bottom }}
+        contentContainerStyle={{ paddingBottom: summaryHeight + bottomInset }}
       >
         <QueryState query={query} skeleton="header">
           {query.data && (
@@ -472,17 +606,23 @@ export function ProfileJourney() {
                   position: "absolute",
                   left: 24,
                   top: insets.top * 2 + JOURNEY_CONTENT_OFFSET,
-                  width: width * 0.4,
+                  width:
+                    width * (process.env.EXPO_OS === "android" ? 0.52 : 0.4),
                   gap: 3,
                 }}
               >
                 <Text
                   accessibilityRole="header"
                   numberOfLines={2}
+                  adjustsFontSizeToFit={process.env.EXPO_OS === "android"}
+                  minimumFontScale={0.7}
                   style={{
                     fontFamily: t.fonts.display,
                     color: t.colors.deep,
                     fontSize: 29,
+                    ...(process.env.EXPO_OS === "android"
+                      ? { lineHeight: 34 }
+                      : {}),
                     textTransform: "uppercase",
                   }}
                 >
@@ -572,7 +712,7 @@ export function ProfileJourney() {
         style={{
           position: "absolute",
           top: panelTop,
-          bottom: insets.bottom,
+          bottom: bottomInset,
           left: 0,
           right: 0,
           overflow: "hidden",

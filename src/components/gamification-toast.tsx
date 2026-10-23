@@ -48,7 +48,7 @@ export function GamificationToastObserver() {
     const messages: string[] = [];
     if (xp > 0) messages.push(tr("+{0} XP", { 0: xp }));
     for (const achievement of newAchievements) {
-      messages.push(tr("Logro: {0}", { 0: tr(achievement.name) }));
+      messages.push(tr("{0}", { 0: tr(achievement.name) }));
     }
     if (data.level > old.data.level) {
       messages.push(tr("¡Subiste al nivel {0}!", { 0: data.level }));
