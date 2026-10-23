@@ -471,7 +471,11 @@ export function ProfileJourney() {
   const mapScrollRef = React.useRef<ScrollView>(null);
   const panelTop = insets.top * 2 + 16;
   const panelHeight = Math.max(summaryHeight, height - panelTop - bottomInset);
-  const collapsedOffset = Math.max(0, panelHeight - summaryHeight);
+  const sheetOverlap = process.env.EXPO_OS === "android" ? 12 : 0;
+  const collapsedOffset = Math.max(
+    0,
+    panelHeight - summaryHeight - sheetOverlap,
+  );
   const offset = useSharedValue(collapsedOffset);
   const dragStart = useSharedValue(0);
   const expandedRef = React.useRef(expanded);
