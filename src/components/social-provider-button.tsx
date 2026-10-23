@@ -3,7 +3,7 @@ import { Image, Pressable, Text, View } from "react-native";
 import FontAwesome from "@expo/vector-icons/FontAwesome";
 import { useFonts } from "expo-font";
 import { tr, useLocale } from "@/i18n";
-import { theme } from "@/theme";
+import { useTheme } from "@/theme";
 import type { SocialProvider } from "@/api/social-auth";
 
 export function SocialProviderButton({
@@ -15,6 +15,7 @@ export function SocialProviderButton({
   disabled: boolean;
   onPress: () => void;
 }) {
+  const theme = useTheme();
   useLocale();
   const [fontsLoaded] = useFonts({
     GoogleSans: require("../../assets/fonts/google-sans-variable.ttf"),
@@ -37,7 +38,7 @@ export function SocialProviderButton({
         paddingVertical: 14,
         borderRadius: theme.radius.pill,
         borderWidth: 1,
-        borderColor: "#747775",
+        borderColor: theme.colors.border,
         backgroundColor: "transparent",
         alignItems: "center",
         justifyContent: "center",
@@ -73,7 +74,7 @@ export function SocialProviderButton({
             <FontAwesome
               name="apple"
               size={22}
-              color="#1f1f1f"
+              color={theme.colors.ink}
               accessible={false}
             />
           )}
@@ -84,7 +85,7 @@ export function SocialProviderButton({
             fontWeight: "500",
             fontSize: 16,
             lineHeight: 22,
-            color: "#1f1f1f",
+            color: theme.colors.ink,
             flexShrink: 1,
             textAlign: "center",
           }}

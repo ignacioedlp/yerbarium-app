@@ -865,5 +865,19 @@
   "¡Subiste al nivel {0}!": "Você chegou ao nível {0}!",
   "¡Nuevo nivel!": "Subiu de nível!",
   "¡Logro desbloqueado!": "Conquista desbloqueada!",
-  "¡Sumaste experiencia!": "Você ganhou experiência!"
+  "¡Sumaste experiencia!": "Você ganhou experiência!",
+  "Apariencia": "Aparência",
+  "Automático": "Automático",
+  "Claro": "Claro",
+  "Oscuro": "Escuro",
+  "Elegí cómo querés ver Yerbarium.": "Escolha como você quer ver o Yerbarium.",
+  "Sigue la apariencia de tu dispositivo.": "Segue a aparência do seu dispositivo.",
+  "No pudimos guardar la apariencia en este dispositivo.": "Não foi possível salvar a aparência neste dispositivo.",
+  "{0}": "{0}",
+  "Completá la puntuación, el amargor, la intensidad y el polvo percibido. Los campos con * son obligatorios.": "Complete a pontuação, o amargor, a intensidade e o pó percebido. Os campos com * são obrigatórios.",
+  "Elegí un valor de 1 a 5 para cada campo obligatorio.": "Escolha um valor de 1 a 5 para cada campo obrigatório.",
+  "Elegí un valor de 1 a 5.": "Escolha um valor de 1 a 5.",
+  "Detalles opcionales": "Detalhes opcionais",
+  "Podés seleccionar varias notas. Son opcionales.": "Pode selecionar várias notas. São opcionais.",
+  "Completá todos los campos obligatorios antes de publicar.": "Complete todos os campos obrigatórios antes de publicar."
 }

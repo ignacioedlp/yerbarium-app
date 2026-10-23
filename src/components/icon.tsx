@@ -1,5 +1,5 @@
 import MaterialCommunityIcons from "@expo/vector-icons/MaterialCommunityIcons";
-import { theme } from "@/theme";
+import { useTheme } from "@/theme";
 export type IconName =
   | "image"
   | "brand"
@@ -28,7 +28,10 @@ export type IconName =
   | "language"
   | "mail"
   | "chevronDown"
-  | "settings";
+  | "settings"
+  | "appearance"
+  | "sun"
+  | "moon";
 export type IconProps = { name: IconName; size?: number; color?: string };
 const names = {
   image: "image-outline",
@@ -58,13 +61,15 @@ const names = {
   language: "translate",
   mail: "email-outline",
   chevronDown: "chevron-down",
+  appearance: "theme-light-dark",
+  moon: "weather-night",
+  sun: "white-balance-sunny",
   settings: "cog-outline",
 } as const;
-export function Icon({
-  name,
-  size = 20,
-  color = theme.colors.green,
-}: IconProps) {
+export function Icon({ name, size = 20, color }: IconProps) {
+  const theme = useTheme();
+  color ??= theme.colors.green;
+
   return (
     <MaterialCommunityIcons
       name={names[name]}

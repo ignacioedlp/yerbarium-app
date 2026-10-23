@@ -11,7 +11,7 @@ import Animated, {
   useSharedValue,
   withTiming,
 } from "react-native-reanimated";
-import { theme } from "@/theme";
+import { useTheme } from "@/theme";
 
 const CONTENT_ENTER = FadeIn.duration(140)
   .easing(Easing.bezier(0.23, 1, 0.32, 1))
@@ -48,6 +48,7 @@ export function AnimatedTabs<Key extends string>({
   selected: Key;
   onSelect: (key: Key) => void;
 }) {
+  const theme = useTheme();
   useLocale();
   const [tabsWidth, setTabsWidth] = React.useState(0);
   const indicatorX = useSharedValue(0);
@@ -146,7 +147,9 @@ export function AnimatedTabs<Key extends string>({
                 <Text
                   style={{
                     color:
-                      selected === key ? theme.colors.green : theme.colors.muted,
+                      selected === key
+                        ? theme.colors.green
+                        : theme.colors.muted,
                     fontFamily: theme.fonts.bold,
                     fontSize: 13,
                     fontVariant: ["tabular-nums"],
@@ -168,7 +171,7 @@ export function AnimatedTabs<Key extends string>({
               bottom: 0,
               height: 3,
               width: options.length ? tabsWidth / options.length : 0,
-              backgroundColor: theme.colors.green,
+              backgroundColor: theme.colors.hero,
             },
             indicatorStyle,
           ]}

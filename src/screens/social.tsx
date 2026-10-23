@@ -26,7 +26,7 @@ import { useSocialFeed } from "@/hooks/social-feed";
 import { useSession } from "@/providers/session";
 import type { SocialFeedEvent, SocialTab } from "@/api/social-feed";
 import { tr, useLocale, getLocale } from "@/i18n";
-import { theme } from "@/theme";
+import { useTheme, useThemedStyles, type AppTheme } from "@/theme";
 import { Image } from "expo-image";
 import { Icon } from "@/components/icon";
 
@@ -37,6 +37,8 @@ function ProductReference({
   product: NonNullable<SocialFeedEvent["product"]>;
   featured?: boolean;
 }) {
+  const theme = useTheme();
+  const styles = useThemedStyles(createStyles);
   const image = product.images?.[0];
   const [failedUrl, setFailedUrl] = React.useState<string>();
   const hasImage = image && image.url !== failedUrl;
@@ -101,6 +103,7 @@ function ProductReference({
 }
 
 function EventDate({ date }: { date: string }) {
+  const styles = useThemedStyles(createStyles);
   return (
     <Text
       style={styles.date}
@@ -119,6 +122,7 @@ function NewProductEvent({
 }: {
   event: Extract<SocialFeedEvent, { kind: "product" }>;
 }) {
+  const styles = useThemedStyles(createStyles);
   return (
     <View style={styles.event}>
       <YerbaCard
@@ -153,6 +157,7 @@ function BrandEvent({
 }: {
   event: Exclude<SocialFeedEvent, { kind: "review" }>;
 }) {
+  const styles = useThemedStyles(createStyles);
   const [failedLogo, setFailedLogo] = React.useState<string>();
   return (
     <View style={styles.event}>
@@ -229,6 +234,8 @@ function BrandEvent({
 }
 
 function EventCard({ event }: { event: SocialFeedEvent }) {
+  const theme = useTheme();
+  const styles = useThemedStyles(createStyles);
   if (event.kind === "product") return <NewProductEvent event={event} />;
   if (event.kind === "news") return <BrandEvent event={event} />;
   return (
@@ -274,161 +281,167 @@ function EventCard({ event }: { event: SocialFeedEvent }) {
   );
 }
 
-const styles = StyleSheet.create({
-  catalogBrandLink: { flex: 1, minHeight: 48, justifyContent: "center" },
-  event: {
-    paddingVertical: theme.spacing.lg,
-    gap: theme.spacing.sm,
-    borderBottomWidth: StyleSheet.hairlineWidth,
-    borderBottomColor: theme.colors.subtleBorder,
-  },
-  byline: { flexDirection: "row", alignItems: "center", gap: theme.spacing.md },
-  authorLink: { minHeight: 20, justifyContent: "center", flex: 1 },
-  author: {
-    fontFamily: theme.fonts.bold,
-    fontSize: 17,
-    lineHeight: 23,
-    color: theme.colors.ink,
-  },
-  date: {
-    fontFamily: theme.fonts.body,
-    fontSize: 13,
-    color: theme.colors.muted,
-    flexShrink: 1,
-    textAlign: "right",
-  },
-  comment: {
-    fontFamily: theme.fonts.body,
-    fontSize: 17,
-    lineHeight: 25,
-    color: theme.colors.ink,
-  },
-  product: {
-    marginTop: theme.spacing.sm,
-    flexDirection: "row",
-    alignItems: "center",
-    gap: theme.spacing.md,
-    padding: theme.spacing.sm,
-    backgroundColor: theme.colors.sage,
-    borderRadius: theme.radius.control,
-    minHeight: 72,
-  },
-  reviewReference: {
-    backgroundColor: "transparent",
-    borderRadius: 0,
-    paddingHorizontal: 0,
-    paddingVertical: theme.spacing.md,
-    borderTopWidth: StyleSheet.hairlineWidth,
-    borderTopColor: theme.colors.subtleBorder,
-    minHeight: 80,
-  },
-  reviewProductName: {
-    fontFamily: theme.fonts.display,
-    fontSize: 23,
-    lineHeight: 27,
-  },
-  thumbnail: {
-    width: 68,
-    height: 88,
-    borderRadius: 8,
-    backgroundColor: "transparent",
-    overflow: "hidden",
-    alignItems: "center",
-    justifyContent: "center",
-  },
-  productImage: { width: "100%", height: "100%" },
-  featuredProduct: {
-    marginTop: 0,
-    padding: 0,
-    backgroundColor: "transparent",
-    flexDirection: "column",
-    alignItems: "stretch",
-    gap: theme.spacing.md,
-    minHeight: 0,
-  },
-  featuredThumbnail: {
-    width: "100%",
-    height: 164,
-    backgroundColor: theme.colors.background,
-    borderWidth: 0,
-    borderRadius: theme.radius.control,
-  },
-  featuredName: {
-    fontFamily: theme.fonts.display,
-    fontSize: 28,
-    lineHeight: 32,
-  },
-  featuredCopy: { gap: theme.spacing.md },
-  brandFooter: {
-    flexDirection: "row",
-    alignItems: "center",
-    justifyContent: "space-between",
-    minHeight: 44,
-    borderTopWidth: StyleSheet.hairlineWidth,
-    borderTopColor: theme.colors.subtleBorder,
-    paddingTop: theme.spacing.sm,
-  },
-  brandMonogram: {
-    fontFamily: theme.fonts.display,
-    color: theme.colors.cream,
-    fontSize: 20,
-  },
-  productAction: {
-    fontFamily: theme.fonts.bold,
-    fontSize: 13,
-    lineHeight: 19,
-    color: theme.colors.green,
-  },
-  brandPanel: {
-    backgroundColor: theme.colors.surface,
-    borderWidth: StyleSheet.hairlineWidth,
-    borderColor: theme.colors.subtleBorder,
-    borderRadius: theme.radius.card,
-    padding: theme.spacing.lg,
-    gap: theme.spacing.md,
-  },
-  brandLink: {
-    flex: 1,
-    minHeight: 48,
-    flexDirection: "row",
-    alignItems: "center",
-    gap: theme.spacing.sm,
-  },
-  brandSymbol: {
-    width: 40,
-    height: 40,
-    borderRadius: 10,
-    backgroundColor: theme.colors.green,
-    overflow: "hidden",
-    alignItems: "center",
-    justifyContent: "center",
-  },
-  brandActivity: {
-    flexDirection: "row",
-    alignItems: "center",
-    gap: theme.spacing.sm,
-  },
-  productName: {
-    fontFamily: theme.fonts.bold,
-    fontSize: 16,
-    lineHeight: 21,
-    color: theme.colors.ink,
-  },
-  caption: {
-    fontFamily: theme.fonts.body,
-    fontSize: 13,
-    lineHeight: 19,
-    color: theme.colors.muted,
-  },
-  newsTitle: {
-    fontFamily: theme.fonts.display,
-    fontSize: 28,
-    lineHeight: 32,
-    color: theme.colors.ink,
-  },
-});
+const createStyles = (theme: AppTheme) =>
+  StyleSheet.create({
+    catalogBrandLink: { flex: 1, minHeight: 48, justifyContent: "center" },
+    event: {
+      paddingVertical: theme.spacing.lg,
+      gap: theme.spacing.sm,
+      borderBottomWidth: StyleSheet.hairlineWidth,
+      borderBottomColor: theme.colors.subtleBorder,
+    },
+    byline: {
+      flexDirection: "row",
+      alignItems: "center",
+      gap: theme.spacing.md,
+    },
+    authorLink: { minHeight: 20, justifyContent: "center", flex: 1 },
+    author: {
+      fontFamily: theme.fonts.bold,
+      fontSize: 17,
+      lineHeight: 23,
+      color: theme.colors.ink,
+    },
+    date: {
+      fontFamily: theme.fonts.body,
+      fontSize: 13,
+      color: theme.colors.muted,
+      flexShrink: 1,
+      textAlign: "right",
+    },
+    comment: {
+      fontFamily: theme.fonts.body,
+      fontSize: 17,
+      lineHeight: 25,
+      color: theme.colors.ink,
+    },
+    product: {
+      marginTop: theme.spacing.sm,
+      flexDirection: "row",
+      alignItems: "center",
+      gap: theme.spacing.md,
+      padding: theme.spacing.sm,
+      backgroundColor: theme.colors.sage,
+      borderRadius: theme.radius.control,
+      minHeight: 72,
+    },
+    reviewReference: {
+      backgroundColor: "transparent",
+      borderRadius: 0,
+      paddingHorizontal: 0,
+      paddingVertical: theme.spacing.md,
+      borderTopWidth: StyleSheet.hairlineWidth,
+      borderTopColor: theme.colors.subtleBorder,
+      minHeight: 80,
+    },
+    reviewProductName: {
+      fontFamily: theme.fonts.display,
+      fontSize: 23,
+      lineHeight: 27,
+    },
+    thumbnail: {
+      width: 68,
+      height: 88,
+      borderRadius: 8,
+      backgroundColor: "transparent",
+      overflow: "hidden",
+      alignItems: "center",
+      justifyContent: "center",
+    },
+    productImage: { width: "100%", height: "100%" },
+    featuredProduct: {
+      marginTop: 0,
+      padding: 0,
+      backgroundColor: "transparent",
+      flexDirection: "column",
+      alignItems: "stretch",
+      gap: theme.spacing.md,
+      minHeight: 0,
+    },
+    featuredThumbnail: {
+      width: "100%",
+      height: 164,
+      backgroundColor: theme.colors.background,
+      borderWidth: 0,
+      borderRadius: theme.radius.control,
+    },
+    featuredName: {
+      fontFamily: theme.fonts.display,
+      fontSize: 28,
+      lineHeight: 32,
+    },
+    featuredCopy: { gap: theme.spacing.md },
+    brandFooter: {
+      flexDirection: "row",
+      alignItems: "center",
+      justifyContent: "space-between",
+      minHeight: 44,
+      borderTopWidth: StyleSheet.hairlineWidth,
+      borderTopColor: theme.colors.subtleBorder,
+      paddingTop: theme.spacing.sm,
+    },
+    brandMonogram: {
+      fontFamily: theme.fonts.display,
+      color: theme.colors.onDark,
+      fontSize: 20,
+    },
+    productAction: {
+      fontFamily: theme.fonts.bold,
+      fontSize: 13,
+      lineHeight: 19,
+      color: theme.colors.green,
+    },
+    brandPanel: {
+      backgroundColor: theme.colors.surface,
+      borderWidth: StyleSheet.hairlineWidth,
+      borderColor: theme.colors.subtleBorder,
+      borderRadius: theme.radius.card,
+      padding: theme.spacing.lg,
+      gap: theme.spacing.md,
+    },
+    brandLink: {
+      flex: 1,
+      minHeight: 48,
+      flexDirection: "row",
+      alignItems: "center",
+      gap: theme.spacing.sm,
+    },
+    brandSymbol: {
+      width: 40,
+      height: 40,
+      borderRadius: 10,
+      backgroundColor: theme.colors.hero,
+      overflow: "hidden",
+      alignItems: "center",
+      justifyContent: "center",
+    },
+    brandActivity: {
+      flexDirection: "row",
+      alignItems: "center",
+      gap: theme.spacing.sm,
+    },
+    productName: {
+      fontFamily: theme.fonts.bold,
+      fontSize: 16,
+      lineHeight: 21,
+      color: theme.colors.ink,
+    },
+    caption: {
+      fontFamily: theme.fonts.body,
+      fontSize: 13,
+      lineHeight: 19,
+      color: theme.colors.muted,
+    },
+    newsTitle: {
+      fontFamily: theme.fonts.display,
+      fontSize: 28,
+      lineHeight: 32,
+      color: theme.colors.ink,
+    },
+  });
 
 function SocialContent() {
+  const theme = useTheme();
   const [tab, setTab] = React.useState<SocialTab>("for_you");
   const feed = useSocialFeed(tab);
   const [refreshing, setRefreshing] = React.useState(false);
@@ -539,6 +552,7 @@ function SocialContent() {
   );
 }
 export function SocialScreen() {
+  const theme = useTheme();
   useLocale();
   const { user, ready } = useSession();
   if (!ready)

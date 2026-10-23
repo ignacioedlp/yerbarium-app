@@ -3,7 +3,7 @@ import { useState } from "react";
 import { Pressable, Text, View } from "react-native";
 import { Icon } from "@/components/icon";
 import { ErrorMessage, openExternal } from "@/components/ui";
-import { theme } from "@/theme";
+import { useTheme } from "@/theme";
 
 export function EditorialSourceLink({
   name,
@@ -16,6 +16,7 @@ export function EditorialSourceLink({
   note: string;
   href: string;
 }) {
+  const theme = useTheme();
   useLocale();
   const [error, setError] = useState(false);
   return (

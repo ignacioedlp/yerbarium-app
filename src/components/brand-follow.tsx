@@ -7,9 +7,10 @@ import { useSocialResource } from "@/hooks/follows";
 import { useBrandFollow } from "@/hooks/brand-follows";
 import { useSession } from "@/providers/session";
 import type { BrandFollowState } from "@/api/brand-follows";
-import { theme } from "@/theme";
+import { useTheme } from "@/theme";
 
 export function BrandFollow({ slug }: { slug: string }) {
+  const theme = useTheme();
   useLocale();
   const { user } = useSession();
   const state = useSocialResource<BrandFollowState>(

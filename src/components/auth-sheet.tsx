@@ -15,7 +15,7 @@ import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { Paper } from "@/components/editorial";
 import { Icon } from "@/components/icon";
 import { Body, ErrorMessage, OfflineBanner, Title } from "@/components/ui";
-import { theme as t } from "@/theme";
+import { useTheme } from "@/theme";
 
 export function AuthSheet({
   title,
@@ -31,6 +31,7 @@ export function AuthSheet({
   pending: boolean;
   showClose?: boolean;
 }>) {
+  const t = useTheme();
   useLocale();
   const insets = useSafeAreaInsets();
   return (
@@ -121,6 +122,7 @@ export function AuthField({
   hint?: string;
   inputRef?: React.Ref<TextInput>;
 }) {
+  const t = useTheme();
   useLocale();
   const [focused, setFocused] = useState(false);
   const [visible, setVisible] = useState(false);
@@ -205,6 +207,7 @@ export function AuthSwitch({
   register: boolean;
   pending: boolean;
 }) {
+  const t = useTheme();
   useLocale();
   return (
     <View

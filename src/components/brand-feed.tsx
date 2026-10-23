@@ -14,9 +14,10 @@ import { SectionHeading } from "@/components/editorial";
 import { useBrandPages } from "@/hooks/brand-follows";
 import { useSession } from "@/providers/session";
 import type { BrandFeedEvent } from "@/api/brand-feed";
-import { theme } from "@/theme";
+import { useTheme } from "@/theme";
 
 export function BrandFeed() {
+  const theme = useTheme();
   useLocale();
   const { user } = useSession();
   const feed = useBrandPages<BrandFeedEvent>("auth/feed/");

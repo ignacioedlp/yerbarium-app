@@ -12,7 +12,7 @@ import {
 import { ReportReason } from "@/api/community-types";
 import { Icon } from "@/components/icon";
 import { useSession } from "@/providers/session";
-import { theme } from "@/theme";
+import { useTheme } from "@/theme";
 
 const reasons: { key: ReportReason; label: string }[] = [
   { key: "SPAM", label: "Spam o publicidad" },
@@ -33,6 +33,7 @@ export function CommunitySafetyActions({
   isBlocked?: boolean;
   onBlockChange?: (blocked: boolean) => void;
 }) {
+  const theme = useTheme();
   useLocale();
   const { user } = useSession();
   const queryClient = useQueryClient();

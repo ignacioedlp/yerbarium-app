@@ -2,7 +2,7 @@ import { tr, useLocale } from "@/i18n";
 import { useState } from "react";
 import { View } from "react-native";
 import { Image } from "expo-image";
-import { theme } from "@/theme";
+import { useTheme } from "@/theme";
 import { Body } from "./ui";
 export function CatalogImage({
   url,
@@ -13,6 +13,7 @@ export function CatalogImage({
   label: string;
   height?: number;
 }) {
+  const theme = useTheme();
   useLocale();
   const [failed, setFailed] = useState(false);
   return failed ? (

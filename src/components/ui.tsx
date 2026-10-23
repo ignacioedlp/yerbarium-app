@@ -26,7 +26,7 @@ import { Icon } from "./icon";
 import { Paper } from "./editorial";
 import { router } from "expo-router";
 import { useNetInfo } from "@react-native-community/netinfo";
-import { theme as t } from "@/theme";
+import { useTheme, useThemedStyles, type AppTheme } from "@/theme";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useResource } from "@/hooks/queries";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
@@ -36,83 +36,85 @@ import { useSession } from "@/providers/session";
 import type { YerbaMateListItem } from "@/api/types";
 import { useComparison } from "@/providers/comparison";
 export const TAB_BAR_CONTENT_CLEARANCE = 112;
-export const styles = StyleSheet.create({
-  page: {
-    padding: t.spacing.lg,
-    paddingBottom: t.spacing.section,
-    gap: t.spacing.lg,
-    flexGrow: 1,
-  },
-  body: {
-    fontFamily: t.fonts.body,
-    fontSize: t.type.body,
-    lineHeight: 24,
-    color: t.colors.ink,
-  },
-  title: {
-    fontFamily: t.fonts.display,
-    fontSize: t.type.title,
-    lineHeight: 31,
-    textTransform: "uppercase",
-    color: t.colors.ink,
-  },
-  display: {
-    fontFamily: t.fonts.display,
-    fontSize: t.type.display,
-    lineHeight: 48,
-    textTransform: "uppercase",
-    color: t.colors.ink,
-  },
-  muted: {
-    fontFamily: t.fonts.body,
-    fontSize: t.type.caption,
-    lineHeight: 19,
-    color: t.colors.muted,
-  },
-  card: {
-    padding: t.spacing.md,
-    gap: t.spacing.sm,
-    backgroundColor: t.colors.surface,
-    overflow: "hidden",
-    borderRadius: t.radius.card,
-    borderWidth: 1,
-    borderColor: t.colors.border,
-  },
-  row: {
-    flexDirection: "row",
-    alignItems: "center",
-    gap: t.spacing.sm,
-  },
-  button: {
-    minHeight: 48,
-    paddingHorizontal: t.spacing.md,
-    paddingVertical: 12,
-    borderRadius: t.radius.pill,
-    backgroundColor: t.colors.green,
-    alignItems: "center",
-    justifyContent: "center",
-  },
-  buttonText: {
-    fontFamily: t.fonts.bold,
-    fontSize: 16,
-    color: t.colors.cream,
-  },
-  input: {
-    minHeight: 48,
-    padding: t.spacing.md,
-    backgroundColor: t.colors.cream,
-    borderWidth: 1,
-    borderColor: t.colors.border,
-    borderRadius: t.radius.control,
-    fontFamily: t.fonts.body,
-    fontSize: 17,
-    color: t.colors.ink,
-  },
-});
+const createStyles = (t: AppTheme) =>
+  StyleSheet.create({
+    page: {
+      padding: t.spacing.lg,
+      paddingBottom: t.spacing.section,
+      gap: t.spacing.lg,
+      flexGrow: 1,
+    },
+    body: {
+      fontFamily: t.fonts.body,
+      fontSize: t.type.body,
+      lineHeight: 24,
+      color: t.colors.ink,
+    },
+    title: {
+      fontFamily: t.fonts.display,
+      fontSize: t.type.title,
+      lineHeight: 31,
+      textTransform: "uppercase",
+      color: t.colors.ink,
+    },
+    display: {
+      fontFamily: t.fonts.display,
+      fontSize: t.type.display,
+      lineHeight: 48,
+      textTransform: "uppercase",
+      color: t.colors.ink,
+    },
+    muted: {
+      fontFamily: t.fonts.body,
+      fontSize: t.type.caption,
+      lineHeight: 19,
+      color: t.colors.muted,
+    },
+    card: {
+      padding: t.spacing.md,
+      gap: t.spacing.sm,
+      backgroundColor: t.colors.surface,
+      overflow: "hidden",
+      borderRadius: t.radius.card,
+      borderWidth: 1,
+      borderColor: t.colors.border,
+    },
+    row: {
+      flexDirection: "row",
+      alignItems: "center",
+      gap: t.spacing.sm,
+    },
+    button: {
+      minHeight: 48,
+      paddingHorizontal: t.spacing.md,
+      paddingVertical: 12,
+      borderRadius: t.radius.pill,
+      backgroundColor: t.colors.hero,
+      alignItems: "center",
+      justifyContent: "center",
+    },
+    buttonText: {
+      fontFamily: t.fonts.bold,
+      fontSize: 16,
+      color: t.colors.onDark,
+    },
+    input: {
+      minHeight: 48,
+      padding: t.spacing.md,
+      backgroundColor: t.colors.cream,
+      borderWidth: 1,
+      borderColor: t.colors.border,
+      borderRadius: t.radius.control,
+      fontFamily: t.fonts.body,
+      fontSize: 17,
+      color: t.colors.ink,
+    },
+  });
 export function Body({
   children,
   muted = false,
 }: React.PropsWithChildren<{ muted?: boolean }>) {
+  const styles = useThemedStyles(createStyles);
   useLocale();
   return (
     <Text selectable style={muted ? styles.muted : styles.body}>
@@ -121,6 +123,7 @@ export function Body({
   );
 }
 export function Title({ children }: React.PropsWithChildren) {
+  const styles = useThemedStyles(createStyles);
   useLocale();
   return (
     <Text accessibilityRole="header" style={styles.title}>
@@ -133,11 +136,15 @@ export function Page({
   fullBleed = false,
   safeTop = false,
   tabBarClearance = false,
+  footer,
 }: React.PropsWithChildren<{
   fullBleed?: boolean;
   safeTop?: boolean;
   tabBarClearance?: boolean;
+  footer?: React.ReactNode;
 }>) {
+  const t = useTheme();
+  const styles = useThemedStyles(createStyles);
   useLocale();
   return (
     <KeyboardAvoidingView
@@ -147,6 +154,7 @@ export function Page({
       <Paper />
       <SafeAreaView edges={safeTop ? ["top"] : []} style={{ flex: 1 }}>
         <ScrollView
+          style={footer ? { flex: 1 } : undefined}
           contentInsetAdjustmentBehavior="automatic"
           keyboardShouldPersistTaps="handled"
           contentContainerStyle={[
@@ -160,11 +168,32 @@ export function Page({
           <OfflineBanner />
           {children}
         </ScrollView>
+        {footer && (
+          <SafeAreaView
+            edges={["bottom"]}
+            style={{
+              backgroundColor: t.colors.background,
+              borderTopWidth: StyleSheet.hairlineWidth,
+              borderTopColor: t.colors.border,
+            }}
+          >
+            <View
+              style={{
+                paddingHorizontal: t.spacing.lg,
+                paddingVertical: t.spacing.sm,
+                gap: t.spacing.sm,
+              }}
+            >
+              {footer}
+            </View>
+          </SafeAreaView>
+        )}
       </SafeAreaView>
     </KeyboardAvoidingView>
   );
 }
 export function Card({ children }: React.PropsWithChildren) {
+  const styles = useThemedStyles(createStyles);
   useLocale();
   return (
     <View style={styles.card}>
@@ -182,7 +211,7 @@ export function Button({
   fullWidth = false,
   selected,
   compact = false,
-  selectedBackgroundColor = t.colors.selected,
+  selectedBackgroundColor,
   expanded,
   accessibilityLabel,
   testID,
@@ -200,6 +229,10 @@ export function Button({
   accessibilityLabel?: string;
   testID?: string;
 }) {
+  const t = useTheme();
+  selectedBackgroundColor ??= t.colors.selected;
+
+  const styles = useThemedStyles(createStyles);
   useLocale();
   const filled = (!secondary || selected) && !destructive;
   return (
@@ -219,7 +252,7 @@ export function Button({
           backgroundColor: filled
             ? selected
               ? selectedBackgroundColor
-              : t.colors.green
+              : t.colors.hero
             : "transparent",
           borderWidth: filled ? 0 : 1,
           borderColor: destructive ? t.colors.error : t.colors.border,
@@ -237,7 +270,7 @@ export function Button({
               ? t.colors.error
               : selected || !filled
                 ? t.colors.ink
-                : t.colors.cream,
+                : t.colors.onDark,
             fontSize: compact ? 13 : 15,
           },
         ]}
@@ -257,6 +290,8 @@ export function Field({
   error?: string;
   inputRef?: React.Ref<TextInput>;
 }) {
+  const t = useTheme();
+  const styles = useThemedStyles(createStyles);
   useLocale();
   return (
     <View style={{ gap: t.spacing.xs }}>
@@ -280,6 +315,8 @@ export function Field({
   );
 }
 export function ErrorMessage({ message }: { message: string }) {
+  const t = useTheme();
+  const styles = useThemedStyles(createStyles);
   useLocale();
   return (
     <Text
@@ -417,6 +454,8 @@ export function EmptyState({
   description: string;
   action?: React.ReactNode;
 }) {
+  const t = useTheme();
+  const styles = useThemedStyles(createStyles);
   useLocale();
   return (
     <View
@@ -463,6 +502,7 @@ export function RequireSession({
   children,
   bare = false,
 }: React.PropsWithChildren<{ bare?: boolean }>) {
+  const t = useTheme();
   useLocale();
   const session = useSession();
   if (!session.user) {
@@ -512,6 +552,7 @@ export function ExternalLink({
   url: string;
   textLink?: boolean;
 }) {
+  const t = useTheme();
   useLocale();
   const [error, setError] = React.useState(false);
   const open = () => {
@@ -579,6 +620,8 @@ export function YerbaCard({
       >
     >;
 }) {
+  const t = useTheme();
+  const styles = useThemedStyles(createStyles);
   useLocale();
   const comparison = useComparison();
   const { user } = useSession();
@@ -625,7 +668,11 @@ export function YerbaCard({
       <View
         style={[
           styles.card,
-          { padding: 0, backgroundColor: "#f8f4e5", borderColor: "#a8a477" },
+          {
+            padding: 0,
+            backgroundColor: t.colors.productCard,
+            borderColor: t.colors.productBorder,
+          },
         ]}
       >
         <Paper />
@@ -734,7 +781,7 @@ export function YerbaCard({
               <View
                 style={{
                   alignSelf: "flex-start",
-                  backgroundColor: t.colors.green,
+                  backgroundColor: t.colors.hero,
                   borderRadius: t.radius.pill,
                   paddingHorizontal: 10,
                   paddingVertical: 4,
@@ -745,7 +792,7 @@ export function YerbaCard({
                     fontFamily: t.fonts.bold,
                     fontSize: 12,
                     lineHeight: 17,
-                    color: t.colors.cream,
+                    color: t.colors.onDark,
                   }}
                 >
                   {badge.text}
@@ -790,7 +837,7 @@ export function YerbaCard({
                   backgroundColor: t.colors.styleBackground,
                 }}
               >
-                <Icon name="leaf" size={16} color="#455c26" />
+                <Icon name="leaf" size={16} color={t.colors.leafFill} />
                 <Text
                   style={[
                     styles.muted,
@@ -929,4 +976,8 @@ export function countryLabel(code: string) {
   } catch {
     return code;
   }
+}
+
+export function useUIStyles() {
+  return useThemedStyles(createStyles);
 }

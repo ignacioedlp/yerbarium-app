@@ -11,6 +11,7 @@ import Animated, {
   useSharedValue,
   withTiming,
 } from "react-native-reanimated";
+import { useTheme } from "@/theme";
 import { scheduleOnRN } from "react-native-worklets";
 
 // Keep the native image until its identical React layer has been painted.
@@ -29,6 +30,7 @@ export function LaunchSplash({
   ready: boolean;
   onFinish: () => void;
 }) {
+  const theme = useTheme();
   const { width, height } = useWindowDimensions();
   const reducedMotion = useReducedMotion();
   const [laidOut, setLaidOut] = useState(false);
@@ -95,10 +97,22 @@ export function LaunchSplash({
       onLayout={() => setLaidOut(true)}
       accessibilityElementsHidden
       importantForAccessibility="no-hide-descendants"
-      style={[s.overlay, overlayStyle]}
+      style={[
+        s.overlay,
+        {
+          backgroundColor: theme.dark
+            ? theme.colors.background
+            : SPLASH_BACKGROUND,
+        },
+        overlayStyle,
+      ]}
     >
       <Animated.Image
-        source={require("../../assets/branding/splash-logo.png")}
+        source={
+          theme.dark
+            ? require("../../assets/branding/logo-cream.png")
+            : require("../../assets/branding/splash-logo.png")
+        }
         onLoad={() => setImageReady(true)}
         fadeDuration={0}
         resizeMode="contain"

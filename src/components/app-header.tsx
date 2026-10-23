@@ -4,7 +4,7 @@ import type { ReactNode } from "react";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { Icon } from "@/components/icon";
 import { Paper } from "@/components/editorial";
-import { theme } from "@/theme";
+import { useTheme } from "@/theme";
 
 export function AppHeader({
   title,
@@ -17,12 +17,13 @@ export function AppHeader({
   paper?: boolean;
   rightAction?: ReactNode;
 }) {
+  const theme = useTheme();
   useLocale();
   const insets = useSafeAreaInsets();
   return (
     <View
       style={{
-        backgroundColor: paper ? theme.colors.background : theme.colors.green,
+        backgroundColor: paper ? theme.colors.background : theme.colors.hero,
         isolation: "isolate",
         paddingTop: insets.top,
         paddingLeft: Math.max(insets.left, theme.spacing.md),
@@ -51,14 +52,14 @@ export function AppHeader({
             alignItems: "center",
             justifyContent: "center",
             borderRadius: 22,
-            backgroundColor: paper ? theme.colors.green : theme.colors.cream,
+            backgroundColor: paper ? theme.colors.hero : theme.colors.cream,
             opacity: pressed ? 0.65 : 1,
           })}
         >
           <Icon
             name="arrowLeft"
             size={22}
-            color={paper ? theme.colors.cream : theme.colors.green}
+            color={paper ? theme.colors.onDark : theme.colors.green}
           />
         </Pressable>
         <Text
@@ -67,7 +68,7 @@ export function AppHeader({
           style={{
             flex: 1,
             textAlign: "center",
-            color: paper ? theme.colors.ink : theme.colors.cream,
+            color: paper ? theme.colors.ink : theme.colors.onDark,
             fontFamily: theme.fonts.bold,
             fontSize: 18,
           }}

@@ -1,5 +1,5 @@
 import { SymbolView } from "expo-symbols";
-import { theme } from "@/theme";
+import { useTheme } from "@/theme";
 import type { IconProps } from "./icon";
 const names = {
   image: "photo",
@@ -29,13 +29,15 @@ const names = {
   language: "character.bubble",
   mail: "envelope",
   chevronDown: "chevron.down",
+  appearance: "circle.lefthalf.filled",
+  moon: "moon",
+  sun: "sun.max",
   settings: "gearshape",
 } as const;
-export function Icon({
-  name,
-  size = 20,
-  color = theme.colors.green,
-}: IconProps) {
+export function Icon({ name, size = 20, color }: IconProps) {
+  const theme = useTheme();
+  color ??= theme.colors.green;
+
   return (
     <SymbolView
       name={names[name]}

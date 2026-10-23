@@ -8,7 +8,7 @@ import {
 import { ErrorMessage } from "./ui";
 import { Pressable, Text, View } from "react-native";
 import { Icon } from "./icon";
-import { theme } from "@/theme";
+import { useTheme } from "@/theme";
 import { useSession } from "@/providers/session";
 import { write, normalizeError } from "@/api/client";
 import type { Review } from "@/api/community-types";
@@ -23,6 +23,7 @@ export function ReviewLike({ review }: { review: LikeableReview }) {
   return <LikeControl key={user?.id ?? "guest"} review={review} />;
 }
 function LikeControl({ review }: { review: LikeableReview }) {
+  const theme = useTheme();
   useLocale();
   const { user } = useSession();
   const client = useQueryClient();

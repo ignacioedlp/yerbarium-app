@@ -2,9 +2,11 @@ import { tr, useLocale } from "@/i18n";
 import React from "react";
 import { View, Text, Pressable, StyleSheet, TextInput } from "react-native";
 import { Image } from "expo-image";
-import { theme as t } from "@/theme";
+import { useTheme, useThemedStyles, type AppTheme } from "@/theme";
 import { Icon } from "./icon";
 export function Paper({ dark = false }: { dark?: boolean }) {
+  const t = useTheme();
+  dark = dark || t.dark;
   useLocale();
   return (
     <View
@@ -26,6 +28,7 @@ export function Paper({ dark = false }: { dark?: boolean }) {
 }
 
 export function BrandLockup() {
+  const t = useTheme();
   useLocale();
   return (
     <View
@@ -33,7 +36,7 @@ export function BrandLockup() {
     >
       <Image
         source={require("../../assets/branding/logo-green.png")}
-        style={{ width: 32, height: 36 }}
+        style={{ width: 32, height: 36, tintColor: t.colors.green }}
         contentFit="contain"
         accessible={false}
       />
@@ -53,13 +56,16 @@ export function BrandLockup() {
 export function Display({
   children,
   accent = false,
-  size = t.type.display,
+  size,
   color,
 }: React.PropsWithChildren<{
   accent?: boolean;
   size?: number;
   color?: string;
 }>) {
+  const t = useTheme();
+  size ??= t.type.display;
+
   useLocale();
   return (
     <Text
@@ -68,7 +74,7 @@ export function Display({
         fontFamily: t.fonts.display,
         fontSize: size,
         lineHeight: size * 1.02,
-        color: color ?? (accent ? t.colors.lime : t.colors.cream),
+        color: color ?? (accent ? t.colors.lime : t.colors.onDark),
         textTransform: "uppercase",
         letterSpacing: -0.5,
       }}
@@ -82,6 +88,7 @@ export function HandNote({
   light = false,
   rotate = true,
 }: React.PropsWithChildren<{ light?: boolean; rotate?: boolean }>) {
+  const t = useTheme();
   useLocale();
   return (
     <Text
@@ -106,6 +113,7 @@ export function SectionHeading({
   action?: string;
   onPress?: () => void;
 }) {
+  const t = useTheme();
   useLocale();
   return (
     <View
@@ -172,11 +180,12 @@ export function EditorialHero({
   compact?: boolean;
   paper?: boolean;
 }>) {
+  const t = useTheme();
   useLocale();
   return (
     <View
       style={{
-        backgroundColor: paper ? t.colors.background : t.colors.green,
+        backgroundColor: paper ? t.colors.background : t.colors.hero,
         isolation: "isolate",
         padding: t.spacing.lg,
         paddingBottom: t.spacing.xl,
@@ -206,7 +215,7 @@ export function EditorialHero({
       )}
       <View style={{ gap: t.spacing.xs }}>
         <Display
-          color={paper ? t.colors.ink : t.colors.cream}
+          color={paper ? t.colors.ink : t.colors.onDark}
           size={compact ? 34 : 39}
         >
           {title}
@@ -227,7 +236,7 @@ export function EditorialHero({
             fontFamily: t.fonts.body,
             fontSize: t.type.body,
             lineHeight: 23,
-            color: paper ? t.colors.ink : t.colors.cream,
+            color: paper ? t.colors.ink : t.colors.onDark,
             maxWidth: 360,
           }}
         >
@@ -251,6 +260,8 @@ export function SearchBox({
   placeholder?: string;
   autoFocus?: boolean;
 }) {
+  const t = useTheme();
+  const e = useThemedStyles(createE);
   useLocale();
   const input = React.useRef<TextInput>(null);
   const [focused, setFocused] = React.useState(false);
@@ -274,7 +285,7 @@ export function SearchBox({
           {tr(placeholder)}
         </Text>
         <View style={e.searchAction}>
-          <Icon name="arrow" size={20} color={t.colors.cream} />
+          <Icon name="arrow" size={20} color={t.colors.onDark} />
         </View>
       </Pressable>
     );
@@ -319,31 +330,32 @@ export function SearchBox({
         <Icon
           name={value ? "close" : "arrow"}
           size={20}
-          color={t.colors.cream}
+          color={t.colors.onDark}
         />
       </Pressable>
     </View>
   );
 }
-const e = StyleSheet.create({
-  search: {
-    minHeight: 60,
-    paddingLeft: t.spacing.md,
-    paddingRight: 7,
-    flexDirection: "row",
-    alignItems: "center",
-    gap: 10,
-    borderRadius: t.radius.pill,
-    borderWidth: 1,
-    borderColor: t.colors.border,
-    backgroundColor: t.colors.cream,
-  },
-  searchAction: {
-    width: 44,
-    height: 44,
-    borderRadius: t.radius.pill,
-    backgroundColor: t.colors.green,
-    alignItems: "center",
-    justifyContent: "center",
-  },
-});
+const createE = (t: AppTheme) =>
+  StyleSheet.create({
+    search: {
+      minHeight: 60,
+      paddingLeft: t.spacing.md,
+      paddingRight: 7,
+      flexDirection: "row",
+      alignItems: "center",
+      gap: 10,
+      borderRadius: t.radius.pill,
+      borderWidth: 1,
+      borderColor: t.colors.border,
+      backgroundColor: t.colors.cream,
+    },
+    searchAction: {
+      width: 44,
+      height: 44,
+      borderRadius: t.radius.pill,
+      backgroundColor: t.colors.hero,
+      alignItems: "center",
+      justifyContent: "center",
+    },
+  });

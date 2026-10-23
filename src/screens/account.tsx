@@ -25,7 +25,7 @@ import { useSession } from "@/providers/session";
 import { normalizeError, write } from "@/api/client";
 import { Account } from "@/api/account-types";
 import { Host, Switch } from "@expo/ui";
-import { theme } from "@/theme";
+import { useTheme } from "@/theme";
 import { ProfileSelect, profileCountries } from "@/components/profile-select";
 import { Icon } from "@/components/icon";
 const loginSchema = z.object({
@@ -123,6 +123,7 @@ function LoginForm() {
   );
 }
 function RegistrationForm() {
+  const theme = useTheme();
   const [newsletter, setNewsletter] = React.useState(false);
   useLocale();
   const [legalLinkError, setLegalLinkError] = React.useState(false);
@@ -295,6 +296,7 @@ export function Registration() {
   return <RegistrationForm />;
 }
 export function Profile() {
+  const theme = useTheme();
   useLocale();
   const { user } = useSession();
   if (user) return <ProfileJourney />;
@@ -317,12 +319,12 @@ export function Profile() {
             width: 42,
             height: 42,
             borderRadius: 21,
-            backgroundColor: theme.colors.green,
+            backgroundColor: theme.colors.hero,
             alignItems: "center",
             justifyContent: "center",
           }}
         >
-          <Icon name="settings" color={theme.colors.cream} size={23} />
+          <Icon name="settings" color={theme.colors.onDark} size={23} />
         </Pressable>
       </View>
       <RequireSession bare />
@@ -340,6 +342,7 @@ const profileSchema = z.object({
   is_private: z.boolean(),
 });
 function ProfileForm({ user }: { user: Account }) {
+  const theme = useTheme();
   useLocale();
   const session = useSession(),
     online = useCanWrite();
@@ -423,7 +426,7 @@ function ProfileForm({ user }: { user: Account }) {
           <Host
             matchContents
             seedColor={theme.colors.green}
-            colorScheme="light"
+            colorScheme={theme.dark ? "dark" : "light"}
           >
             <Switch
               label={tr("Perfil privado")}

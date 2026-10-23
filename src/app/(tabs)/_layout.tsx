@@ -1,8 +1,9 @@
 import { tr, useLocale } from "@/i18n";
 import { Stack } from "expo-router";
 import { NativeTabs } from "expo-router/unstable-native-tabs";
-import { theme } from "@/theme";
+import { useTheme } from "@/theme";
 export default function TabLayout() {
+  const theme = useTheme();
   useLocale();
   return (
     <>

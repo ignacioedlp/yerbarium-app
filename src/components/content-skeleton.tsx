@@ -9,7 +9,7 @@ import Animated, {
   useSharedValue,
   withTiming,
 } from "react-native-reanimated";
-import { theme as t } from "@/theme";
+import { useTheme, useThemedStyles, type AppTheme } from "@/theme";
 
 export type SkeletonVariant = "content" | "detail" | "header" | "chips";
 
@@ -21,6 +21,7 @@ export function ContentLoadingTransition({
   loading: boolean;
   variant: SkeletonVariant;
 }>) {
+  const t = useTheme();
   useLocale();
   // Start cached content fully visible; fade only after an actual loading state.
   const progress = useSharedValue(loading ? 0 : 1);
@@ -71,6 +72,7 @@ export function ContentSkeleton({
 }: {
   variant?: SkeletonVariant;
 }) {
+  const s = useThemedStyles(createS);
   useLocale();
   return (
     <View
@@ -113,13 +115,14 @@ export function ContentSkeleton({
   );
 }
 
-const s = StyleSheet.create({
-  container: { gap: t.spacing.md },
-  block: { backgroundColor: t.colors.sage, borderRadius: t.radius.control },
-  heading: { width: "72%", height: 32 },
-  subtitle: { width: "38%", height: 14 },
-  line: { width: "100%", height: 14 },
-  image: { width: "100%", height: 280 },
-  row: { flexDirection: "row", gap: t.spacing.sm },
-  chip: { flex: 1, height: 44, borderRadius: t.radius.pill },
-});
+const createS = (t: AppTheme) =>
+  StyleSheet.create({
+    container: { gap: t.spacing.md },
+    block: { backgroundColor: t.colors.sage, borderRadius: t.radius.control },
+    heading: { width: "72%", height: 32 },
+    subtitle: { width: "38%", height: 14 },
+    line: { width: "100%", height: 14 },
+    image: { width: "100%", height: 280 },
+    row: { flexDirection: "row", gap: t.spacing.sm },
+    chip: { flex: 1, height: 44, borderRadius: t.radius.pill },
+  });

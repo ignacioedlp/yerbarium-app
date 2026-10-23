@@ -17,7 +17,7 @@ import { Image } from "expo-image";
 import { StatusBar } from "expo-status-bar";
 import { CatalogImage } from "@/components/catalog-image";
 import { CountryFlag } from "@/components/country-flag";
-import { theme } from "@/theme";
+import { useTheme } from "@/theme";
 import { Stack, router, useLocalSearchParams } from "expo-router";
 import { useMutation, useQueryClient, useQuery } from "@tanstack/react-query";
 import {
@@ -29,7 +29,7 @@ import {
   ErrorMessage,
   ExternalLink,
   useCanWrite,
-  styles,
+  useUIStyles,
   countryLabel,
 } from "@/components/ui";
 import { useResource, usePages } from "@/hooks/queries";
@@ -58,6 +58,8 @@ const TAB_OPTIONS = Object.entries(DETAIL_TABS).map(([key, label]) => ({
   label,
 }));
 export function Detail() {
+  const theme = useTheme();
+  const styles = useUIStyles();
   useLocale();
   const { width } = useWindowDimensions();
   const galleryWidth = Math.min(420, width - theme.spacing.lg * 2);
@@ -145,7 +147,7 @@ export function Detail() {
   );
   return (
     <Page>
-      <StatusBar style="dark" />
+      <StatusBar style={theme.dark ? "light" : "dark"} />
       <Stack.Screen />
       <QueryState query={query} skeleton="detail">
         {yerba && (
@@ -434,25 +436,27 @@ export function Detail() {
                             gap: theme.spacing.xs,
                           }}
                         >
-                          {(["is_tried", "wants_to_try"] as const).map((key) => (
-                            <Button
-                              key={key}
-                              compact
-                              label={
-                                key === "is_tried"
-                                  ? tr("Probada")
-                                  : tr("Quiero probar")
-                              }
-                              secondary={!library.data?.[key]}
-                              selected={library.data?.[key]}
-                              disabled={mutation.isPending || !online}
-                              onPress={() =>
-                                mutation.mutate(
-                                  libraryChanges(key, !library.data?.[key]),
-                                )
-                              }
-                            />
-                          ))}
+                          {(["is_tried", "wants_to_try"] as const).map(
+                            (key) => (
+                              <Button
+                                key={key}
+                                compact
+                                label={
+                                  key === "is_tried"
+                                    ? tr("Probada")
+                                    : tr("Quiero probar")
+                                }
+                                secondary={!library.data?.[key]}
+                                selected={library.data?.[key]}
+                                disabled={mutation.isPending || !online}
+                                onPress={() =>
+                                  mutation.mutate(
+                                    libraryChanges(key, !library.data?.[key]),
+                                  )
+                                }
+                              />
+                            ),
+                          )}
                         </View>
                       </QueryState>
                     )}
@@ -819,6 +823,7 @@ function SummaryFact({
   value: string;
   countryCode?: string;
 }) {
+  const theme = useTheme();
   useLocale();
   const showFlag =
     !!countryCode &&
@@ -858,6 +863,7 @@ function SummaryFact({
   );
 }
 function SectionHeading({ children }: React.PropsWithChildren) {
+  const theme = useTheme();
   useLocale();
   return (
     <Text
@@ -880,6 +886,7 @@ function DetailRow({
   label: string;
   value: React.ReactNode;
 }) {
+  const theme = useTheme();
   useLocale();
   return (
     <View
@@ -921,6 +928,7 @@ function DetailRow({
   );
 }
 function DetailReview({ review }: { review: Review }) {
+  const theme = useTheme();
   useLocale();
   const [expanded, setExpanded] = React.useState(false);
   const sensory = Object.entries(review.sensory ?? {}).filter(

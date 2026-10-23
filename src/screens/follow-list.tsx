@@ -11,9 +11,10 @@ import { tr, useLocale } from "@/i18n";
 import { Body, Button, Card, Title, Page } from "@/components/ui";
 import { Paper } from "@/components/editorial";
 import { useFollowList, type FollowDirection } from "@/hooks/follows";
-import { theme } from "@/theme";
+import { useTheme } from "@/theme";
 
 export function FollowList({ direction }: { direction: FollowDirection }) {
+  const theme = useTheme();
   useLocale();
   const { username } = useLocalSearchParams<{ username: string }>();
   const [tab, setTab] = React.useState<"people" | "brands">("people");

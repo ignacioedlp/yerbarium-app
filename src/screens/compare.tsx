@@ -9,9 +9,10 @@ import { get } from "@/api/client";
 import { technicalRows } from "@/api/format";
 import { YerbaMateDetail } from "@/api/types";
 import { sensoryLabels } from "@/api/community-types";
-import { theme } from "@/theme";
+import { useTheme } from "@/theme";
 import { EditorialHero } from "@/components/editorial";
 export function Compare() {
+  const theme = useTheme();
   useLocale();
   const { slugs, toggle, clear } = useComparison();
   const queries = useQueries({
@@ -154,7 +155,7 @@ export function Compare() {
                       paddingHorizontal: theme.spacing.md,
                       paddingVertical: theme.spacing.sm,
                       backgroundColor:
-                        index === 0 ? theme.colors.green : theme.colors.sage,
+                        index === 0 ? theme.colors.hero : theme.colors.sage,
                       borderRightWidth: 1,
                       borderColor: theme.colors.border,
                     }}
@@ -167,7 +168,7 @@ export function Compare() {
                         letterSpacing: 0.2,
                         textTransform: "uppercase",
                         color:
-                          index === 0 ? theme.colors.cream : theme.colors.ink,
+                          index === 0 ? theme.colors.onDark : theme.colors.ink,
                         flexShrink: 1,
                       }}
                       numberOfLines={2}

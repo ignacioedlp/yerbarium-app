@@ -3,7 +3,7 @@ import React, { useState } from "react";
 import { LibraryYerbaCard } from "@/components/library-yerba-card";
 import { YerbaCardSkeletons } from "@/components/yerba-card-loading";
 import { View } from "react-native";
-import { theme } from "@/theme";
+import { useTheme } from "@/theme";
 import { Title, Button, EmptyState, QueryState } from "@/components/ui";
 import {
   AnimatedTabContent,
@@ -26,6 +26,7 @@ const COLLECTION_TABS: AnimatedTabOption<LibraryCollection>[] = [
 ];
 
 export function ProfileLibrary() {
+  const theme = useTheme();
   useLocale();
   const { user } = useSession();
   const [state, setState] = useState<LibraryCollection>("favorite");

@@ -8,9 +8,10 @@ import { useSession } from "@/providers/session";
 import { normalizeError } from "@/api/client";
 import { suggestYerba, validSuggestionWeight } from "@/api/yerba-suggestions";
 import { tr, useLocale } from "@/i18n";
-import { theme as t } from "@/theme";
+import { useTheme } from "@/theme";
 
 export function YerbaSuggestion() {
+  const t = useTheme();
   useLocale();
   const params = useLocalSearchParams<{
     name?: string;

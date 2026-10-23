@@ -11,10 +11,12 @@ import Animated, {
   withDelay,
   withTiming,
 } from "react-native-reanimated";
-import { theme as t } from "@/theme";
+import { useTheme, useThemedStyles, type AppTheme } from "@/theme";
 
 // Match the catalog card's footprint so the handoff keeps each row in place.
 export function YerbaCardSkeleton() {
+  const t = useTheme();
+  const s = useThemedStyles(createS);
   useLocale();
   return (
     <View style={s.card} pointerEvents="none" accessible={false}>
@@ -38,6 +40,7 @@ export function YerbaCardSkeleton() {
 }
 
 export function YerbaCardSkeletons() {
+  const t = useTheme();
   useLocale();
   return (
     <View
@@ -110,34 +113,35 @@ export function YerbaCardReveal({
   );
 }
 
-const s = StyleSheet.create({
-  card: {
-    minHeight: 246,
-    flex: 1,
-    borderRadius: t.radius.card,
-    borderWidth: 1,
-    borderColor: t.colors.border,
-    backgroundColor: t.colors.surface,
-    overflow: "hidden",
-  },
-  block: { backgroundColor: t.colors.sage, borderRadius: 6 },
-  copy: { width: "53%", padding: t.spacing.md, gap: 14 },
-  pack: {
-    position: "absolute",
-    left: "62%",
-    right: 18,
-    top: 48,
-    bottom: 18,
-    backgroundColor: t.colors.sage,
-    borderRadius: t.radius.control,
-  },
-  favorite: {
-    position: "absolute",
-    width: 22,
-    height: 22,
-    right: 16,
-    top: 16,
-    backgroundColor: t.colors.sage,
-    borderRadius: t.radius.pill,
-  },
-});
+const createS = (t: AppTheme) =>
+  StyleSheet.create({
+    card: {
+      minHeight: 246,
+      flex: 1,
+      borderRadius: t.radius.card,
+      borderWidth: 1,
+      borderColor: t.colors.border,
+      backgroundColor: t.colors.surface,
+      overflow: "hidden",
+    },
+    block: { backgroundColor: t.colors.sage, borderRadius: 6 },
+    copy: { width: "53%", padding: t.spacing.md, gap: 14 },
+    pack: {
+      position: "absolute",
+      left: "62%",
+      right: 18,
+      top: 48,
+      bottom: 18,
+      backgroundColor: t.colors.sage,
+      borderRadius: t.radius.control,
+    },
+    favorite: {
+      position: "absolute",
+      width: 22,
+      height: 22,
+      right: 16,
+      top: 16,
+      backgroundColor: t.colors.sage,
+      borderRadius: t.radius.pill,
+    },
+  });

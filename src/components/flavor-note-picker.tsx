@@ -2,7 +2,7 @@ import { tr, useLocale } from "@/i18n";
 import { Pressable, Text, View } from "react-native";
 import { flavorFamilies, type FlavorNote } from "@/api/community-types";
 import { Body } from "@/components/ui";
-import { theme as t } from "@/theme";
+import { useTheme } from "@/theme";
 
 export function FlavorNotePicker({
   notes,
@@ -15,6 +15,7 @@ export function FlavorNotePicker({
   onToggle: (slug: string) => void;
   disabled?: boolean;
 }) {
+  const t = useTheme();
   useLocale();
   const uniqueNotes = [
     ...new Map(notes.map((note) => [note.slug, note])).values(),

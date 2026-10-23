@@ -21,9 +21,10 @@ import {
   useCanWrite,
 } from "@/components/ui";
 import { tr, useLocale } from "@/i18n";
-import { theme } from "@/theme";
+import { useTheme } from "@/theme";
 
 export function Scanner() {
+  const theme = useTheme();
   useLocale();
   const focused = useIsFocused();
   const online = useCanWrite();

@@ -3,12 +3,13 @@ import { View, Pressable, Text } from "react-native";
 import { router } from "expo-router";
 import { tr, useLocale } from "@/i18n";
 import { Button, Body } from "@/components/ui";
-import { theme } from "@/theme";
+import { useTheme } from "@/theme";
 import { useSession } from "@/providers/session";
 import { useFollow, useSocialResource } from "@/hooks/follows";
 import type { Account, PublicProfile } from "@/api/account-types";
 
 export function ProfileSocial({ profile }: { profile: PublicProfile }) {
+  const theme = useTheme();
   useLocale();
   const { user } = useSession();
   const mutation = useFollow(profile.username);
@@ -53,6 +54,7 @@ function SocialCounts({
   following?: number;
   compact?: boolean;
 }) {
+  const theme = useTheme();
   const { user } = useSession();
   if (user?.username !== username)
     return (

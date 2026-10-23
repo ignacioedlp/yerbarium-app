@@ -3,7 +3,7 @@ import { getOwnGamification } from "@/api/gamification";
 import { Icon } from "@/components/icon";
 import { useSession } from "@/providers/session";
 import { tr } from "@/i18n";
-import { theme } from "@/theme";
+import { useTheme, useThemedStyles, type AppTheme } from "@/theme";
 import { useQuery } from "@tanstack/react-query";
 import React, { useEffect, useRef, useState } from "react";
 import { StyleSheet, Text, View } from "react-native";
@@ -12,6 +12,8 @@ import { useSafeAreaInsets } from "react-native-safe-area-context";
 type ToastEvent = { id: number; title: string; detail: string };
 
 export function GamificationToastObserver() {
+  const theme = useTheme();
+  const styles = useThemedStyles(createStyles);
   const { user, ready } = useSession();
   const insets = useSafeAreaInsets();
   const query = useQuery<OwnGamification>({
@@ -97,49 +99,50 @@ export function GamificationToastObserver() {
   );
 }
 
-const styles = StyleSheet.create({
-  anchor: {
-    position: "absolute",
-    left: 16,
-    right: 16,
-    alignItems: "center",
-    zIndex: 1000,
-  },
-  toast: {
-    width: "100%",
-    maxWidth: 480,
-    minHeight: 72,
-    borderRadius: 20,
-    padding: 14,
-    flexDirection: "row",
-    alignItems: "center",
-    gap: 12,
-    backgroundColor: theme.colors.deep,
-    borderWidth: 1,
-    borderColor: "rgba(255,248,232,0.22)",
-    shadowColor: "#000",
-    shadowOpacity: 0.2,
-    shadowRadius: 16,
-    shadowOffset: { width: 0, height: 8 },
-    elevation: 10,
-  },
-  mark: {
-    width: 42,
-    height: 42,
-    borderRadius: 21,
-    alignItems: "center",
-    justifyContent: "center",
-    backgroundColor: theme.colors.lime,
-  },
-  copy: { flex: 1, gap: 2 },
-  title: {
-    color: theme.colors.cream,
-    fontFamily: theme.fonts.bold,
-    fontSize: 16,
-  },
-  detail: {
-    color: theme.colors.lime,
-    fontFamily: theme.fonts.body,
-    fontSize: 13,
-  },
-});
+const createStyles = (theme: AppTheme) =>
+  StyleSheet.create({
+    anchor: {
+      position: "absolute",
+      left: 16,
+      right: 16,
+      alignItems: "center",
+      zIndex: 1000,
+    },
+    toast: {
+      width: "100%",
+      maxWidth: 480,
+      minHeight: 72,
+      borderRadius: 20,
+      padding: 14,
+      flexDirection: "row",
+      alignItems: "center",
+      gap: 12,
+      backgroundColor: theme.colors.deep,
+      borderWidth: 1,
+      borderColor: "rgba(255,248,232,0.22)",
+      shadowColor: "#000",
+      shadowOpacity: 0.2,
+      shadowRadius: 16,
+      shadowOffset: { width: 0, height: 8 },
+      elevation: 10,
+    },
+    mark: {
+      width: 42,
+      height: 42,
+      borderRadius: 21,
+      alignItems: "center",
+      justifyContent: "center",
+      backgroundColor: theme.colors.lime,
+    },
+    copy: { flex: 1, gap: 2 },
+    title: {
+      color: theme.colors.onDark,
+      fontFamily: theme.fonts.bold,
+      fontSize: 16,
+    },
+    detail: {
+      color: theme.colors.lime,
+      fontFamily: theme.fonts.body,
+      fontSize: 13,
+    },
+  });

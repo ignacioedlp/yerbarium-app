@@ -10,16 +10,18 @@ import {
   ScrollView,
   useWindowDimensions,
 } from "react-native";
-import { Page, QueryState, YerbaCard, styles } from "@/components/ui";
+import { Page, QueryState, YerbaCard, useUIStyles } from "@/components/ui";
 import { Paper, SearchBox, SectionHeading } from "@/components/editorial";
 import { Icon } from "@/components/icon";
-import { theme as t } from "@/theme";
+import { useTheme } from "@/theme";
 import { usePages, useResource } from "@/hooks/queries";
 import { YerbaMateListItem, PaginatedResponse, YerbaStyle } from "@/api/types";
 import { learningLinks } from "@/content/learning";
 import { CommunityPodium } from "@/components/community-podium";
 
 export function Home() {
+  const t = useTheme();
+  const styles = useUIStyles();
   useLocale();
   const { width: windowWidth } = useWindowDimensions();
   const carouselRef = React.useRef<ScrollView>(null);
@@ -60,7 +62,7 @@ export function Home() {
             padding: t.spacing.md,
             paddingRight: 164,
             justifyContent: "center",
-            backgroundColor: t.colors.green,
+            backgroundColor: t.colors.hero,
             borderRadius: t.radius.card,
             borderCurve: "continuous",
             overflow: "hidden",
@@ -76,7 +78,7 @@ export function Home() {
                 fontSize: 30,
                 lineHeight: 32,
                 textTransform: "uppercase",
-                color: t.colors.cream,
+                color: t.colors.onDark,
               },
             ]}
           >

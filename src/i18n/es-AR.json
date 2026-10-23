@@ -135,5 +135,13 @@
   "¡Subiste al nivel {0}!": "¡Subiste al nivel {0}!",
   "¡Nuevo nivel!": "¡Nuevo nivel!",
   "¡Logro desbloqueado!": "¡Logro desbloqueado!",
-  "¡Sumaste experiencia!": "¡Sumaste experiencia!"
+  "¡Sumaste experiencia!": "¡Sumaste experiencia!",
+  "Apariencia": "Apariencia",
+  "Automático": "Automático",
+  "Claro": "Claro",
+  "Oscuro": "Oscuro",
+  "Elegí cómo querés ver Yerbarium.": "Elegí cómo querés ver Yerbarium.",
+  "Sigue la apariencia de tu dispositivo.": "Sigue la apariencia de tu dispositivo.",
+  "No pudimos guardar la apariencia en este dispositivo.": "No pudimos guardar la apariencia en este dispositivo.",
+  "{0}": "{0}"
 }

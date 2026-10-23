@@ -3,7 +3,7 @@ import { tr, useLocale } from "@/i18n";
 import { Text, View } from "react-native";
 import { Icon } from "@/components/icon";
 import { CountryFlag } from "@/components/country-flag";
-import { theme } from "@/theme";
+import { useTheme } from "@/theme";
 import { Stack, useLocalSearchParams } from "expo-router";
 import { CatalogImage } from "@/components/catalog-image";
 import { YerbaCardSkeletons } from "@/components/yerba-card-loading";
@@ -20,6 +20,7 @@ import {
 import { useResource, usePages } from "@/hooks/queries";
 import { BrandDetail, YerbaMateListItem } from "@/api/types";
 export function Brand() {
+  const theme = useTheme();
   useLocale();
   const { slug } = useLocalSearchParams<{ slug: string }>();
   const brand = useResource<BrandDetail>(`brands/${encodeURIComponent(slug)}/`);

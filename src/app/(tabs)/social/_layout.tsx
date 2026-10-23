@@ -1,7 +1,8 @@
 import { useLocale } from "@/i18n";
 import { Stack } from "expo-router";
-import { theme } from "@/theme";
+import { useTheme } from "@/theme";
 export default function Layout() {
+  const theme = useTheme();
   useLocale();
   return (
     <Stack

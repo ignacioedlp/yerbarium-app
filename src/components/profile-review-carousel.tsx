@@ -13,11 +13,12 @@ import { useSocialResource } from "@/hooks/follows";
 import { Review } from "@/api/community-types";
 import { Body, Button } from "./ui";
 import { LeafRating } from "./leaf-rating";
-import { theme } from "@/theme";
+import { useTheme } from "@/theme";
 import { getLocale, tr, useLocale } from "@/i18n";
 
 type ProfileReview = Review & { yerba_name: string; brand_name: string };
 export function ProfileReviewCarousel({ username }: { username: string }) {
+  const theme = useTheme();
   useLocale();
   const query = useSocialResource<ProfileReview[]>(
     `profiles/${encodeURIComponent(username)}/reviews/recent/`,
@@ -45,6 +46,7 @@ export function ProfileReviewCarousel({ username }: { username: string }) {
 }
 
 function ReviewCarousel({ reviews }: { reviews: ProfileReview[] }) {
+  const theme = useTheme();
   const focused = useIsFocused();
   const scroll = useRef<ScrollView>(null);
   const index = useRef(0);

@@ -1,12 +1,13 @@
 import { tr, useLocale, getLocale } from "@/i18n";
 import { Pressable, Text, View } from "react-native";
-import { theme } from "@/theme";
+import { useTheme } from "@/theme";
 import { LeafRating } from "@/components/leaf-rating";
 import { router } from "expo-router";
 import { Body, Card } from "./ui";
 import { Review, sensoryLabels } from "@/api/community-types";
 import { ReviewLike } from "./review-like";
 export function ReviewCard({ review }: { review: Review }) {
+  const theme = useTheme();
   useLocale();
   return (
     <Card>

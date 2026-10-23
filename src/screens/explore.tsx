@@ -23,14 +23,14 @@ import {
   OfflineBanner,
   countryLabel,
   TAB_BAR_CONTENT_CLEARANCE,
-  styles,
+  useUIStyles,
 } from "@/components/ui";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { Paper, SearchBox } from "@/components/editorial";
 import { CatalogMode } from "@/components/catalog-mode";
 import { YerbaCardSkeletons } from "@/components/yerba-card-loading";
 import { Icon } from "@/components/icon";
-import { theme as t } from "@/theme";
+import { useTheme } from "@/theme";
 import { usePages } from "@/hooks/queries";
 import { BrandListItem, YerbaMateListItem, YerbaStyle } from "@/api/types";
 import { useComparison } from "@/providers/comparison";
@@ -60,6 +60,8 @@ function ExploreContent({
   initialBrand: string;
   initialMode: Mode;
 }) {
+  const t = useTheme();
+  const styles = useUIStyles();
   useLocale();
   const [mode, setMode] = useState<Mode>(
     ["catalog", "search", "brands"].includes(initialMode)
@@ -498,6 +500,7 @@ function ExploreContent({
   );
 }
 function BrandTile({ brand }: { brand: BrandListItem }) {
+  const t = useTheme();
   useLocale();
   const [failedUrl, setFailedUrl] = useState<string>();
   const hasImage = Boolean(brand.image_url && brand.image_url !== failedUrl);
@@ -573,6 +576,8 @@ function CatalogFiltersSheet({
   onClose: () => void;
   onApply: (filters: CatalogFilters) => void;
 }) {
+  const t = useTheme();
+  const styles = useUIStyles();
   useLocale();
   const [draft, setDraft] = useState(initial);
   const [choosingBrand, setChoosingBrand] = useState(false);
@@ -638,7 +643,7 @@ function CatalogFiltersSheet({
                 borderRadius: t.radius.pill,
                 borderWidth: 1,
                 borderColor: selected ? t.colors.green : t.colors.border,
-                backgroundColor: selected ? t.colors.green : t.colors.cream,
+                backgroundColor: selected ? t.colors.hero : t.colors.cream,
                 flexDirection: "row",
                 alignItems: "center",
                 gap: 6,
@@ -646,13 +651,13 @@ function CatalogFiltersSheet({
               })}
             >
               {selected && (
-                <Icon name="check" size={16} color={t.colors.cream} />
+                <Icon name="check" size={16} color={t.colors.onDark} />
               )}
               <Text
                 style={{
                   fontFamily: t.fonts.bold,
                   fontSize: 14,
-                  color: selected ? t.colors.cream : t.colors.ink,
+                  color: selected ? t.colors.onDark : t.colors.ink,
                   flexShrink: 1,
                 }}
               >

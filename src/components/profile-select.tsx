@@ -13,7 +13,7 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import { Icon, type IconName } from "@/components/icon";
 import { CountryFlag } from "@/components/country-flag";
 import { ErrorMessage, Title } from "@/components/ui";
-import { theme as t } from "@/theme";
+import { useTheme, useThemedStyles, type AppTheme } from "@/theme";
 
 type Option = readonly [code: string, label: string];
 
@@ -60,6 +60,8 @@ export function ProfileSelect({
   disabled?: boolean;
   error?: string;
 }) {
+  const t = useTheme();
+  const styles = useThemedStyles(createStyles);
   useLocale();
   const [open, setOpen] = React.useState(false);
   const rawLabel = options.find(([code]) => code === value)?.[1] || value;
@@ -201,57 +203,58 @@ export function ProfileSelect({
   );
 }
 
-const styles = StyleSheet.create({
-  label: {
-    fontFamily: t.fonts.bold,
-    fontSize: t.type.caption,
-    color: t.colors.ink,
-  },
-  optional: { fontFamily: t.fonts.body, color: t.colors.muted },
-  trigger: {
-    flexDirection: "row",
-    alignItems: "center",
-    gap: t.spacing.sm,
-    minHeight: 56,
-    padding: t.spacing.md,
-    borderWidth: 1,
-    borderRadius: t.radius.control,
-    backgroundColor: t.colors.cream,
-  },
-  value: {
-    flex: 1,
-    fontFamily: t.fonts.body,
-    fontSize: t.type.body,
-    color: t.colors.ink,
-  },
-  description: {
-    fontFamily: t.fonts.body,
-    fontSize: t.type.caption,
-    color: t.colors.muted,
-  },
-  header: {
-    flexDirection: "row",
-    alignItems: "center",
-    gap: t.spacing.sm,
-    padding: t.spacing.lg,
-  },
-  close: {
-    minHeight: 44,
-    minWidth: 44,
-    alignItems: "center",
-    justifyContent: "center",
-  },
-  options: {
-    paddingHorizontal: t.spacing.lg,
-    paddingBottom: t.spacing.xl,
-    gap: t.spacing.xs,
-  },
-  option: {
-    flexDirection: "row",
-    alignItems: "center",
-    gap: t.spacing.sm,
-    minHeight: 56,
-    padding: t.spacing.md,
-    borderRadius: t.radius.control,
-  },
-});
+const createStyles = (t: AppTheme) =>
+  StyleSheet.create({
+    label: {
+      fontFamily: t.fonts.bold,
+      fontSize: t.type.caption,
+      color: t.colors.ink,
+    },
+    optional: { fontFamily: t.fonts.body, color: t.colors.muted },
+    trigger: {
+      flexDirection: "row",
+      alignItems: "center",
+      gap: t.spacing.sm,
+      minHeight: 56,
+      padding: t.spacing.md,
+      borderWidth: 1,
+      borderRadius: t.radius.control,
+      backgroundColor: t.colors.cream,
+    },
+    value: {
+      flex: 1,
+      fontFamily: t.fonts.body,
+      fontSize: t.type.body,
+      color: t.colors.ink,
+    },
+    description: {
+      fontFamily: t.fonts.body,
+      fontSize: t.type.caption,
+      color: t.colors.muted,
+    },
+    header: {
+      flexDirection: "row",
+      alignItems: "center",
+      gap: t.spacing.sm,
+      padding: t.spacing.lg,
+    },
+    close: {
+      minHeight: 44,
+      minWidth: 44,
+      alignItems: "center",
+      justifyContent: "center",
+    },
+    options: {
+      paddingHorizontal: t.spacing.lg,
+      paddingBottom: t.spacing.xl,
+      gap: t.spacing.xs,
+    },
+    option: {
+      flexDirection: "row",
+      alignItems: "center",
+      gap: t.spacing.sm,
+      minHeight: 56,
+      padding: t.spacing.md,
+      borderRadius: t.radius.control,
+    },
+  });

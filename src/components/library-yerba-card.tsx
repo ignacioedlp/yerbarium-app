@@ -9,7 +9,7 @@ import { get } from "@/api/client";
 import type { LibraryEntry } from "@/api/community-types";
 import type { PaginatedResponse, YerbaMateListItem } from "@/api/types";
 import { Button, ErrorMessage, YerbaCard } from "@/components/ui";
-import { theme } from "@/theme";
+import { useTheme } from "@/theme";
 
 // Library responses contain a smaller product summary than catalog responses.
 // Enrich it with public catalog data, while keeping the library card usable offline.
@@ -20,6 +20,7 @@ export function LibraryYerbaCard({
   yerba: LibraryEntry["yerba"];
   index?: number;
 }) {
+  const theme = useTheme();
   useLocale();
   const client = useQueryClient();
   const complete =

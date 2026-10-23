@@ -39,7 +39,7 @@ import { useGamification } from "@/hooks/gamification";
 import { tr, useLocale } from "@/i18n";
 import { useSession } from "@/providers/session";
 import { EmailVerificationStatus } from "@/screens/email-actions";
-import { theme as t } from "@/theme";
+import { useTheme } from "@/theme";
 
 // Coordinates are fractions of recorrido.webp (1024 × 1536), never of the viewport.
 export const JOURNEY_STOPS = [
@@ -203,6 +203,7 @@ function JourneyMap({
   selectedLevel: number | null;
   onSelectLevel: (level: number | null) => void;
 }) {
+  const t = useTheme();
   const badgeSize = Math.max(32, Math.min(48, width * 0.05));
   const labelWidth = Math.min(width * 0.34, 150);
   const levels: GamificationLevel[] =
@@ -235,8 +236,7 @@ function JourneyMap({
         style={{
           position: "absolute",
           inset: 0,
-          experimental_backgroundImage:
-            "radial-gradient(ellipse 85% 65% at 0% 0%, #fff8e8 0%, rgba(255,248,232,0.96) 60%, rgba(255,248,232,0) 100%)",
+          experimental_backgroundImage: t.colors.journeyFade,
         }}
       />
       <CompletedJourney level={data.level} width={width} height={height} />
@@ -286,9 +286,11 @@ function JourneyMap({
                 alignItems: "center",
                 justifyContent: "center",
                 backgroundColor: locked
-                  ? "rgba(231,235,213,0.65)"
+                  ? t.dark
+                    ? t.colors.sage
+                    : "rgba(231,235,213,0.65)"
                   : current
-                    ? t.colors.green
+                    ? t.colors.hero
                     : "#676b57",
                 borderColor: "#f6d15b",
                 borderWidth: current ? 3 : 0,
@@ -312,7 +314,7 @@ function JourneyMap({
                 <Text
                   style={{
                     fontFamily: t.fonts.bold,
-                    color: t.colors.cream,
+                    color: t.colors.onDark,
                     fontSize: badgeSize * 0.52,
                   }}
                 >
@@ -334,7 +336,9 @@ function JourneyMap({
                   paddingHorizontal: 8,
                   paddingVertical: 5,
                   borderRadius: 10,
-                  backgroundColor: current ? t.colors.cream : "#f4efdfed",
+                  backgroundColor: current
+                    ? t.colors.cream
+                    : t.colors.journeyLabel,
                   flexDirection: "row",
                   alignItems: "center",
                   gap: 4,
@@ -344,7 +348,7 @@ function JourneyMap({
                   <Text
                     style={{
                       fontFamily: t.fonts.bold,
-                      color: current ? t.colors.green : "#42483d",
+                      color: current ? t.colors.green : t.colors.journeyInk,
                       fontSize: 10,
                     }}
                   >
@@ -353,7 +357,7 @@ function JourneyMap({
                   <Text
                     style={{
                       fontFamily: t.fonts.bold,
-                      color: current ? t.colors.green : "#42483d",
+                      color: current ? t.colors.green : t.colors.journeyInk,
                       fontSize: 11,
                       lineHeight: 13,
                     }}
@@ -364,7 +368,7 @@ function JourneyMap({
                 {locked && (
                   <SymbolView
                     name={{ ios: "lock.fill", android: "lock" }}
-                    tintColor="#606454"
+                    tintColor={t.colors.muted}
                     size={12}
                   />
                 )}
@@ -378,6 +382,7 @@ function JourneyMap({
 }
 
 function ProfileDetails({ close }: { close: () => void }) {
+  const t = useTheme();
   const { user, logout } = useSession();
   const navigate = (action: () => void) => {
     close();
@@ -455,6 +460,7 @@ function ProfileDetails({ close }: { close: () => void }) {
 }
 
 export function ProfileJourney() {
+  const t = useTheme();
   useLocale();
   const { user } = useSession();
   const query = useGamification();
@@ -622,7 +628,7 @@ export function ProfileJourney() {
                   minimumFontScale={0.7}
                   style={{
                     fontFamily: t.fonts.display,
-                    color: t.colors.deep,
+                    color: t.colors.green,
                     fontSize: 29,
                     ...(process.env.EXPO_OS === "android"
                       ? { lineHeight: 34 }
@@ -703,12 +709,12 @@ export function ProfileJourney() {
             width: 42,
             height: 42,
             borderRadius: 21,
-            backgroundColor: t.colors.green,
+            backgroundColor: t.colors.hero,
             alignItems: "center",
             justifyContent: "center",
           }}
         >
-          <Icon name="settings" color={t.colors.cream} size={23} />
+          <Icon name="settings" color={t.colors.onDark} size={23} />
         </Pressable>
       </View>
       <View
@@ -716,7 +722,7 @@ export function ProfileJourney() {
         style={{
           position: "absolute",
           top: panelTop,
-          bottom: bottomInset,
+          bottom: 0,
           left: 0,
           right: 0,
           overflow: "hidden",
@@ -726,7 +732,10 @@ export function ProfileJourney() {
           testID="profile-library-sheet"
           style={[
             {
-              height: panelHeight,
+              // Continue the sheet surface behind iOS floating tabs while keeping
+              // its summary and drag positions above the navigation safe area.
+              height: panelHeight + bottomInset,
+              paddingBottom: bottomInset,
               borderTopLeftRadius: 30,
               borderTopRightRadius: 30,
               backgroundColor: t.colors.surface,

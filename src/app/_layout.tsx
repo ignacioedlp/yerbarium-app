@@ -13,8 +13,9 @@ import { DataProvider } from "@/providers/data";
 import { NotificationObserver } from "@/providers/notifications";
 import { SessionProvider, useSession } from "@/providers/session";
 import { LocaleProvider, useLocaleReady } from "@/providers/locale";
+import { AppearanceProvider, useAppearance } from "@/providers/appearance";
 import { ComparisonProvider } from "@/providers/comparison";
-import { theme } from "@/theme";
+import { useTheme } from "@/theme";
 import { LaunchSplash } from "@/components/launch-splash";
 import { AppHeader } from "@/components/app-header";
 import { GamificationToastObserver } from "@/components/gamification-toast";
@@ -51,9 +52,11 @@ function AnalyticsTracking() {
 }
 
 function Navigation() {
+  const theme = useTheme();
   useLocale();
   const { ready } = useSession();
   const localeReady = useLocaleReady();
+  const appearance = useAppearance();
   const { markInteractive } = useObserve();
   const [fonts, error] = useFonts({
     NunitoSans_400Regular,
@@ -62,7 +65,8 @@ function Navigation() {
     Caveat: require("../../assets/fonts/caveat-variable.ttf"),
   });
 
-  const appReady = ready && localeReady && Boolean(fonts || error);
+  const appReady =
+    ready && localeReady && appearance.ready && Boolean(fonts || error);
   const [contentLaidOut, setContentLaidOut] = useState(false);
   const [splashReady, setSplashReady] = useState(false);
   const [splashFinished, setSplashFinished] = useState(false);
@@ -99,7 +103,7 @@ function Navigation() {
           <View style={{ flex: 1 }} onLayout={() => setContentLaidOut(true)}>
             <NotificationObserver />
             {posthogClient && <AnalyticsTracking />}
-            <StatusBar style="dark" />
+            <StatusBar style={theme.dark ? "light" : "dark"} />
             <Stack
               screenOptions={{
                 headerShown: false,
@@ -198,6 +202,10 @@ function Navigation() {
                 options={{ title: tr("Ajustes"), headerShown: true }}
               />
               <Stack.Screen
+                name="ajustes/apariencia"
+                options={{ title: tr("Apariencia"), headerShown: true }}
+              />
+              <Stack.Screen
                 name="ajustes/idioma"
                 options={{ title: tr("Idioma"), headerShown: true }}
               />
@@ -248,9 +256,11 @@ function RootLayout() {
         <DataProvider>
           <SessionProvider>
             <LocaleProvider>
-              <ComparisonProvider>
-                <Navigation />
-              </ComparisonProvider>
+              <AppearanceProvider>
+                <ComparisonProvider>
+                  <Navigation />
+                </ComparisonProvider>
+              </AppearanceProvider>
             </LocaleProvider>
           </SessionProvider>
         </DataProvider>

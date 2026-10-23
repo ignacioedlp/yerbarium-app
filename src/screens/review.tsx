@@ -3,12 +3,12 @@ import { FlavorNotePicker } from "@/components/flavor-note-picker";
 import { LeafRating } from "@/components/leaf-rating";
 import { Icon } from "@/components/icon";
 import { EditorialHero } from "@/components/editorial";
-import { theme } from "@/theme";
+import { useTheme } from "@/theme";
 import React, { useState } from "react";
 import { Pressable, Text, View } from "react-native";
 import { useLocalSearchParams, router } from "expo-router";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
-import { Controller, useForm } from "react-hook-form";
+import { Controller, useForm, useWatch } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { get, write, normalizeError } from "@/api/client";
@@ -33,18 +33,12 @@ import {
   useCanWrite,
 } from "@/components/ui";
 import { sensoryFields } from "@/api/sensory-fields";
-const schema = z.object({
-  rating: z
-    .number()
-    .min(1)
-    .max(5)
-    .refine(
-      (value) => Number.isInteger(value * 2),
-      "Elegí una puntuación en pasos de medio punto.",
-    ),
-  comment: z.string(),
-});
+import {
+  reviewSchema as schema,
+  requiredReviewSensoryKeys,
+} from "@/api/review-validation";
 function ReviewForm({ slug, review }: { slug: string; review: Review | null }) {
+  const theme = useTheme();
   useLocale();
   const online = useCanWrite(),
     client = useQueryClient();
@@ -52,21 +46,19 @@ function ReviewForm({ slug, review }: { slug: string; review: Review | null }) {
   const [expanded, setExpanded] = useState(
     !!review?.comment || !!review?.sensory || !!review?.flavor_notes.length,
   );
-  const [sensory, setSensory] = useState<
-    Partial<Record<SensoryKey, number | null>>
-  >(review?.sensory || {});
   const [selected, setSelected] = useState<string[]>(
     review?.flavor_notes.map((note) => note.slug) || [],
   );
-  const [sensoryChanged, setSensoryChanged] = useState(false),
-    [notesChanged, setNotesChanged] = useState(false);
+  const [notesChanged, setNotesChanged] = useState(false);
   const form = useForm<z.infer<typeof schema>>({
     resolver: zodResolver(schema),
     defaultValues: {
       rating: review ? Number(review.rating) : 3,
       comment: review?.comment || "",
+      sensory: review?.sensory || {},
     },
   });
+  const sensory = useWatch({ control: form.control, name: "sensory" });
   const mutation = useMutation({
     mutationFn: (values: z.infer<typeof schema>) =>
       write<Review>(
@@ -77,7 +69,7 @@ function ReviewForm({ slug, review }: { slug: string; review: Review | null }) {
         {
           rating: values.rating.toFixed(1),
           comment: values.comment,
-          ...(sensoryChanged ? { sensory } : {}),
+          sensory: values.sensory,
           ...(notesChanged ? { flavor_note_slugs: selected } : {}),
         },
       ),
@@ -113,13 +105,87 @@ function ReviewForm({ slug, review }: { slug: string; review: Review | null }) {
       router.back();
     },
   });
+  const renderSensoryField = (key: SensoryKey) => {
+    const required = requiredReviewSensoryKeys.includes(key);
+    return (
+      <Card key={key}>
+        <Body>
+          {tr(sensoryLabels[key])}
+          {required ? " *" : ""}
+        </Body>
+        <Body muted>
+          {tr(sensoryFields.find((field) => field.key === key)?.help || "")}
+        </Body>
+        <LeafRating
+          value={sensory[key] ?? null}
+          label={tr(sensoryLabels[key])}
+          size={30}
+          onChange={(value) => {
+            form.setValue(`sensory.${key}`, value, {
+              shouldValidate: form.formState.isSubmitted,
+            });
+          }}
+        />
+        {(sensory[key] ?? null) !== null && (
+          <Body muted>
+            {tr(
+              sensoryFields.find((field) => field.key === key)?.levels[
+                sensory[key]! - 1
+              ] || "",
+            )}
+          </Body>
+        )}
+        {!required && (
+          <Button
+            compact
+            secondary
+            label={tr("No evaluar")}
+            selected={(sensory[key] ?? null) === null}
+            onPress={() => {
+              form.setValue(`sensory.${key}`, null, {
+                shouldValidate: form.formState.isSubmitted,
+              });
+            }}
+          />
+        )}
+        {form.formState.errors.sensory?.[key] && (
+          <ErrorMessage message={tr("Elegí un valor de 1 a 5.")} />
+        )}
+      </Card>
+    );
+  };
   return (
-    <>
+    <Page
+      footer={
+        <>
+          <Button
+            label={
+              mutation.isPending
+                ? tr("Guardando…")
+                : review
+                  ? tr("Guardar opinión")
+                  : tr("Publicar opinión")
+            }
+            disabled={!online || mutation.isPending}
+            onPress={form.handleSubmit((values) => mutation.mutate(values))}
+          />
+          <Button
+            label={tr("Cancelar")}
+            secondary
+            disabled={mutation.isPending}
+            onPress={() => router.back()}
+          />
+        </>
+      }
+    >
+      <ReviewHero />
       <Title>
         {review ? tr("Editá tu opinión") : tr("¿Cómo fue tu ronda?")}
       </Title>
       <Body>
-        {tr("Una puntuación alcanza. Podés completar los detalles después.")}
+        {tr(
+          "Completá la puntuación, el amargor, la intensidad y el polvo percibido. Los campos con * son obligatorios.",
+        )}
       </Body>
       <Controller
         control={form.control}
@@ -242,6 +308,19 @@ function ReviewForm({ slug, review }: { slug: string; review: Review | null }) {
           </Card>
         )}
       />
+      <View style={{ marginTop: theme.spacing.lg, gap: theme.spacing.sm }}>
+        <Title>{tr("Evaluación sensorial")}</Title>
+        <Body muted>
+          {tr("Elegí un valor de 1 a 5 para cada campo obligatorio.")}
+        </Body>
+        {requiredReviewSensoryKeys
+          .filter((key) => key === "intensity" || key === "bitterness")
+          .map((key) => renderSensoryField(key))}
+      </View>
+      <View style={{ marginTop: theme.spacing.lg, gap: theme.spacing.sm }}>
+        <Title>{tr("Comportamiento en cebado")}</Title>
+        {renderSensoryField("perceived_dust")}
+      </View>
       <Button
         label={expanded ? tr("Ocultar detalles") : tr("¿Querés contar más?")}
         secondary
@@ -261,53 +340,22 @@ function ReviewForm({ slug, review }: { slug: string; review: Review | null }) {
               />
             )}
           />
-          <Title>{tr("Evaluación sensorial")}</Title>
+          <View style={{ marginTop: theme.spacing.lg }}>
+            <Title>{tr("Detalles opcionales")}</Title>
+          </View>
           <Body muted>
             {tr(
               "Usá 1 para el nivel más bajo y 5 para el más alto. No evaluar deja el atributo sin valoración.",
             )}
           </Body>
-          {(Object.keys(sensoryLabels) as SensoryKey[]).map((key) => (
-            <Card key={key}>
-              <Body>{tr(sensoryLabels[key])}</Body>
-              <Body muted>
-                {tr(
-                  sensoryFields.find((field) => field.key === key)?.help || "",
-                )}
-              </Body>
-              <LeafRating
-                value={sensory[key] ?? null}
-                label={tr(sensoryLabels[key])}
-                size={30}
-                onChange={(value) => {
-                  setSensory((current) => ({ ...current, [key]: value }));
-                  setSensoryChanged(true);
-                }}
-              />
-              {(sensory[key] ?? null) !== null && (
-                <Body muted>
-                  {tr(
-                    sensoryFields.find((field) => field.key === key)?.levels[
-                      sensory[key]! - 1
-                    ] || "",
-                  )}
-                </Body>
-              )}
-              <Button
-                compact
-                secondary
-                label={tr("No evaluar")}
-                selected={(sensory[key] ?? null) === null}
-                onPress={() => {
-                  setSensory((current) => ({ ...current, [key]: null }));
-                  setSensoryChanged(true);
-                }}
-              />
-            </Card>
-          ))}
-          <Title>{tr("Notas que percibiste")}</Title>
+          {(Object.keys(sensoryLabels) as SensoryKey[])
+            .filter((key) => !requiredReviewSensoryKeys.includes(key))
+            .map((key) => renderSensoryField(key))}
+          <View style={{ marginTop: theme.spacing.lg }}>
+            <Title>{tr("Notas que percibiste")}</Title>
+          </View>
           <Body muted>
-            {tr("Podés seleccionar varias, aunque no evalúes ningún atributo.")}
+            {tr("Podés seleccionar varias notas. Son opcionales.")}
           </Body>
           <QueryState query={notes}>
             <FlavorNotePicker
@@ -346,27 +394,17 @@ function ReviewForm({ slug, review }: { slug: string; review: Review | null }) {
           />
         </>
       )}
+      {form.formState.errors.sensory && (
+        <ErrorMessage
+          message={tr(
+            "Completá todos los campos obligatorios antes de publicar.",
+          )}
+        />
+      )}
       {mutation.error && (
         <ErrorMessage message={normalizeError(mutation.error).message} />
       )}
-      <Button
-        label={
-          mutation.isPending
-            ? tr("Guardando…")
-            : review
-              ? tr("Guardar opinión")
-              : tr("Publicar opinión")
-        }
-        disabled={!online || mutation.isPending}
-        onPress={form.handleSubmit((values) => mutation.mutate(values))}
-      />
-      <Button
-        label={tr("Cancelar")}
-        secondary
-        disabled={mutation.isPending}
-        onPress={() => router.back()}
-      />
-    </>
+    </Page>
   );
 }
 export function ReviewScreen() {
@@ -390,28 +428,34 @@ export function ReviewScreen() {
       }
     },
   });
+  if (user && own.data !== undefined) {
+    return <ReviewForm slug={slug} review={own.data} />;
+  }
   return (
     <Page>
-      <View
-        style={{
-          marginHorizontal: -theme.spacing.lg,
-          marginTop: -theme.spacing.lg,
-        }}
-      >
-        <EditorialHero
-          title={tr("Tu experiencia")}
-          accent={tr("suma a la ronda")}
-          description={tr("Cada opinión ayuda a conocer mejor una yerba.")}
-          compact
-        />
-      </View>
+      <ReviewHero />
       <RequireSession bare>
-        <QueryState query={own}>
-          {own.data !== undefined && (
-            <ReviewForm slug={slug} review={own.data} />
-          )}
-        </QueryState>
+        <QueryState query={own}>{null}</QueryState>
       </RequireSession>
     </Page>
+  );
+}
+
+function ReviewHero() {
+  const theme = useTheme();
+  return (
+    <View
+      style={{
+        marginHorizontal: -theme.spacing.lg,
+        marginTop: -theme.spacing.lg,
+      }}
+    >
+      <EditorialHero
+        title={tr("Tu experiencia")}
+        accent={tr("suma a la ronda")}
+        description={tr("Cada opinión ayuda a conocer mejor una yerba.")}
+        compact
+      />
+    </View>
   );
 }

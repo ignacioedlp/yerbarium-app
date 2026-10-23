@@ -10,8 +10,8 @@ import {
 } from "@/api/gamification";
 import { useGamification } from "@/hooks/gamification";
 import { tr, useLocale } from "@/i18n";
-import { theme as t } from "@/theme";
-import { Body, Button, Card, QueryState, styles } from "./ui";
+import { useTheme } from "@/theme";
+import { Body, Button, Card, QueryState, useUIStyles } from "./ui";
 import { Icon } from "./icon";
 
 export function BadgeImage({
@@ -23,6 +23,8 @@ export function BadgeImage({
   size?: number;
   level?: number;
 }) {
+  const t = useTheme();
+  const styles = useUIStyles();
   useLocale();
   const [failedUrl, setFailedUrl] = useState<string | null>(null);
   return badge.image_url && badge.image_url !== failedUrl ? (
@@ -64,6 +66,7 @@ export function ProgressBar({
   maximum?: number;
   label: string;
 }) {
+  const t = useTheme();
   const ratio = progressRatio(value, maximum);
   return (
     <View
@@ -82,7 +85,7 @@ export function ProgressBar({
         style={{
           height: "100%",
           width: `${ratio * 100}%`,
-          backgroundColor: t.colors.green,
+          backgroundColor: t.colors.hero,
           borderRadius: t.radius.pill,
         }}
       />
@@ -91,6 +94,8 @@ export function ProgressBar({
 }
 
 export function LevelProgress({ data }: { data: OwnGamification }) {
+  const t = useTheme();
+  const styles = useUIStyles();
   useLocale();
   return (
     <View style={{ gap: t.spacing.sm }}>

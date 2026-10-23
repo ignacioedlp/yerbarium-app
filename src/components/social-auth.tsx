@@ -13,7 +13,7 @@ import { SocialProviderButton } from "@/components/social-provider-button";
 import { AuthField } from "@/components/auth-sheet";
 import { Body, Button, ErrorMessage } from "@/components/ui";
 import { useSession } from "@/providers/session";
-import { theme } from "@/theme";
+import { useTheme } from "@/theme";
 import { tr, useLocale } from "@/i18n";
 
 export function useSocialAuth({
@@ -97,6 +97,7 @@ export function SocialAuthButtons({
   disabled: boolean;
   showEmailSeparator?: boolean;
 }) {
+  const theme = useTheme();
   useLocale();
   const [password, setPassword] = React.useState("");
   const google =

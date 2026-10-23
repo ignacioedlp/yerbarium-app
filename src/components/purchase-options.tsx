@@ -4,7 +4,7 @@ import { Pressable, Text, View } from "react-native";
 import type { YerbaPurchaseLink } from "@/api/types";
 import { Body, ErrorMessage, openExternal } from "@/components/ui";
 import { Icon } from "@/components/icon";
-import { theme as t } from "@/theme";
+import { useTheme } from "@/theme";
 import { trackAnalyticsEvent } from "@/analytics";
 
 export function PurchaseOptions({
@@ -14,6 +14,7 @@ export function PurchaseOptions({
   slug: string;
   links: YerbaPurchaseLink[];
 }) {
+  const t = useTheme();
   useLocale();
   const [failedLink, setFailedLink] = useState<number | null>(null);
   return (

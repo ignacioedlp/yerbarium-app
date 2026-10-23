@@ -9,10 +9,11 @@ import {
   SectionHeading,
   HandNote,
 } from "@/components/editorial";
-import { theme as t } from "@/theme";
+import { useTheme } from "@/theme";
 import { Icon } from "@/components/icon";
 import { articles, learningLinks } from "@/content/learning";
 export function Editorial() {
+  const t = useTheme();
   useLocale();
   const { article } = useLocalSearchParams<{ article: string }>();
   const data = articles[article];

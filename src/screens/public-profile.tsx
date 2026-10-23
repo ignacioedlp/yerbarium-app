@@ -11,7 +11,7 @@ import {
   AnimatedTabs,
   type AnimatedTabOption,
 } from "@/components/animated-tabs";
-import { theme } from "@/theme";
+import { useTheme } from "@/theme";
 import React, { useState } from "react";
 import { Stack, useLocalSearchParams } from "expo-router";
 import { Page, Body, Button, Card, QueryState } from "@/components/ui";
@@ -32,6 +32,7 @@ const COLLECTION_TABS: AnimatedTabOption<LibraryCollection>[] = [
 ];
 
 export function PublicProfile() {
+  const theme = useTheme();
   useLocale();
   const { username } = useLocalSearchParams<{ username: string }>();
   const { user } = useSession();

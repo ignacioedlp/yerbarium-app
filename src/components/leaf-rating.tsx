@@ -1,13 +1,13 @@
 import { tr, useLocale, getLocale } from "@/i18n";
 import { Image } from "expo-image";
 import { Platform, Pressable, Text, View } from "react-native";
-import { theme } from "@/theme";
+import { useTheme, type AppTheme } from "@/theme";
 import { Icon } from "@/components/icon";
 
 // The same leaf silhouette and fractional fill used by the web sensory profile.
 const leafPath =
   "M16.8 2.4C8.2 2.4 3.8 6.6 3.8 11.6a5.9 5.9 0 0 0 5.9 5.9c5.1 0 7.7-6.2 7.1-15.1Z";
-function leafSource(fill: number) {
+function leafSource(fill: number, theme: AppTheme) {
   const filled =
     fill > 0
       ? `<defs><clipPath id="fill"><rect width="${20 * fill}" height="20"/></clipPath></defs><path d="${leafPath}" fill="${theme.colors.leafFill}" clip-path="url(#fill)"/>`
@@ -33,6 +33,7 @@ export function LeafRating({
   disabled?: boolean;
   fullWidth?: boolean;
 }) {
+  const theme = useTheme();
   useLocale();
   const parsed = value === null ? null : Number(value);
   const rating =
@@ -98,7 +99,7 @@ export function LeafRating({
               </View>
             ) : (
               <Image
-                source={leafSource(fill)}
+                source={leafSource(fill, theme)}
                 accessible={false}
                 contentFit="contain"
                 style={{ width: size, height: size }}

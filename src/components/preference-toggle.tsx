@@ -1,6 +1,6 @@
 import { Host, Switch } from "@expo/ui";
 import { Pressable, Text, View } from "react-native";
-import { theme } from "@/theme";
+import { useTheme } from "@/theme";
 export function PreferenceToggle({
   label,
   description,
@@ -16,6 +16,7 @@ export function PreferenceToggle({
   onChange: (value: boolean) => void;
   testID?: string;
 }) {
+  const theme = useTheme();
   return (
     <Pressable
       accessibilityRole="switch"
@@ -58,7 +59,7 @@ export function PreferenceToggle({
       </View>
       <Host
         matchContents
-        colorScheme="light"
+        colorScheme={theme.dark ? "dark" : "light"}
         seedColor={theme.colors.green}
         pointerEvents="none"
         accessibilityElementsHidden

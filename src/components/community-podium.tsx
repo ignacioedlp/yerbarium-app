@@ -11,11 +11,13 @@ import {
 } from "react-native";
 import type { CommunityRanking, RankedYerba } from "@/api/types";
 import { useResource } from "@/hooks/queries";
-import { theme as t } from "@/theme";
+import { useTheme, useThemedStyles, type AppTheme } from "@/theme";
 import { SectionHeading } from "./editorial";
-import { QueryState, styles } from "./ui";
+import { QueryState, useUIStyles } from "./ui";
 
 export function CommunityPodium() {
+  const t = useTheme();
+  const styles = useUIStyles();
   useLocale();
   const ranking = useResource<CommunityRanking>(
     "community/rankings/yerbas/?limit=3",
@@ -68,6 +70,9 @@ function PodiumYerba({
   yerba: RankedYerba;
   stacked: boolean;
 }) {
+  const t = useTheme();
+  const podium = useThemedStyles(createPodium);
+  const styles = useUIStyles();
   useLocale();
   const [failedUrl, setFailedUrl] = React.useState<string>();
   const winner = yerba.rank === 1;
@@ -170,24 +175,25 @@ function PodiumYerba({
   );
 }
 
-const podium = StyleSheet.create({
-  item: {
-    minWidth: 0,
-    justifyContent: "space-between",
-  },
-  content: { gap: t.spacing.sm, flex: 1 },
-  media: { alignItems: "center", justifyContent: "flex-end" },
-  copy: { gap: t.spacing.xs },
-  name: {
-    fontFamily: t.fonts.display,
-    fontSize: 18,
-    lineHeight: 21,
-    color: t.colors.ink,
-  },
-  place: {
-    alignItems: "center",
-    justifyContent: "center",
-    padding: t.spacing.xs,
-  },
-  position: { fontFamily: t.fonts.display, fontSize: 24 },
-});
+const createPodium = (t: AppTheme) =>
+  StyleSheet.create({
+    item: {
+      minWidth: 0,
+      justifyContent: "space-between",
+    },
+    content: { gap: t.spacing.sm, flex: 1 },
+    media: { alignItems: "center", justifyContent: "flex-end" },
+    copy: { gap: t.spacing.xs },
+    name: {
+      fontFamily: t.fonts.display,
+      fontSize: 18,
+      lineHeight: 21,
+      color: t.colors.ink,
+    },
+    place: {
+      alignItems: "center",
+      justifyContent: "center",
+      padding: t.spacing.xs,
+    },
+    position: { fontFamily: t.fonts.display, fontSize: 24 },
+  });

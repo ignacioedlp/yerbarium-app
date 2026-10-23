@@ -1,23 +1,22 @@
 import React from "react";
 import { Text, View } from "react-native";
 import { groupAchievements, type Achievement } from "@/api/gamification";
-import {
-  BadgeImage,
-  ProgressBar,
-} from "@/components/gamification";
+import { BadgeImage, ProgressBar } from "@/components/gamification";
 import {
   Body,
   Page,
   QueryState,
   RequireSession,
-  styles,
+  useUIStyles,
 } from "@/components/ui";
 import { useGamification } from "@/hooks/gamification";
 import { tr, useLocale } from "@/i18n";
-import { theme as t } from "@/theme";
+import { useTheme } from "@/theme";
 import { Paper } from "@/components/editorial";
 
 function AchievementCard({ award }: { award: Achievement }) {
+  const t = useTheme();
+  const styles = useUIStyles();
   useLocale();
   const completed = award.status === "unlocked";
   const progressLabel = {
@@ -90,6 +89,8 @@ function AchievementCard({ award }: { award: Achievement }) {
 }
 
 function AchievementsContent() {
+  const t = useTheme();
+  const styles = useUIStyles();
   useLocale();
   const query = useGamification();
   const data = query.data;
