@@ -18,7 +18,13 @@ export interface Achievement extends GamificationBadge {
   awarded_at: string | null;
 }
 
+export interface GamificationLevel extends GamificationBadge {
+  level: number;
+  min_xp: number;
+}
+
 export interface OwnGamification extends GamificationBadge {
+  levels?: GamificationLevel[];
   rules_version: string;
   level: number;
   total_xp: number;

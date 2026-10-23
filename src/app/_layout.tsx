@@ -17,6 +17,7 @@ import { ComparisonProvider } from "@/providers/comparison";
 import { theme } from "@/theme";
 import { LaunchSplash } from "@/components/launch-splash";
 import { AppHeader } from "@/components/app-header";
+import { GamificationToastObserver } from "@/components/gamification-toast";
 import { PostHogProvider, usePostHog } from "posthog-react-native";
 import { posthogClient } from "@/analytics";
 
@@ -229,6 +230,7 @@ function Navigation() {
                 options={{ title: "", headerShown: true }}
               />
             </Stack>
+            <GamificationToastObserver />
           </View>
         )}
       </View>

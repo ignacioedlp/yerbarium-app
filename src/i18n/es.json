@@ -858,5 +858,12 @@
   "¡Completaste todos los logros!": "¡Completaste todos los logros!",
   "Yerbas probadas: {0} de {1}": "Yerbas probadas: {0} de {1}",
   "Opiniones publicadas: {0} de {1}": "Opiniones publicadas: {0} de {1}",
-  "Marcas probadas: {0} de {1}": "Marcas probadas: {0} de {1}"
+  "Marcas probadas: {0} de {1}": "Marcas probadas: {0} de {1}",
+  "Nivel {0}": "Nivel {0}",
+  "+{0} XP": "+{0} XP",
+  "Logro: {0}": "Logro: {0}",
+  "¡Subiste al nivel {0}!": "¡Subiste al nivel {0}!",
+  "¡Nuevo nivel!": "¡Nuevo nivel!",
+  "¡Logro desbloqueado!": "¡Logro desbloqueado!",
+  "¡Sumaste experiencia!": "¡Sumaste experiencia!"
 }

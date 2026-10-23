@@ -858,5 +858,12 @@
   "¡Completaste todos los logros!": "You completed every achievement!",
   "Yerbas probadas: {0} de {1}": "Yerbas tried: {0} of {1}",
   "Opiniones publicadas: {0} de {1}": "Reviews published: {0} of {1}",
-  "Marcas probadas: {0} de {1}": "Brands tried: {0} of {1}"
+  "Marcas probadas: {0} de {1}": "Brands tried: {0} of {1}",
+  "Nivel {0}": "Level {0}",
+  "+{0} XP": "+{0} XP",
+  "Logro: {0}": "Achievement: {0}",
+  "¡Subiste al nivel {0}!": "You reached level {0}!",
+  "¡Nuevo nivel!": "Level up!",
+  "¡Logro desbloqueado!": "Achievement unlocked!",
+  "¡Sumaste experiencia!": "You earned experience!"
 }

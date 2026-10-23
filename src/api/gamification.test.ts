@@ -22,6 +22,24 @@ it("fetches private progress with cancellation and preserves badge presentation"
     image_url: "https://media.example.test/level-1.webp",
     image_alt_text: "Primer Cebado",
     achievements: [],
+    levels: [
+      {
+        level: 1,
+        name: "Primer Cebado",
+        min_xp: 0,
+        icon_key: "level-1",
+        image_url: null,
+        image_alt_text: "",
+      },
+      {
+        level: 10,
+        name: "Leyenda de la Ronda",
+        min_xp: 10000,
+        icon_key: "level-10",
+        image_url: "https://media.example.test/level-10.webp",
+        image_alt_text: "Insignia del nivel 10",
+      },
+    ],
   };
   publicApi.defaults.adapter = async () => {
     throw new Error("Progress must use the authenticated client");

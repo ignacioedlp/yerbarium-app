@@ -16,6 +16,7 @@ export default function TabLayout() {
         indicatorColor={theme.colors.selected}
         rippleColor={theme.colors.selected}
         backgroundColor={theme.colors.surface}
+        blurEffect="none"
         labelStyle={{
           default: {
             color: theme.colors.muted,
@@ -36,10 +37,11 @@ export default function TabLayout() {
           <NativeTabs.Trigger.Icon sf="magnifyingglass" md="search" />
         </NativeTabs.Trigger>
         <NativeTabs.Trigger name="escanear">
-          <NativeTabs.Trigger.Label>
-            {tr("Escanear")}
-          </NativeTabs.Trigger.Label>
-          <NativeTabs.Trigger.Icon sf="barcode.viewfinder" md="barcode_scanner" />
+          <NativeTabs.Trigger.Label>{tr("Escanear")}</NativeTabs.Trigger.Label>
+          <NativeTabs.Trigger.Icon
+            sf="barcode.viewfinder"
+            md="barcode_scanner"
+          />
         </NativeTabs.Trigger>
         <NativeTabs.Trigger name="social">
           <NativeTabs.Trigger.Label>{tr("Social")}</NativeTabs.Trigger.Label>

@@ -1,15 +1,10 @@
 import { SocialAuthButtons, useSocialAuth } from "@/components/social-auth";
-import { ProfileLibrary } from "@/components/profile-library";
-import { ProfileGamification } from "@/components/gamification";
+import { ProfileJourney } from "@/components/profile-journey";
 import { PreferenceToggle } from "@/components/preference-toggle";
-import { OwnProfileSocial } from "@/components/profile-social";
 import { tr, useLocale } from "@/i18n";
-import { learningLinks } from "@/content/learning";
 import { AuthField, AuthSheet, AuthSwitch } from "@/components/auth-sheet";
 import React from "react";
 import { Pressable, Text, TextInput, View } from "react-native";
-import { HandNote } from "@/components/editorial";
-import { Icon } from "@/components/icon";
 import { router } from "expo-router";
 import { Controller, useForm } from "react-hook-form";
 import { z } from "zod";
@@ -28,11 +23,11 @@ import {
 } from "@/components/ui";
 import { useSession } from "@/providers/session";
 import { normalizeError, write } from "@/api/client";
-import { EmailVerificationStatus } from "@/screens/email-actions";
 import { Account } from "@/api/account-types";
 import { Host, Switch } from "@expo/ui";
 import { theme } from "@/theme";
 import { ProfileSelect, profileCountries } from "@/components/profile-select";
+import { Icon } from "@/components/icon";
 const loginSchema = z.object({
   identifier: z.string().trim().min(1, "Ingresá tu usuario o email."),
   password: z.string().min(1, "Ingresá tu contraseña."),
@@ -301,7 +296,8 @@ export function Registration() {
 }
 export function Profile() {
   useLocale();
-  const session = useSession();
+  const { user } = useSession();
+  if (user) return <ProfileJourney />;
   return (
     <Page safeTop tabBarClearance>
       <View
@@ -309,7 +305,6 @@ export function Profile() {
           flexDirection: "row",
           alignItems: "center",
           justifyContent: "space-between",
-          gap: theme.spacing.md,
         }}
       >
         <Title>{tr("Perfil")}</Title>
@@ -318,117 +313,19 @@ export function Profile() {
           accessibilityLabel={tr("Ajustes")}
           testID="profile-settings"
           onPress={() => router.push("/ajustes")}
-          hitSlop={6}
-          style={({ pressed }) => ({
-            width: 44,
-            height: 44,
-            borderRadius: 22,
+          style={{
+            width: 42,
+            height: 42,
+            borderRadius: 21,
+            backgroundColor: theme.colors.green,
             alignItems: "center",
             justifyContent: "center",
-            backgroundColor: theme.colors.green,
-            opacity: pressed ? 0.65 : 1,
-          })}
+          }}
         >
-          <Icon name="settings" size={23} color={theme.colors.cream} />
+          <Icon name="settings" color={theme.colors.cream} size={23} />
         </Pressable>
       </View>
-      <RequireSession bare>
-        <View style={{ gap: theme.spacing.sm }}>
-          <Title>{session.user?.display_name}</Title>
-          <View
-            style={{
-              flexDirection: "row",
-              alignItems: "center",
-              gap: theme.spacing.xs,
-            }}
-          >
-            <Body muted>@{session.user?.username}</Body>
-            {session.user?.email_verified && (
-              <View
-                accessible
-                accessibilityRole="image"
-                accessibilityLabel={tr("Email verificado")}
-              >
-                <Icon name="verified" size={18} />
-              </View>
-            )}
-          </View>
-          <OwnProfileSocial />
-          <EmailVerificationStatus />
-          <HandNote rotate={false}>
-            {session.user?.bio || tr("Contá un poco sobre vos y tu ronda.")}
-          </HandNote>
-        </View>
-        <ProfileGamification />
-        <View style={{ gap: theme.spacing.sm }}>
-          <Button
-            label={tr("Editar perfil")}
-            onPress={() => router.push("/editar-perfil")}
-          />
-          <Button
-            label={tr("Ver perfil público")}
-            secondary
-            fullWidth
-            onPress={() =>
-              router.push({
-                pathname: "/usuarios/[username]",
-                params: { username: session.user!.username },
-              })
-            }
-          />
-        </View>
-        <ProfileLibrary />
-      </RequireSession>
-      <View style={{ gap: theme.spacing.sm }}>
-        <Title>{tr("Aprende")}</Title>
-        <Body>
-          {tr("Un catálogo y una comunidad para conocer mejor la yerba mate.")}
-        </Body>
-        <View style={{ borderTopWidth: 1, borderColor: theme.colors.border }}>
-          {learningLinks.map(({ article, label }) => (
-            <Pressable
-              key={article}
-              accessibilityRole="link"
-              onPress={() =>
-                router.push({
-                  pathname: "/editorial/[article]",
-                  params: { article },
-                })
-              }
-              style={({ pressed }) => ({
-                minHeight: 52,
-                flexDirection: "row",
-                alignItems: "center",
-                gap: theme.spacing.sm,
-                borderBottomWidth: 1,
-                borderColor: theme.colors.border,
-                opacity: pressed ? 0.6 : 1,
-              })}
-            >
-              <Text
-                style={{
-                  flex: 1,
-                  fontFamily: theme.fonts.bold,
-                  fontSize: 16,
-                  color: theme.colors.green,
-                }}
-              >
-                {tr(label)}
-              </Text>
-              <Icon name="arrow" size={18} />
-            </Pressable>
-          ))}
-        </View>
-      </View>
-      {session.user ? (
-        <View style={{ gap: theme.spacing.sm }}>
-          <Button
-            label={tr("Cerrar sesión")}
-            secondary
-            onPress={() => void session.logout()}
-          />
-        </View>
-      ) : null}
+      <RequireSession bare />
     </Page>
   );
 }

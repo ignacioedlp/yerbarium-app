@@ -185,6 +185,7 @@ export function Button({
   selectedBackgroundColor = t.colors.selected,
   expanded,
   accessibilityLabel,
+  testID,
 }: {
   label: string;
   onPress: () => void;
@@ -197,6 +198,7 @@ export function Button({
   selectedBackgroundColor?: string;
   expanded?: boolean;
   accessibilityLabel?: string;
+  testID?: string;
 }) {
   useLocale();
   const filled = (!secondary || selected) && !destructive;
@@ -205,6 +207,7 @@ export function Button({
       accessibilityRole="button"
       accessibilityLabel={accessibilityLabel ?? label}
       accessibilityState={{ disabled, selected, expanded }}
+      testID={testID}
       onPress={onPress}
       disabled={disabled}
       style={({ pressed }) => [
@@ -551,11 +554,7 @@ export function ExternalLink({
 
   return (
     <>
-      <Button
-        secondary
-        label={label}
-        onPress={open}
-      />
+      <Button secondary label={label} onPress={open} />
       {error && <ErrorMessage message={tr("No pudimos abrir el enlace.")} />}
     </>
   );

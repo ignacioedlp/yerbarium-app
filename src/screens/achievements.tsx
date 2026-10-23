@@ -3,12 +3,10 @@ import { Text, View } from "react-native";
 import { groupAchievements, type Achievement } from "@/api/gamification";
 import {
   BadgeImage,
-  LevelProgress,
   ProgressBar,
 } from "@/components/gamification";
 import {
   Body,
-  Card,
   Page,
   QueryState,
   RequireSession,
@@ -100,15 +98,6 @@ function AchievementsContent() {
     <QueryState query={query}>
       {data && (
         <View style={{ gap: t.spacing.section }}>
-          <Card>
-            <LevelProgress data={data} />
-            <Body>
-              {tr("{0} de {1} logros completados", {
-                0: groups.completed.length,
-                1: data.achievements.length,
-              })}
-            </Body>
-          </Card>
           {data.achievements.length === 0 ? (
             <Body>{tr("Todavía no hay logros disponibles.")}</Body>
           ) : (

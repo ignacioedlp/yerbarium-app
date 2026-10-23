@@ -858,5 +858,12 @@
   "¡Completaste todos los logros!": "Você concluiu todas as conquistas!",
   "Yerbas probadas: {0} de {1}": "Ervas provadas: {0} de {1}",
   "Opiniones publicadas: {0} de {1}": "Avaliações publicadas: {0} de {1}",
-  "Marcas probadas: {0} de {1}": "Marcas provadas: {0} de {1}"
+  "Marcas probadas: {0} de {1}": "Marcas provadas: {0} de {1}",
+  "Nivel {0}": "Nível {0}",
+  "+{0} XP": "+{0} XP",
+  "Logro: {0}": "Conquista: {0}",
+  "¡Subiste al nivel {0}!": "Você chegou ao nível {0}!",
+  "¡Nuevo nivel!": "Subiu de nível!",
+  "¡Logro desbloqueado!": "Conquista desbloqueada!",
+  "¡Sumaste experiencia!": "Você ganhou experiência!"
 }

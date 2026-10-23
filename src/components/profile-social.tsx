@@ -1,5 +1,5 @@
 import React from "react";
-import { View, Pressable } from "react-native";
+import { View, Pressable, Text } from "react-native";
 import { router } from "expo-router";
 import { tr, useLocale } from "@/i18n";
 import { Button, Body } from "@/components/ui";
@@ -46,10 +46,12 @@ function SocialCounts({
   username,
   followers,
   following,
+  compact = false,
 }: {
   username: string;
   followers?: number;
   following?: number;
+  compact?: boolean;
 }) {
   const { user } = useSession();
   if (user?.username !== username)
@@ -71,7 +73,11 @@ function SocialCounts({
     );
   return (
     <View
-      style={{ flexDirection: "row", flexWrap: "wrap", gap: theme.spacing.lg }}
+      style={{
+        flexDirection: "row",
+        flexWrap: "wrap",
+        gap: compact ? 12 : theme.spacing.lg,
+      }}
     >
       <Pressable
         accessibilityRole="link"
@@ -83,9 +89,15 @@ function SocialCounts({
           })
         }
       >
-        <Body>
+        <Text
+          style={{
+            fontFamily: theme.fonts.body,
+            color: theme.colors.ink,
+            fontSize: compact ? 12 : 16,
+          }}
+        >
           {followers ?? 0} {tr("seguidores")}
-        </Body>
+        </Text>
       </Pressable>
       <Pressable
         accessibilityRole="link"
@@ -97,21 +109,28 @@ function SocialCounts({
           })
         }
       >
-        <Body>
+        <Text
+          style={{
+            fontFamily: theme.fonts.body,
+            color: theme.colors.ink,
+            fontSize: compact ? 12 : 16,
+          }}
+        >
           {following ?? 0} {tr("seguidos")}
-        </Body>
+        </Text>
       </Pressable>
     </View>
   );
 }
 
-export function OwnProfileSocial() {
+export function OwnProfileSocial({ compact = false }: { compact?: boolean }) {
   const { user } = useSession();
   const query = useSocialResource<Account>("auth/me/", !!user);
   if (!user) return null;
   const account = query.data ?? user;
   return (
     <SocialCounts
+      compact={compact}
       username={user.username}
       followers={account.followers_count}
       following={account.following_count}
