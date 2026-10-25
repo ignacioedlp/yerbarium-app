@@ -105,11 +105,13 @@ export function HandNote({
   );
 }
 export function SectionHeading({
+  compact = false,
   title,
   action,
   onPress,
 }: {
   title: string;
+  compact?: boolean;
   action?: string;
   onPress?: () => void;
 }) {
@@ -128,11 +130,11 @@ export function SectionHeading({
         accessibilityRole="header"
         style={{
           fontFamily: t.fonts.display,
-          fontSize: t.type.title,
-          lineHeight: 31,
+          fontSize: compact ? 22 : t.type.title,
+          lineHeight: compact ? 27 : 31,
           color: t.colors.ink,
           flex: 1,
-          textTransform: "uppercase",
+          textTransform: compact ? "none" : "uppercase",
         }}
       >
         {title}
@@ -172,6 +174,7 @@ export function EditorialHero({
   children,
   compact = false,
   paper = false,
+  accessory,
 }: React.PropsWithChildren<{
   title: string;
   accent?: string;
@@ -179,6 +182,7 @@ export function EditorialHero({
   description?: string;
   compact?: boolean;
   paper?: boolean;
+  accessory?: React.ReactNode;
 }>) {
   const t = useTheme();
   useLocale();
@@ -188,7 +192,7 @@ export function EditorialHero({
         backgroundColor: paper ? t.colors.background : t.colors.hero,
         isolation: "isolate",
         padding: t.spacing.lg,
-        paddingBottom: t.spacing.xl,
+        paddingBottom: accessory ? t.spacing.lg : t.spacing.xl,
         gap: t.spacing.md,
         overflow: "hidden",
         borderRadius: t.radius.card,
@@ -198,7 +202,7 @@ export function EditorialHero({
       }}
     >
       {!paper && <Paper dark />}
-      {!paper && (
+      {!paper && !accessory && (
         <Image
           source={require("../../assets/images/mate-botanical.webp")}
           style={{
@@ -213,22 +217,31 @@ export function EditorialHero({
           accessible={false}
         />
       )}
-      <View style={{ gap: t.spacing.xs }}>
-        <Display
-          color={paper ? t.colors.ink : t.colors.onDark}
-          size={compact ? 34 : 39}
-        >
-          {title}
-        </Display>
-        {accent && (
+      <View
+        style={{
+          flexDirection: "row",
+          alignItems: "center",
+          gap: t.spacing.md,
+        }}
+      >
+        <View style={{ gap: t.spacing.xs, flex: 1, minWidth: 0 }}>
           <Display
-            color={paper ? t.colors.green : t.colors.lime}
+            color={paper ? t.colors.ink : t.colors.onDark}
             size={compact ? 34 : 39}
           >
-            {accent}
+            {title}
           </Display>
-        )}
-        {ending && <Display size={compact ? 34 : 39}>{ending}</Display>}
+          {accent && (
+            <Display
+              color={paper ? t.colors.green : t.colors.lime}
+              size={compact ? 34 : 39}
+            >
+              {accent}
+            </Display>
+          )}
+          {ending && <Display size={compact ? 34 : 39}>{ending}</Display>}
+        </View>
+        {accessory}
       </View>
       {description && (
         <Text
@@ -285,7 +298,7 @@ export function SearchBox({
           {tr(placeholder)}
         </Text>
         <View style={e.searchAction}>
-          <Icon name="arrow" size={20} color={t.colors.onDark} />
+          <Icon name="arrow" size={20} color={t.colors.onAction} />
         </View>
       </Pressable>
     );
@@ -330,7 +343,7 @@ export function SearchBox({
         <Icon
           name={value ? "close" : "arrow"}
           size={20}
-          color={t.colors.onDark}
+          color={t.colors.onAction}
         />
       </Pressable>
     </View>
@@ -354,7 +367,7 @@ const createE = (t: AppTheme) =>
       width: 44,
       height: 44,
       borderRadius: t.radius.pill,
-      backgroundColor: t.colors.hero,
+      backgroundColor: t.colors.action,
       alignItems: "center",
       justifyContent: "center",
     },

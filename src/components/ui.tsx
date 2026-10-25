@@ -136,11 +136,13 @@ export function Page({
   fullBleed = false,
   safeTop = false,
   tabBarClearance = false,
+  textured = true,
   footer,
 }: React.PropsWithChildren<{
   fullBleed?: boolean;
   safeTop?: boolean;
   tabBarClearance?: boolean;
+  textured?: boolean;
   footer?: React.ReactNode;
 }>) {
   const t = useTheme();
@@ -151,7 +153,7 @@ export function Page({
       style={{ flex: 1, backgroundColor: t.colors.background }}
       behavior={Platform.OS === "ios" ? "padding" : undefined}
     >
-      <Paper />
+      {textured && <Paper />}
       <SafeAreaView edges={safeTop ? ["top"] : []} style={{ flex: 1 }}>
         <ScrollView
           style={footer ? { flex: 1 } : undefined}
@@ -252,7 +254,7 @@ export function Button({
           backgroundColor: filled
             ? selected
               ? selectedBackgroundColor
-              : t.colors.hero
+              : t.colors.action
             : "transparent",
           borderWidth: filled ? 0 : 1,
           borderColor: destructive ? t.colors.error : t.colors.border,
@@ -270,7 +272,7 @@ export function Button({
               ? t.colors.error
               : selected || !filled
                 ? t.colors.ink
-                : t.colors.onDark,
+                : t.colors.onAction,
             fontSize: compact ? 13 : 15,
           },
         ]}
@@ -307,7 +309,10 @@ export function Field({
         ref={inputRef}
         accessibilityLabel={label}
         placeholderTextColor={t.colors.muted}
-        style={styles.input}
+        style={[
+          styles.input,
+          !props.multiline && { borderRadius: t.radius.pill },
+        ]}
         {...props}
       />
       {error && <ErrorMessage message={error} />}
@@ -781,7 +786,7 @@ export function YerbaCard({
               <View
                 style={{
                   alignSelf: "flex-start",
-                  backgroundColor: t.colors.hero,
+                  backgroundColor: t.colors.action,
                   borderRadius: t.radius.pill,
                   paddingHorizontal: 10,
                   paddingVertical: 4,
@@ -792,7 +797,7 @@ export function YerbaCard({
                     fontFamily: t.fonts.bold,
                     fontSize: 12,
                     lineHeight: 17,
-                    color: t.colors.onDark,
+                    color: t.colors.onAction,
                   }}
                 >
                   {badge.text}
@@ -827,30 +832,41 @@ export function YerbaCard({
             {!!yerba.styles?.length && (
               <View
                 style={{
-                  alignSelf: "flex-start",
                   flexDirection: "row",
-                  alignItems: "center",
-                  gap: 5,
-                  borderRadius: 16,
-                  padding: 5,
-                  paddingRight: 8,
-                  backgroundColor: t.colors.styleBackground,
+                  flexWrap: "wrap",
+                  gap: 4,
+                  alignItems: "flex-start",
                 }}
               >
-                <Icon name="leaf" size={16} color={t.colors.leafFill} />
-                <Text
-                  style={[
-                    styles.muted,
-                    {
-                      flexShrink: 1,
-                      fontFamily: t.fonts.bold,
-                      fontSize: 12,
-                      color: t.colors.ink,
-                    },
-                  ]}
-                >
-                  {yerba.styles.map((style) => tr(style.name)).join(" · ")}
-                </Text>
+                {yerba.styles.map((style) => (
+                  <View
+                    key={style.name}
+                    style={{
+                      flexDirection: "row",
+                      alignItems: "center",
+                      alignSelf: "flex-start",
+                      maxWidth: "100%",
+                      gap: 4,
+                      borderRadius: 12,
+                      paddingHorizontal: 8,
+                      paddingVertical: 4,
+                      backgroundColor: t.colors.styleBackground,
+                    }}
+                  >
+                    <Icon name="leaf" size={13} color={t.colors.leafFill} />
+                    <Text
+                      style={{
+                        flexShrink: 1,
+                        fontFamily: t.fonts.bold,
+                        fontSize: 12,
+                        lineHeight: 16,
+                        color: t.colors.ink,
+                      }}
+                    >
+                      {tr(style.name)}
+                    </Text>
+                  </View>
+                ))}
               </View>
             )}
             {!!yerba.manufacturing_country_code && (

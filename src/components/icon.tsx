@@ -19,6 +19,8 @@ export type IconName =
   | "heartFilled"
   | "heart"
   | "compare"
+  | "personPlus"
+  | "personCheck"
   | "person"
   | "eye"
   | "eyeOff"
@@ -53,6 +55,8 @@ const names = {
   heartFilled: "heart",
   compare: "scale-balance",
   person: "account-outline",
+  personPlus: "account-plus-outline",
+  personCheck: "account-check-outline",
   eye: "eye-outline",
   eyeOff: "eye-off-outline",
   external: "open-in-new",

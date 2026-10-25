@@ -2,7 +2,6 @@ import { BrandFeed } from "@/components/brand-feed";
 import { tr, useLocale } from "@/i18n";
 import React from "react";
 import { router } from "expo-router";
-import { Image } from "expo-image";
 import {
   View,
   Text,
@@ -11,7 +10,7 @@ import {
   useWindowDimensions,
 } from "react-native";
 import { Page, QueryState, YerbaCard, useUIStyles } from "@/components/ui";
-import { Paper, SearchBox, SectionHeading } from "@/components/editorial";
+import { SearchBox, SectionHeading } from "@/components/editorial";
 import { Icon } from "@/components/icon";
 import { useTheme } from "@/theme";
 import { usePages, useResource } from "@/hooks/queries";
@@ -55,62 +54,45 @@ export function Home() {
   };
   return (
     <Page safeTop tabBarClearance>
-      <View style={{ position: "relative", marginTop: t.spacing.md }}>
-        <View
-          style={{
-            minHeight: 128,
-            padding: t.spacing.md,
-            paddingRight: 164,
-            justifyContent: "center",
-            backgroundColor: t.colors.hero,
-            borderRadius: t.radius.card,
-            borderCurve: "continuous",
-            overflow: "hidden",
-            isolation: "isolate",
-          }}
-        >
-          <Paper dark />
+      <View
+        style={{ gap: t.spacing.lg, paddingTop: t.spacing.sm }}
+        testID="home-hero"
+      >
+        <View style={{ gap: 12 }}>
           <Text
             accessibilityRole="header"
+            style={{
+              fontFamily: t.fonts.display,
+              fontSize: windowWidth < 360 ? 34 : 40,
+              lineHeight: windowWidth < 360 ? 38 : 44,
+              letterSpacing: -0.6,
+              color: t.colors.ink,
+            }}
+          >
+            {tr("Encontrá tu")}
+            {"\n"}
+            <Text style={{ color: t.colors.green }}>
+              {tr("próxima yerba.")}
+            </Text>
+          </Text>
+          <Text
             style={[
-              styles.title,
-              {
-                fontSize: 30,
-                lineHeight: 32,
-                textTransform: "uppercase",
-                color: t.colors.onDark,
-              },
+              styles.body,
+              { color: t.colors.muted, lineHeight: 23, maxWidth: 360 },
             ]}
           >
-            {tr("Tu")}
-            {"\n"}
-            {tr("próxima")}
-            {"\n"}
-            <Text style={{ color: t.colors.lime }}>{tr("yerba.")}</Text>
+            {tr("Explorá marcas, estilos y opiniones de la comunidad.")}
           </Text>
         </View>
-        <Image
-          source={require("../../assets/images/mate-hero-inicio.webp")}
-          style={{
-            position: "absolute",
-            width: 160,
-            height: 160,
-            right: -8,
-            bottom: 0,
-          }}
-          contentFit="contain"
-          contentPosition="right"
-          accessible={false}
+        <SearchBox
+          onSubmit={() =>
+            router.push({ pathname: "/explorar", params: { mode: "search" } })
+          }
+          placeholder={tr("Buscar yerbas o marcas…")}
         />
       </View>
-      <SearchBox
-        onSubmit={() =>
-          router.push({ pathname: "/explorar", params: { mode: "search" } })
-        }
-        placeholder={tr("Buscar yerbas o marcas…")}
-      />
       <View style={{ gap: 12 }}>
-        <SectionHeading title={tr("Explorá por estilo")} />
+        <SectionHeading title={tr("Explorá por estilo")} compact />
         <QueryState
           query={taxonomy}
           skeleton="chips"
@@ -153,6 +135,7 @@ export function Home() {
       <View style={{ gap: 16 }}>
         <SectionHeading
           title={tr("Yerbas destacadas")}
+          compact
           action={tr("Ver todas")}
           onPress={() => router.push("/explorar")}
         />
@@ -239,7 +222,7 @@ export function Home() {
         </QueryState>
       </View>
       <View style={{ gap: t.spacing.sm }}>
-        <SectionHeading title={tr("Aprende")} />
+        <SectionHeading title={tr("Aprende")} compact />
         <Text style={styles.body}>
           {tr("Un catálogo y una comunidad para conocer mejor la yerba mate.")}
         </Text>

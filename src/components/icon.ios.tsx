@@ -21,6 +21,8 @@ const names = {
   heartFilled: "heart.fill",
   compare: "scalemass",
   person: "person",
+  personPlus: "person.badge.plus",
+  personCheck: "person.crop.circle.badge.checkmark",
   eye: "eye",
   eyeOff: "eye.slash",
   external: "arrow.up.right.square",

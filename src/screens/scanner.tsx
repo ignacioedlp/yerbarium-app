@@ -1,14 +1,29 @@
 import React, { useCallback, useEffect, useRef, useState } from "react";
-import { ActivityIndicator, AppState, Linking, View } from "react-native";
+import {
+  ActivityIndicator,
+  AppState,
+  Linking,
+  StyleSheet,
+  View,
+} from "react-native";
 import {
   CameraView,
   useCameraPermissions,
   type BarcodeScanningResult,
 } from "expo-camera";
 import { isDevice } from "expo-device";
-import { router, useFocusEffect, useIsFocused } from "expo-router";
+import {
+  router,
+  useFocusEffect,
+  useIsFocused,
+  useLocalSearchParams,
+} from "expo-router";
 import { useQuery } from "@tanstack/react-query";
-import { lookupBarcode, scannedBarcode } from "@/api/barcodes";
+import {
+  lookupBarcode,
+  scannedBarcode,
+  type BarcodeLookup,
+} from "@/api/barcodes";
 import { suggestionFromScan } from "@/api/yerba-suggestions";
 import { normalizeError } from "@/api/client";
 import {
@@ -20,6 +35,7 @@ import {
   Title,
   useCanWrite,
 } from "@/components/ui";
+import { SectionHeading } from "@/components/editorial";
 import { tr, useLocale } from "@/i18n";
 import { useTheme } from "@/theme";
 
@@ -35,7 +51,12 @@ export function Scanner() {
     AppState.currentState === "active",
   );
   const [code, setCode] = useState<string | null>(null);
+  const { preview } = useLocalSearchParams<{ preview?: string }>();
+  const previewMissing = __DEV__ && !isDevice && preview === "external";
   const [cameraError, setCameraError] = useState(false);
+  const [requestingPermission, setRequestingPermission] = useState(false);
+  const [cameraReady, setCameraReady] = useState(false);
+  const [wasCameraActive, setWasCameraActive] = useState(false);
   const [actionError, setActionError] = useState(false);
   const locked = useRef(false);
   const navigated = useRef(false);
@@ -43,7 +64,7 @@ export function Scanner() {
     useCallback(() => {
       locked.current = false;
       navigated.current = false;
-      setCode(null);
+      setCode(previewMissing ? "2000000000008" : null);
       setCameraError(false);
       setActionError(false);
       void getPermission().catch(() => setActionError(true));
@@ -51,7 +72,7 @@ export function Scanner() {
         locked.current = true;
         setCode(null);
       };
-    }, [getPermission]),
+    }, [getPermission, previewMissing]),
   );
   useEffect(() => {
     const subscription = AppState.addEventListener("change", (state) => {
@@ -61,14 +82,54 @@ export function Scanner() {
     });
     return () => subscription.remove();
   }, [getPermission]);
+  const cameraActive =
+    focused &&
+    foreground &&
+    !!permission?.granted &&
+    !requestingPermission &&
+    !code &&
+    !cameraError &&
+    isDevice &&
+    !previewMissing;
+  if (wasCameraActive !== cameraActive) {
+    setWasCameraActive(cameraActive);
+    setCameraReady(false);
+  }
+  useEffect(() => {
+    if (!cameraActive) return;
+    // Native startup failures do not always dispatch onMountError.
+    if (cameraReady) return;
+    const timeout = setTimeout(() => setCameraError(true), 12000);
+    return () => clearTimeout(timeout);
+  }, [cameraActive, cameraReady]);
+  const allowCamera = async () => {
+    setActionError(false);
+    setRequestingPermission(true);
+    try {
+      await requestPermission();
+    } catch {
+      setActionError(true);
+    } finally {
+      setRequestingPermission(false);
+    }
+  };
   const lookup = useQuery({
     queryKey: ["barcode", code],
     queryFn: ({ signal }) => lookupBarcode(code!, signal),
-    enabled: !!code && focused && foreground,
+    enabled: !!code && focused && foreground && !previewMissing,
     retry: false,
     staleTime: 0,
     gcTime: 0,
   });
+  const result: BarcodeLookup | undefined =
+    previewMissing && code
+      ? {
+          status: "FOUND_EXTERNAL",
+          barcode: code,
+          external_source: "OPEN_FOOD_FACTS",
+          product: { name: "Yerba mate de ejemplo", brand: "Marca de ejemplo" },
+        }
+      : lookup.data;
   useEffect(() => {
     if (
       !focused ||
@@ -95,41 +156,45 @@ export function Scanner() {
     locked.current = false;
     navigated.current = false;
     setCode(null);
+    router.setParams({ preview: undefined });
     setCameraError(false);
     setActionError(false);
   };
   return (
-    <Page safeTop tabBarClearance>
+    // Dark paper uses mixBlendMode, which composites native camera previews offscreen.
+    <Page safeTop tabBarClearance textured={false}>
       <Title>{tr("Escanear")}</Title>
       <Body>
         {tr("Apuntá al código de barras del paquete para encontrar la yerba.")}
       </Body>
-      {!permission && !actionError ? (
+      {!previewMissing && !permission && !actionError ? (
         <ActivityIndicator
           accessibilityLabel={tr("Comprobando permiso de cámara…")}
           color={theme.colors.green}
         />
-      ) : !permission ? null : !permission.granted ? (
-        <Card>
-          <Title>{tr("Necesitamos acceso a la cámara")}</Title>
+      ) : !previewMissing && !permission ? null : !previewMissing &&
+        !permission?.granted ? (
+        <View style={{ gap: theme.spacing.md }}>
+          <SectionHeading
+            title={tr("Necesitamos acceso a la cámara")}
+            compact
+          />
           <Body>{tr("Usamos la cámara para leer códigos EAN-13 y UPC.")}</Body>
           <Button
             label={tr(
-              permission.canAskAgain ? "Permitir cámara" : "Abrir ajustes",
+              permission?.canAskAgain ? "Permitir cámara" : "Abrir ajustes",
             )}
+            disabled={requestingPermission}
             onPress={() => {
-              setActionError(false);
-              void (
-                permission.canAskAgain
-                  ? requestPermission()
-                  : Linking.openSettings()
-              ).catch(() => setActionError(true));
+              if (permission?.canAskAgain) void allowCamera();
+              else
+                void Linking.openSettings().catch(() => setActionError(true));
             }}
           />
-        </Card>
+        </View>
       ) : code ? (
-        <Card>
-          {lookup.isError ? (
+        <View style={{ gap: theme.spacing.md }}>
+          {!previewMissing && lookup.isError ? (
             <>
               <Title>{tr("No pudimos buscar el código")}</Title>
               <ErrorMessage
@@ -149,24 +214,37 @@ export function Scanner() {
                 }}
               />
             </>
-          ) : lookup.data?.status === "NOT_FOUND" ||
-            lookup.data?.status === "FOUND_EXTERNAL" ? (
+          ) : result?.status === "NOT_FOUND" ||
+            result?.status === "FOUND_EXTERNAL" ? (
             <>
-              <Title>{tr("Código sin ficha en Yerbarium")}</Title>
+              <SectionHeading
+                title={tr(
+                  result.status === "FOUND_EXTERNAL"
+                    ? "Producto encontrado en una fuente externa"
+                    : "Código sin ficha en Yerbarium",
+                )}
+                compact
+              />
               <Body>
                 {tr(
-                  "Todavía no tenemos una ficha del catálogo para este código.",
+                  result.status === "FOUND_EXTERNAL"
+                    ? "Encontramos sus datos en Open Food Facts. Podés usarlos para sugerir esta yerba al catálogo."
+                    : "Todavía no tenemos una ficha del catálogo para este código.",
                 )}
               </Body>
-              {lookup.data.status === "FOUND_EXTERNAL" &&
-                !!lookup.data.product.name && (
-                  <Body>{lookup.data.product.name}</Body>
-                )}
+              {result.status === "FOUND_EXTERNAL" && !!result.product.name && (
+                <View style={{ gap: theme.spacing.xs }}>
+                  <Body>{result.product.name}</Body>
+                  {!!result.product.brand && (
+                    <Body muted>{result.product.brand}</Body>
+                  )}
+                </View>
+              )}
               <Button
                 label={tr("Sugerir esta yerba")}
                 onPress={() => {
-                  if (!lookup.data) return;
-                  const params = suggestionFromScan(code, lookup.data);
+                  if (!result) return;
+                  const params = suggestionFromScan(code, result);
                   if (params)
                     router.push({ pathname: "/sugerir-yerba", params });
                 }}
@@ -189,10 +267,10 @@ export function Scanner() {
             secondary
             onPress={reset}
           />
-        </Card>
+        </View>
       ) : cameraError || !isDevice ? (
-        <Card>
-          <Title>{tr("Cámara no disponible")}</Title>
+        <View style={{ gap: theme.spacing.md }}>
+          <SectionHeading title={tr("Cámara no disponible")} compact />
           <Body>
             {tr(
               !isDevice
@@ -201,8 +279,8 @@ export function Scanner() {
             )}
           </Body>
           {isDevice && <Button label={tr("Reintentar")} onPress={reset} />}
-        </Card>
-      ) : focused && foreground ? (
+        </View>
+      ) : cameraActive ? (
         <View
           style={{
             height: 280,
@@ -212,15 +290,24 @@ export function Scanner() {
           }}
         >
           <CameraView
-            style={{ flex: 1 }}
+            style={StyleSheet.absoluteFill}
             facing="back"
             autofocus="on"
             barcodeScannerSettings={{
               barcodeTypes: ["ean13", "upc_a", "upc_e"],
             }}
             onBarcodeScanned={online ? scan : undefined}
+            onCameraReady={() => setCameraReady(true)}
             onMountError={() => setCameraError(true)}
           />
+          {!cameraReady && (
+            <ActivityIndicator
+              pointerEvents="none"
+              style={StyleSheet.absoluteFill}
+              accessibilityLabel={tr("Comprobando permiso de cámara…")}
+              color={theme.colors.green}
+            />
+          )}
         </View>
       ) : null}
       {actionError && (

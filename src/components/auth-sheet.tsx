@@ -139,7 +139,7 @@ export function AuthField({
           alignItems: "center",
           minHeight: 56,
           backgroundColor: t.colors.cream,
-          borderRadius: t.radius.control,
+          borderRadius: t.radius.pill,
           borderCurve: "continuous",
           borderWidth: 1,
           borderColor: error

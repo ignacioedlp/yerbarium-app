@@ -77,7 +77,7 @@ export function ProgressBar({
       style={{
         height: 8,
         borderRadius: t.radius.pill,
-        backgroundColor: t.colors.sage,
+        backgroundColor: t.dark ? `${t.colors.green}40` : t.colors.sage,
         overflow: "hidden",
       }}
     >
@@ -85,7 +85,7 @@ export function ProgressBar({
         style={{
           height: "100%",
           width: `${ratio * 100}%`,
-          backgroundColor: t.colors.hero,
+          backgroundColor: t.colors.green,
           borderRadius: t.radius.pill,
         }}
       />
@@ -121,7 +121,8 @@ export function LevelProgress({ data }: { data: OwnGamification }) {
         </View>
       </View>
       <ProgressBar
-        value={data.next_threshold === null ? 1 : data.progress}
+        value={data.next_threshold === null ? 1 : data.total_xp}
+        maximum={data.next_threshold ?? 1}
         label={tr("Progreso al siguiente nivel")}
       />
       <Body muted>

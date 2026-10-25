@@ -23,6 +23,10 @@ export interface GamificationLevel extends GamificationBadge {
   min_xp: number;
 }
 
+export interface PublicGamification extends GamificationBadge {
+  level: number;
+}
+
 export interface OwnGamification extends GamificationBadge {
   levels?: GamificationLevel[];
   rules_version: string;

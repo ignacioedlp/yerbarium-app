@@ -1,3 +1,5 @@
+import { BadgeImage } from "@/components/gamification";
+import type { PublicGamification } from "@/api/gamification";
 import { ProfileReviewCarousel } from "@/components/profile-review-carousel";
 import { ProfileSocial } from "@/components/profile-social";
 import { useSocialResource } from "@/hooks/follows";
@@ -42,6 +44,10 @@ export function PublicProfile() {
   const [state, setState] = useState<LibraryCollection>("favorite");
   const isBlocked = blockedOverride ?? profile.data?.is_blocked ?? false;
   const visible = !!profile.data && !profile.data.is_private && !isBlocked;
+  const gamification = useSocialResource<PublicGamification>(
+    `${path}gamification/`,
+    visible,
+  );
   const library = usePages<LibraryEntry>(
     `${path}library/`,
     { state },
@@ -85,6 +91,24 @@ export function PublicProfile() {
             title={profile.data?.display_name || username}
             accent={`@${username}`}
             compact
+            accessory={
+              visible && gamification.data ? (
+                <View
+                  accessible
+                  accessibilityLabel={tr("Nivel {0}: {1}", {
+                    0: gamification.data.level,
+                    1: tr(gamification.data.name),
+                  })}
+                  style={{ flexShrink: 0 }}
+                >
+                  <BadgeImage
+                    badge={gamification.data}
+                    level={gamification.data.level}
+                    size={88}
+                  />
+                </View>
+              ) : undefined
+            }
           />
         </View>
         {isBlocked ? (

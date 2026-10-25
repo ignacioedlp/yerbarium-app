@@ -310,6 +310,9 @@
       [
         "expo-build-properties",
         {
+          "ios": {
+            "usePrecompiledModules": false
+          },
           "android": {
             "targetSdkVersion": 36
           }

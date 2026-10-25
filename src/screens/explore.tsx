@@ -520,11 +520,14 @@ function BrandTile({ brand }: { brand: BrandListItem }) {
         alignItems: "center",
         justifyContent: "center",
         padding: hasImage ? 0 : t.spacing.md,
-        borderWidth: 1,
-        borderColor: t.colors.border,
         borderRadius: t.radius.card,
         borderCurve: "continuous",
-        overflow: "hidden",
+        backgroundColor: t.colors.surface,
+        shadowColor: "#000",
+        shadowOpacity: 0.2,
+        shadowRadius: 8,
+        shadowOffset: { width: 0, height: 4 },
+        elevation: 4,
         opacity: pressed ? 0.65 : 1,
       })}
     >
@@ -538,6 +541,8 @@ function BrandTile({ brand }: { brand: BrandListItem }) {
             inset: 0,
             width: "100%",
             height: "100%",
+            borderRadius: t.radius.card,
+            overflow: "hidden",
           }}
           onError={() => setFailedUrl(brand.image_url || undefined)}
         />
@@ -642,8 +647,13 @@ function CatalogFiltersSheet({
                 paddingVertical: 10,
                 borderRadius: t.radius.pill,
                 borderWidth: 1,
-                borderColor: selected ? t.colors.green : t.colors.border,
-                backgroundColor: selected ? t.colors.hero : t.colors.cream,
+                borderColor:
+                  selected && t.dark
+                    ? "transparent"
+                    : selected
+                      ? t.colors.green
+                      : t.colors.border,
+                backgroundColor: selected ? t.colors.action : t.colors.cream,
                 flexDirection: "row",
                 alignItems: "center",
                 gap: 6,
@@ -651,13 +661,13 @@ function CatalogFiltersSheet({
               })}
             >
               {selected && (
-                <Icon name="check" size={16} color={t.colors.onDark} />
+                <Icon name="check" size={16} color={t.colors.onAction} />
               )}
               <Text
                 style={{
                   fontFamily: t.fonts.bold,
                   fontSize: 14,
-                  color: selected ? t.colors.onDark : t.colors.ink,
+                  color: selected ? t.colors.onAction : t.colors.ink,
                   flexShrink: 1,
                 }}
               >
@@ -786,7 +796,7 @@ function CatalogFiltersSheet({
                     gap: t.spacing.sm,
                     borderWidth: 1,
                     borderColor: t.colors.border,
-                    borderRadius: t.radius.control,
+                    borderRadius: t.radius.pill,
                     backgroundColor: t.colors.cream,
                     paddingHorizontal: t.spacing.md,
                   }}

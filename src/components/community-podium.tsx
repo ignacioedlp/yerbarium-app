@@ -33,7 +33,10 @@ export function CommunityPodium() {
   return (
     <View style={{ gap: t.spacing.md }} testID="community-podium">
       <View style={{ gap: t.spacing.sm }}>
-        <SectionHeading title={tr("Mejor valoradas por la comunidad")} />
+        <SectionHeading
+          title={tr("Mejor valoradas por la comunidad")}
+          compact
+        />
         <Text style={styles.muted}>
           {tr("El podio combina puntuación y cantidad de opiniones.")}
         </Text>

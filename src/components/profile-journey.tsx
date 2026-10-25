@@ -709,12 +709,12 @@ export function ProfileJourney() {
             width: 42,
             height: 42,
             borderRadius: 21,
-            backgroundColor: t.colors.hero,
+            backgroundColor: t.colors.action,
             alignItems: "center",
             justifyContent: "center",
           }}
         >
-          <Icon name="settings" color={t.colors.onDark} size={23} />
+          <Icon name="settings" color={t.colors.onAction} size={23} />
         </Pressable>
       </View>
       <View
@@ -818,8 +818,9 @@ export function ProfileJourney() {
                           value={
                             query.data.next_threshold === null
                               ? 1
-                              : query.data.progress
+                              : query.data.total_xp
                           }
+                          maximum={query.data.next_threshold ?? 1}
                           label={tr("Progreso al siguiente nivel")}
                         />
                         <Text

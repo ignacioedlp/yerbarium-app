@@ -5,6 +5,8 @@ export const lightTheme = {
     surface: "#f9f5e8",
     ink: "#153d32",
     green: "#075441",
+    action: "#075441",
+    onAction: "#fff8e8",
     deep: "#064c3b",
     muted: "#3e5b4e",
     sage: "#e7ebd5",
@@ -51,6 +53,8 @@ export const darkTheme: AppTheme = {
     surface: "#183a2f",
     ink: "#f4efdf",
     green: "#bddd9b",
+    action: "#bddd9b",
+    onAction: "#102c24",
 
     muted: "#b4c5ae",
     sage: "#254739",

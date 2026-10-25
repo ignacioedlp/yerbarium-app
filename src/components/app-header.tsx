@@ -52,14 +52,24 @@ export function AppHeader({
             alignItems: "center",
             justifyContent: "center",
             borderRadius: 22,
-            backgroundColor: paper ? theme.colors.hero : theme.colors.cream,
+            backgroundColor: theme.dark
+              ? theme.colors.action
+              : paper
+                ? theme.colors.hero
+                : theme.colors.cream,
             opacity: pressed ? 0.65 : 1,
           })}
         >
           <Icon
             name="arrowLeft"
             size={22}
-            color={paper ? theme.colors.onDark : theme.colors.green}
+            color={
+              theme.dark
+                ? theme.colors.onAction
+                : paper
+                  ? theme.colors.onDark
+                  : theme.colors.green
+            }
           />
         </Pressable>
         <Text

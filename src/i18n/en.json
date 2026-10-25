@@ -680,6 +680,7 @@
   "Siguiendo": "Following",
   "Seguidores": "Followers",
   "Seguidos": "Following",
+  "seguidor": "follower",
   "seguidores": "followers",
   "seguidos": "following",
   "Seguir a @{username}": "Follow @{username}",
@@ -879,5 +880,10 @@
   "Elegí un valor de 1 a 5.": "Choose a value from 1 to 5.",
   "Detalles opcionales": "Optional details",
   "Podés seleccionar varias notas. Son opcionales.": "You can select several notes. They are optional.",
-  "Completá todos los campos obligatorios antes de publicar.": "Complete all required fields before publishing."
+  "Completá todos los campos obligatorios antes de publicar.": "Complete all required fields before publishing.",
+  "Encontrá tu": "Find your",
+  "próxima yerba.": "next yerba.",
+  "Explorá marcas, estilos y opiniones de la comunidad.": "Explore brands, styles and community reviews.",
+  "Producto encontrado en una fuente externa": "Product found in an external source",
+  "Encontramos sus datos en Open Food Facts. Podés usarlos para sugerir esta yerba al catálogo.": "We found its details on Open Food Facts. Use them to suggest this yerba for the catalog."
 }

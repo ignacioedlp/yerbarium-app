@@ -680,6 +680,7 @@
   "Siguiendo": "Seguindo",
   "Seguidores": "Seguidores",
   "Seguidos": "Seguindo",
+  "seguidor": "seguidor",
   "seguidores": "seguidores",
   "seguidos": "seguindo",
   "Seguir a @{username}": "Seguir @{username}",
@@ -879,5 +880,10 @@
   "Elegí un valor de 1 a 5.": "Escolha um valor de 1 a 5.",
   "Detalles opcionales": "Detalhes opcionais",
   "Podés seleccionar varias notas. Son opcionales.": "Pode selecionar várias notas. São opcionais.",
-  "Completá todos los campos obligatorios antes de publicar.": "Complete todos os campos obrigatórios antes de publicar."
+  "Completá todos los campos obligatorios antes de publicar.": "Complete todos os campos obrigatórios antes de publicar.",
+  "Encontrá tu": "Encontre sua",
+  "próxima yerba.": "próxima erva.",
+  "Explorá marcas, estilos y opiniones de la comunidad.": "Explore marcas, estilos e opiniões da comunidade.",
+  "Producto encontrado en una fuente externa": "Produto encontrado em uma fonte externa",
+  "Encontramos sus datos en Open Food Facts. Podés usarlos para sugerir esta yerba al catálogo.": "Encontramos os dados no Open Food Facts. Use-os para sugerir esta erva ao catálogo."
 }
