@@ -143,5 +143,13 @@
   "Elegí cómo querés ver Yerbarium.": "Elegí cómo querés ver Yerbarium.",
   "Sigue la apariencia de tu dispositivo.": "Sigue la apariencia de tu dispositivo.",
   "No pudimos guardar la apariencia en este dispositivo.": "No pudimos guardar la apariencia en este dispositivo.",
-  "{0}": "{0}"
+  "{0}": "{0}",
+  "Presentación confirmada": "Presentación confirmada",
+  "No ofrecida según la fuente": "No ofrecida según la fuente",
+  "Ver detalles": "Ver detalles",
+  "Ver fuente": "Ver fuente",
+  "Otras presentaciones": "Otras presentaciones",
+  "Presentaciones registradas en el catálogo. No indica stock en comercios.": "Presentaciones registradas en el catálogo. No indica stock en comercios.",
+  "La fuente consultada indica que este tamaño no se ofrece.": "La fuente consultada indica que este tamaño no se ofrece.",
+  "✓ Confirmada en el catálogo · × No ofrecida según la evidencia consultada · ? Sin confirmar": "✓ Confirmada en el catálogo · × No ofrecida según la evidencia consultada · ? Sin confirmar"
 }

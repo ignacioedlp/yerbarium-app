@@ -885,5 +885,13 @@
   "próxima yerba.": "next yerba.",
   "Explorá marcas, estilos y opiniones de la comunidad.": "Explore brands, styles and community reviews.",
   "Producto encontrado en una fuente externa": "Product found in an external source",
-  "Encontramos sus datos en Open Food Facts. Podés usarlos para sugerir esta yerba al catálogo.": "We found its details on Open Food Facts. Use them to suggest this yerba for the catalog."
+  "Encontramos sus datos en Open Food Facts. Podés usarlos para sugerir esta yerba al catálogo.": "We found its details on Open Food Facts. Use them to suggest this yerba for the catalog.",
+  "Presentación confirmada": "Confirmed package size",
+  "No ofrecida según la fuente": "Not offered according to the source",
+  "Ver detalles": "View details",
+  "Ver fuente": "View source",
+  "Otras presentaciones": "Other package sizes",
+  "Presentaciones registradas en el catálogo. No indica stock en comercios.": "Package sizes recorded in the catalogue. This does not indicate stock in stores.",
+  "La fuente consultada indica que este tamaño no se ofrece.": "The consulted source indicates that this size is not offered.",
+  "✓ Confirmada en el catálogo · × No ofrecida según la evidencia consultada · ? Sin confirmar": "✓ Confirmed in the catalogue · × Not offered according to the consulted evidence · ? Unconfirmed"
 }

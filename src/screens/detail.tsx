@@ -1,3 +1,4 @@
+import { Presentations } from "@/components/presentations";
 import { ReviewLike } from "@/components/review-like";
 import { tr, countLabel, useLocale, getLocale } from "@/i18n";
 import { PurchaseOptions } from "@/components/purchase-options";
@@ -41,7 +42,7 @@ import {
   sensoryLabels,
 } from "@/api/community-types";
 import { normalizeError, get, write } from "@/api/client";
-import { packageTypeLabel, technicalRows } from "@/api/format";
+import { technicalRows } from "@/api/format";
 import { useSession } from "@/providers/session";
 import { Icon } from "@/components/icon";
 import { AnimatedTabContent, AnimatedTabs } from "@/components/animated-tabs";
@@ -513,58 +514,12 @@ export function Detail() {
                         yerba.short_description ||
                         tr("Todavía no hay una descripción publicada.")}
                     </Body>
-                    {yerba.presentations.length > 0 && (
-                      <>
-                        <SectionHeading>{tr("Presentaciones")}</SectionHeading>
-                        {yerba.presentations.map((item, index) => (
-                          <DetailRow
-                            key={index}
-                            label={`${item.weight_grams} g`}
-                            value={`${packageTypeLabel(item.package_type)}${item.barcode ? ` · ${item.barcode}` : ""}`}
-                          />
-                        ))}
-                      </>
-                    )}
-                    {!!yerba.presentation_availability?.length && (
-                      <>
-                        <SectionHeading>
-                          {tr("Disponibilidad documentada")}
-                        </SectionHeading>
-                        {yerba.presentation_availability.map((item) => (
-                          <View
-                            key={item.weight_grams}
-                            style={{ gap: theme.spacing.xs }}
-                          >
-                            <DetailRow
-                              label={`${item.weight_grams} g`}
-                              value={
-                                {
-                                  AVAILABLE: tr("Disponible"),
-                                  UNAVAILABLE: tr("No disponible"),
-                                  UNKNOWN: tr("Sin confirmar"),
-                                }[item.status]
-                              }
-                            />
-                            {item.verified_at && (
-                              <Body muted>
-                                {tr("Verificado: {date}", {
-                                  date: new Date(
-                                    item.verified_at,
-                                  ).toLocaleDateString(getLocale()),
-                                })}
-                              </Body>
-                            )}
-                            {item.source && (
-                              <ExternalLink
-                                label={item.source.title}
-                                url={item.source.url}
-                                textLink
-                              />
-                            )}
-                          </View>
-                        ))}
-                      </>
-                    )}
+                    <SectionHeading>{tr("Presentaciones")}</SectionHeading>
+                    <Presentations
+                      key={slug}
+                      presentations={yerba.presentations}
+                      availability={yerba.presentation_availability}
+                    />
                   </View>
                 )}
                 {tab === "profile" && (

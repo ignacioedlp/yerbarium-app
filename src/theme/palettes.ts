@@ -28,6 +28,9 @@ export const lightTheme = {
     journeyInk: "#42483d",
     journeyFade:
       "radial-gradient(ellipse 85% 65% at 0% 0%, #fff8e8 0%, rgba(255,248,232,0.96) 60%, rgba(255,248,232,0) 100%)",
+    packageAvailable: "#0c5947",
+    packageUnknown: "#845b1e",
+    packageUnavailable: "#974d49",
     podiumGold: "#d6b45b",
     podiumSilver: "#c3c9cc",
     podiumBronze: "#c68d63",
@@ -49,6 +52,9 @@ export const darkTheme: AppTheme = {
   dark: true,
   colors: {
     ...lightTheme.colors,
+    packageAvailable: "#bddd9b",
+    packageUnknown: "#e6bc72",
+    packageUnavailable: "#ffadb0",
     background: "#102c24",
     surface: "#183a2f",
     ink: "#f4efdf",
