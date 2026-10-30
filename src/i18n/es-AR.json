@@ -151,5 +151,9 @@
   "Otras presentaciones": "Otras presentaciones",
   "Presentaciones registradas en el catálogo. No indica stock en comercios.": "Presentaciones registradas en el catálogo. No indica stock en comercios.",
   "La fuente consultada indica que este tamaño no se ofrece.": "La fuente consultada indica que este tamaño no se ofrece.",
-  "✓ Confirmada en el catálogo · × No ofrecida según la evidencia consultada · ? Sin confirmar": "✓ Confirmada en el catálogo · × No ofrecida según la evidencia consultada · ? Sin confirmar"
+  "✓ Confirmada en el catálogo · × No ofrecida según la evidencia consultada · ? Sin confirmar": "✓ Confirmada en el catálogo · × No ofrecida según la evidencia consultada · ? Sin confirmar",
+  "Podés cambiar tu usuario. Comprobaremos que esté disponible al guardar.": "Podés cambiar tu usuario. Comprobaremos que esté disponible al guardar.",
+  "El usuario no puede superar los 150 caracteres.": "El usuario no puede superar los 150 caracteres.",
+  "Este username ya está en uso.": "Este usuario ya está en uso.",
+  "Dejar de seguir": "Dejar de seguir"
 }

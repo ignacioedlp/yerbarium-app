@@ -648,7 +648,7 @@
   "Barbacuá": "Barbacuá",
   "Tereré": "Tereré",
   "Chimarrão": "Chimarrão",
-  "Este username ya está en uso.": "This username is already taken.",
+  "Este username ya está en uso.": "This username is already in use.",
   "Este email ya está en uso.": "This email is already in use.",
   "Las credenciales no son válidas.": "The username or password is incorrect.",
   "El display name no puede estar vacío.": "The display name cannot be empty.",
@@ -893,5 +893,8 @@
   "Otras presentaciones": "Other package sizes",
   "Presentaciones registradas en el catálogo. No indica stock en comercios.": "Package sizes recorded in the catalogue. This does not indicate stock in stores.",
   "La fuente consultada indica que este tamaño no se ofrece.": "The consulted source indicates that this size is not offered.",
-  "✓ Confirmada en el catálogo · × No ofrecida según la evidencia consultada · ? Sin confirmar": "✓ Confirmed in the catalogue · × Not offered according to the consulted evidence · ? Unconfirmed"
+  "✓ Confirmada en el catálogo · × No ofrecida según la evidencia consultada · ? Sin confirmar": "✓ Confirmed in the catalogue · × Not offered according to the consulted evidence · ? Unconfirmed",
+  "Podés cambiar tu usuario. Comprobaremos que esté disponible al guardar.": "You can change your username. We will check availability when you save.",
+  "El usuario no puede superar los 150 caracteres.": "Your username cannot exceed 150 characters.",
+  "Dejar de seguir": "Unfollow"
 }

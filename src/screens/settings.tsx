@@ -114,6 +114,16 @@ export function Settings() {
       <View style={styles.list}>
         {session.user && (
           <SettingsRow
+            testID="settings-edit-profile"
+            leading={<Icon name="person" size={24} />}
+            trailing={<Icon name="arrow" size={18} />}
+            onPress={() => router.push("/editar-perfil")}
+          >
+            {tr("Editar perfil")}
+          </SettingsRow>
+        )}
+        {session.user && (
+          <SettingsRow
             testID="settings-notifications"
             leading={<Icon name="mail" size={24} />}
             trailing={<Icon name="arrow" size={18} />}

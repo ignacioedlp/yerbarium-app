@@ -218,7 +218,7 @@ const createStyles = (t: AppTheme) =>
       minHeight: 56,
       padding: t.spacing.md,
       borderWidth: 1,
-      borderRadius: t.radius.control,
+      borderRadius: t.radius.pill,
       backgroundColor: t.colors.cream,
     },
     value: {

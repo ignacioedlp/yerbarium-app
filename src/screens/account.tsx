@@ -24,6 +24,7 @@ import {
 import { useSession } from "@/providers/session";
 import { normalizeError, write } from "@/api/client";
 import { Account } from "@/api/account-types";
+import { profileSchema } from "@/api/profile-update";
 import { Host, Switch } from "@expo/ui";
 import { useTheme } from "@/theme";
 import { ProfileSelect, profileCountries } from "@/components/profile-select";
@@ -331,16 +332,6 @@ export function Profile() {
     </Page>
   );
 }
-const profileSchema = z.object({
-  display_name: z.string().trim().min(1, "Ingresá tu nombre."),
-  bio: z.string(),
-  country_code: z
-    .string()
-    .trim()
-    .regex(/^([a-zA-Z]{2})?$/, "Usá un código de país de dos letras.")
-    .transform((value) => value.toUpperCase()),
-  is_private: z.boolean(),
-});
 function ProfileForm({ user }: { user: Account }) {
   const theme = useTheme();
   useLocale();
@@ -354,6 +345,7 @@ function ProfileForm({ user }: { user: Account }) {
   >({
     resolver: zodResolver(profileSchema),
     defaultValues: {
+      username: user.username,
       display_name: user.display_name,
       bio: user.bio,
       country_code: user.country_code,
@@ -363,22 +355,64 @@ function ProfileForm({ user }: { user: Account }) {
   const mutation = useMutation({
     mutationFn: (values: z.output<typeof profileSchema>) =>
       write<Account>("auth/me/", "PATCH", values),
-    onSuccess: async () => {
+    onSuccess: async (updated) => {
       await session.reload();
       await client.invalidateQueries({ queryKey: ["private", "social"] });
       client.removeQueries({
         predicate: (q) =>
           q.queryKey[0] === "public" &&
           typeof q.queryKey[1] === "string" &&
-          q.queryKey[1].startsWith(
-            `profiles/${encodeURIComponent(user.username)}/`,
+          [user.username, updated.username].some((username) =>
+            (q.queryKey[1] as string).startsWith(
+              `profiles/${encodeURIComponent(username)}/`,
+            ),
           ),
       });
       router.back();
     },
+    onError: (error) => {
+      const fields = normalizeError(error).fields;
+      for (const key of ["username", "display_name", "country_code"] as const) {
+        if (fields[key]?.length)
+          form.setError(key, {
+            type: "server",
+            message: fields[key].join(" "),
+          });
+      }
+    },
   });
+  const saveError = mutation.error ? normalizeError(mutation.error) : null;
   return (
     <>
+      <Controller
+        control={form.control}
+        name="username"
+        render={({ field, fieldState }) => (
+          <Field
+            label={tr("Usuario")}
+            testID="profile-username"
+            value={field.value}
+            onChangeText={(value) => {
+              field.onChange(value);
+              if (fieldState.error?.type === "server")
+                form.clearErrors("username");
+            }}
+            onBlur={field.onBlur}
+            inputRef={field.ref}
+            autoCapitalize="none"
+            autoCorrect={false}
+            autoComplete="username"
+            maxLength={150}
+            editable={!mutation.isPending}
+            error={fieldState.error?.message}
+          />
+        )}
+      />
+      <Body muted>
+        {tr(
+          "Podés cambiar tu usuario. Comprobaremos que esté disponible al guardar.",
+        )}
+      </Body>
       <Controller
         control={form.control}
         name="display_name"
@@ -439,9 +473,10 @@ function ProfileForm({ user }: { user: Account }) {
       <Body muted>
         {tr("En un perfil privado solo se muestran tu usuario y tu nombre.")}
       </Body>
-      {mutation.error && (
-        <ErrorMessage message={normalizeError(mutation.error).message} />
-      )}
+      {saveError &&
+        !["username", "display_name", "country_code"].some(
+          (key) => saveError.fields[key]?.length,
+        ) && <ErrorMessage message={saveError.message} />}
       <Button
         label={mutation.isPending ? tr("Guardando…") : tr("Guardar cambios")}
         disabled={!online || mutation.isPending}

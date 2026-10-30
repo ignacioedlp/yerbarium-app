@@ -403,10 +403,6 @@ function ProfileDetails({ close }: { close: () => void }) {
       <EmailVerificationStatus />
       <View style={{ gap: 8 }}>
         <Button
-          label={tr("Editar perfil")}
-          onPress={() => navigate(() => router.push("/editar-perfil"))}
-        />
-        <Button
           label={tr("Ver perfil público")}
           secondary
           onPress={() =>
