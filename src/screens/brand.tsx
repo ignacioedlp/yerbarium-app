@@ -84,8 +84,8 @@ export function Brand() {
                         style={{
                           color: theme.colors.ink,
                           fontFamily: theme.fonts.display,
-                          fontSize: 32,
-                          lineHeight: 36,
+                          fontSize: 24,
+                          lineHeight: 28,
                         }}
                       >
                         {brand.data.name}

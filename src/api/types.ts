@@ -113,6 +113,7 @@ export interface CommunitySensoryProfile {
 export interface YerbaMateDetail extends YerbaMateListItem {
   description: string;
   purchase_links?: YerbaPurchaseLink[];
+  has_physical_stores?: boolean;
   brand: BrandDetail;
   presentations: ProductPresentation[];
   presentation_availability?: PresentationAvailability[];

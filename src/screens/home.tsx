@@ -1,3 +1,4 @@
+import { NearbyStores } from "@/components/nearby-stores";
 import { BrandFeed } from "@/components/brand-feed";
 import { tr, useLocale } from "@/i18n";
 import React from "react";
@@ -221,6 +222,7 @@ export function Home() {
           </View>
         </QueryState>
       </View>
+      <NearbyStores />
       <View style={{ gap: t.spacing.sm }}>
         <SectionHeading title={tr("Aprende")} compact />
         <Text style={styles.body}>

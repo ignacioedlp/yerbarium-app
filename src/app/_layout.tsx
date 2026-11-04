@@ -1,3 +1,4 @@
+import { NearbyLocationProvider } from "@/providers/nearby-location";
 import { tr, useLocale } from "@/i18n";
 import React, { useCallback, useEffect, useRef, useState } from "react";
 import { Platform, View } from "react-native";
@@ -133,6 +134,7 @@ function Navigation() {
                 name="resenas/[id]"
                 options={{ title: tr("Reseña"), headerShown: true }}
               />
+              <Stack.Screen name="tiendas" options={{ headerShown: false }} />
               <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
               <Stack.Screen
                 name="sugerir-yerba"
@@ -258,7 +260,9 @@ function RootLayout() {
             <LocaleProvider>
               <AppearanceProvider>
                 <ComparisonProvider>
-                  <Navigation />
+                  <NearbyLocationProvider>
+                    <Navigation />
+                  </NearbyLocationProvider>
                 </ComparisonProvider>
               </AppearanceProvider>
             </LocaleProvider>

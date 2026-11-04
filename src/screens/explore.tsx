@@ -263,15 +263,7 @@ function ExploreContent({
             justifyContent: "space-between",
           }}
         >
-          <Text
-            accessibilityRole="header"
-            style={[
-              styles.title,
-              { fontSize: 34, lineHeight: 38, textTransform: "uppercase" },
-            ]}
-          >
-            {tr("Explorar")}
-          </Text>
+           <Title>{tr("Explorar")}</Title>
           <Pressable
             accessibilityRole="button"
             accessibilityLabel={tr("Sugerir una yerba")}

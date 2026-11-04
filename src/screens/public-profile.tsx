@@ -84,13 +84,19 @@ export function PublicProfile() {
         <View
           style={{
             marginHorizontal: -theme.spacing.lg,
-            marginTop: -theme.spacing.lg,
           }}
         >
           <EditorialHero
             title={profile.data?.display_name || username}
             accent={`@${username}`}
             compact
+            profile
+            paper
+            subtitle={
+              visible && profile.data?.bio ? (
+                <HandNote rotate={false}>{profile.data.bio}</HandNote>
+              ) : undefined
+            }
             accessory={
               visible && gamification.data ? (
                 <View
@@ -123,9 +129,6 @@ export function PublicProfile() {
               </Card>
             ) : (
               <>
-                {profile.data?.bio && (
-                  <HandNote rotate={false}>{profile.data.bio}</HandNote>
-                )}
                 {profile.data && <ProfileSocial profile={profile.data} />}
                 <ProfileReviewCarousel key={username} username={username} />
                 <AnimatedTabs

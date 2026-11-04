@@ -5,9 +5,32 @@ export default ({ config }: ConfigContext): ExpoConfig => ({
   name: config.name ?? "Yerbarium",
   slug: config.slug ?? "yerbarium",
   ios: { ...config.ios, usesAppleSignIn: true },
+  extra: {
+    ...config.extra,
+    mapsAndroidConfigured: Boolean(process.env.GOOGLE_MAPS_ANDROID_API_KEY),
+  },
   plugins: [
     ...(config.plugins ?? []),
     "expo-apple-authentication",
+    [
+      "expo-location",
+      {
+        locationWhenInUsePermission:
+          "Yerbarium usa tu ubicación para mostrarte tiendas de yerba mate a menos de 25 km.",
+        motionUsagePermission: false,
+        locationAlwaysPermission: false,
+        locationAlwaysAndWhenInUsePermission: false,
+        isIosBackgroundLocationEnabled: false,
+        isAndroidBackgroundLocationEnabled: false,
+        isAndroidForegroundServiceEnabled: false,
+      },
+    ],
+    [
+      "react-native-maps",
+      {
+        androidGoogleMapsApiKey: process.env.GOOGLE_MAPS_ANDROID_API_KEY ?? "",
+      },
+    ],
     ...(process.env.EXPO_PUBLIC_GOOGLE_IOS_CLIENT_ID
       ? [
           [

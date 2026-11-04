@@ -176,8 +176,8 @@ export function Detail() {
                       selectable
                       style={{
                         fontFamily: theme.fonts.display,
-                        fontSize: 34,
-                        lineHeight: 37,
+                        fontSize: 24,
+                          lineHeight: 28,
                         color: theme.colors.ink,
                       }}
                     >
@@ -418,7 +418,9 @@ export function Detail() {
                 <Body muted>{tr("Producto discontinuado")}</Body>
               )}
               <View style={{ gap: theme.spacing.sm }}>
-                {(user || !!yerba.purchase_links?.length) && (
+                {(user ||
+                  !!yerba.purchase_links?.length ||
+                  yerba.has_physical_stores) && (
                   <View
                     style={{
                       flexDirection: "row",
@@ -461,7 +463,8 @@ export function Detail() {
                         </View>
                       </QueryState>
                     )}
-                    {!!yerba.purchase_links?.length && (
+                    {(!!yerba.purchase_links?.length ||
+                      yerba.has_physical_stores) && (
                       <Button
                         compact
                         label={tr("Comprar")}
@@ -490,13 +493,16 @@ export function Detail() {
                     />
                   </>
                 )}
-                {purchaseSlug === slug && !!yerba.purchase_links?.length && (
-                  <PurchaseOptions
-                    key={slug}
-                    slug={slug}
-                    links={yerba.purchase_links}
-                  />
-                )}
+                {purchaseSlug === slug &&
+                  (!!yerba.purchase_links?.length ||
+                    yerba.has_physical_stores) && (
+                    <PurchaseOptions
+                      key={slug}
+                      slug={slug}
+                      links={yerba.purchase_links ?? []}
+                      hasPhysicalStores={yerba.has_physical_stores}
+                    />
+                  )}
               </View>
             </View>
             <View style={{ gap: theme.spacing.md }}>

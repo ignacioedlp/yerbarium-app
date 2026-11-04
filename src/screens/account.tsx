@@ -320,12 +320,12 @@ export function Profile() {
             width: 42,
             height: 42,
             borderRadius: 21,
-            backgroundColor: theme.colors.hero,
+            backgroundColor: theme.colors.action,
             alignItems: "center",
             justifyContent: "center",
           }}
         >
-          <Icon name="settings" color={theme.colors.onDark} size={23} />
+          <Icon name="settings" color={theme.colors.onAction} size={23} />
         </Pressable>
       </View>
       <RequireSession bare />

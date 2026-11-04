@@ -119,3 +119,29 @@ Al agregar mensajes, actualizar los catálogos de inglés, español y ambas vari
 ## Google y Apple
 
 Configuración de proveedores, builds nativos y pruebas: [SOCIAL_AUTH.md](./SOCIAL_AUTH.md).
+
+### Tiendas cercanas (app nativa)
+
+El inicio muestra hasta cinco sucursales a 25 km, y `/tiendas` muestra las sucursales
+físicas dentro del mismo radio. Consume `POST /api/v1/store-branches/` del catálogo
+existente; las distancias son en línea recta. No necesita cambios de backend.
+
+Se usan `react-native-maps` (Apple Maps en iOS y Google Maps en Android) y
+`expo-location`, con permiso solo mientras se usa la app. La ubicación y las
+consultas de cercanía viven en memoria; no se persisten ni se envían a analítica.
+Si se rechaza el permiso, se muestra una invitación a compartir ubicación.
+
+La acción **Comprar** de cada yerba conserva las opciones online y agrega hasta
+cinco sucursales cercanas de su catálogo habitual, cuando la API informa
+`has_physical_stores`. La consulta envía `yerba` junto con las coordenadas y ese
+filtro se conserva al abrir el mapa. El catálogo no garantiza stock en tiempo real.
+
+Para Android, habilitar Maps SDK for Android y configurar
+`GOOGLE_MAPS_ANDROID_API_KEY` en el entorno de compilación (ver `.env.example`).
+Restringir esa clave al paquete `app.yerbarium.mobile` y los certificados de firma
+de cada build. Sin clave, la app conserva las tarjetas y Cómo llegar y muestra
+que el mapa no está disponible. iOS usa Apple Maps sin clave.
+
+Después de instalar estas dependencias, regenerar los proyectos nativos y crear
+nuevos development builds con los scripts habituales de iOS/Android. Una
+actualización JavaScript no agrega los módulos nativos a un binario anterior.

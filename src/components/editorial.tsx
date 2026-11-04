@@ -173,32 +173,41 @@ export function EditorialHero({
   description,
   children,
   compact = false,
+  profile = false,
   paper = false,
   accessory,
+  subtitle,
 }: React.PropsWithChildren<{
   title: string;
   accent?: string;
   ending?: string;
   description?: string;
   compact?: boolean;
+  profile?: boolean;
   paper?: boolean;
   accessory?: React.ReactNode;
+  subtitle?: React.ReactNode;
 }>) {
   const t = useTheme();
   useLocale();
   return (
     <View
       style={{
-        backgroundColor: paper ? t.colors.background : t.colors.hero,
+        backgroundColor: profile
+          ? "transparent"
+          : paper
+            ? t.colors.background
+            : t.colors.hero,
         isolation: "isolate",
-        padding: t.spacing.lg,
-        paddingBottom: accessory ? t.spacing.lg : t.spacing.xl,
+        padding: profile ? 0 : t.spacing.lg,
+        paddingHorizontal: profile ? 0 : t.spacing.lg,
+        paddingBottom: profile ? 0 : accessory ? t.spacing.lg : t.spacing.xl,
         gap: t.spacing.md,
         overflow: "hidden",
-        borderRadius: t.radius.card,
+        borderRadius: profile ? 0 : t.radius.card,
         borderCurve: "continuous",
         marginHorizontal: compact ? t.spacing.md : t.spacing.lg,
-        marginTop: compact ? t.spacing.md : t.spacing.lg,
+        marginTop: profile ? 0 : compact ? t.spacing.md : t.spacing.lg,
       }}
     >
       {!paper && <Paper dark />}
@@ -227,19 +236,34 @@ export function EditorialHero({
         <View style={{ gap: t.spacing.xs, flex: 1, minWidth: 0 }}>
           <Display
             color={paper ? t.colors.ink : t.colors.onDark}
-            size={compact ? 34 : 39}
+            size={profile ? 24 : compact ? 34 : 39}
           >
             {title}
           </Display>
-          {accent && (
+          {accent && profile ? (
+            <Text
+              numberOfLines={2}
+              style={{
+                fontFamily: t.fonts.body,
+                fontSize: 16,
+                lineHeight: 22,
+                color: paper ? t.colors.green : t.colors.lime,
+              }}
+            >
+              {accent}
+            </Text>
+          ) : accent ? (
             <Display
               color={paper ? t.colors.green : t.colors.lime}
               size={compact ? 34 : 39}
             >
               {accent}
             </Display>
-          )}
+          ) : null}
           {ending && <Display size={compact ? 34 : 39}>{ending}</Display>}
+          {subtitle && (
+            <View style={{ marginTop: t.spacing.sm }}>{subtitle}</View>
+          )}
         </View>
         {accessory}
       </View>
