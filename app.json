@@ -2,7 +2,7 @@
   "expo": {
     "name": "Yerbarium",
     "slug": "yerbarium",
-    "version": "1.0.0",
+    "version": "1.0.1",
     "scheme": "yerbarium",
     "orientation": "default",
     "userInterfaceStyle": "automatic",
@@ -11,7 +11,7 @@
       "bundleIdentifier": "app.yerbarium.mobile",
       "icon": "./assets/branding/icon-light.png",
       "privacyManifests": {
-        "NSPrivacyTracking": false,
+        "NSPrivacyTracking": true,
         "NSPrivacyAccessedAPITypes": [
           {
             "NSPrivacyAccessedAPIType": "NSPrivacyAccessedAPICategoryUserDefaults",
@@ -274,7 +274,7 @@
     },
     "android": {
       "package": "app.yerbarium.mobile",
-      "permissions": [],
+      "permissions": ["com.google.android.gms.permission.AD_ID"],
       "blockedPermissions": [
         "android.permission.READ_EXTERNAL_STORAGE",
         "android.permission.WRITE_EXTERNAL_STORAGE",

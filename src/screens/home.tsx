@@ -1,3 +1,4 @@
+import { AdBanner } from "@/components/ad-banner";
 import { NearbyStores } from "@/components/nearby-stores";
 import { BrandFeed } from "@/components/brand-feed";
 import { tr, useLocale } from "@/i18n";
@@ -222,6 +223,7 @@ export function Home() {
           </View>
         </QueryState>
       </View>
+      <AdBanner />
       <NearbyStores />
       <View style={{ gap: t.spacing.sm }}>
         <SectionHeading title={tr("Aprende")} compact />

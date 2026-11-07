@@ -807,8 +807,15 @@ export function YerbaCard({
             <Text style={[styles.muted, { color: t.colors.ink }]}>
               {yerba.brand.name}
             </Text>
-            <Text style={[styles.title, { fontSize: 24, lineHeight: 25 }]}>
-              {yerba.name}
+            <Text
+              accessibilityLabel={yerba.name}
+              numberOfLines={2}
+              ellipsizeMode="tail"
+              style={[styles.title, { fontSize: 22, lineHeight: 24 }]}
+            >
+              {yerba.name.length > 30
+                ? `${yerba.name.slice(0, 29).trimEnd()}…`
+                : yerba.name}
             </Text>
             {yerba.stats && (
               <View

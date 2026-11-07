@@ -1,3 +1,4 @@
+import { AdBanner } from "@/components/ad-banner";
 import { tr, countLabel, getLocale, useLocale } from "@/i18n";
 import React, { useEffect, useState } from "react";
 import {
@@ -263,7 +264,7 @@ function ExploreContent({
             justifyContent: "space-between",
           }}
         >
-           <Title>{tr("Explorar")}</Title>
+          <Title>{tr("Explorar")}</Title>
           <Pressable
             accessibilityRole="button"
             accessibilityLabel={tr("Sugerir una yerba")}
@@ -396,6 +397,9 @@ function ExploreContent({
           renderItem={({ item, index }) => (
             <View style={{ marginHorizontal: t.spacing.lg }}>
               <YerbaCard yerba={item} index={index % 20} />
+              {mode === "catalog" && (index + 1) % 8 === 0 && (
+                <AdBanner placement="catalog" />
+              )}
             </View>
           )}
           contentInsetAdjustmentBehavior="automatic"
