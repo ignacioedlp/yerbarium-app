@@ -12,6 +12,11 @@
       "icon": "./assets/branding/icon-light.png",
       "privacyManifests": {
         "NSPrivacyTracking": true,
+        "NSPrivacyTrackingDomains": [
+          "googleads.g.doubleclick.net",
+          "googleads.g.doubleclick-cn.net",
+          "pagead2.googlesyndication.com"
+        ],
         "NSPrivacyAccessedAPITypes": [
           {
             "NSPrivacyAccessedAPIType": "NSPrivacyAccessedAPICategoryUserDefaults",

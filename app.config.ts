@@ -36,7 +36,8 @@ export default ({ config }: ConfigContext): ExpoConfig => ({
       {
         locationWhenInUsePermission:
           "Yerbarium usa tu ubicación para mostrarte tiendas de yerba mate a menos de 25 km.",
-        motionUsagePermission: false,
+        motionUsagePermission:
+          "La biblioteca de ubicación de Yerbarium incluye acceso a sensores de movimiento. Yerbarium no solicita este permiso ni recopila datos de movimiento o actividad física.",
         locationAlwaysPermission: false,
         locationAlwaysAndWhenInUsePermission: false,
         isIosBackgroundLocationEnabled: false,
